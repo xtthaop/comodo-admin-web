@@ -8,12 +8,12 @@
 
 #### account information
 administrator account    
-**username**：admin    
-**password**：123456    
+username：admin    
+password：123456    
 
 ordinary users account   
-**username**：user   
-**password**：123456     
+username：user   
+password：123456     
 
 ![截图](https://github.com/xtthaop/image-lib/blob/master/image/screenshot.png?raw=true)
 

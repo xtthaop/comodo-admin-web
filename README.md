@@ -7,11 +7,11 @@
 [DEMO](https://zxctb.top:8081)
 
 #### account information
-**administrator account**   
+administrator account    
 **username**：admin    
 **password**：123456    
 
-**ordinary users account**   
+ordinary users account   
 **username**：user   
 **password**：123456     
 

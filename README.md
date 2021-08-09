@@ -50,3 +50,7 @@ module.exports = {
 普通用户账号
 用户名：user
 密码：123456
+
+### reference
+[vue-element-admin](https://github.com/PanJiaChen/vue-element-admin.git)
+[go-admin-ui](https://github.com/go-admin-team/go-admin-ui.git)

@@ -3,6 +3,18 @@
 ## back end
 [comodo-admin-api](https://github.com/xtthaop/comodo-admin-api.git)
 
+## demo
+[DEMO](https://zxctb.top:8081)
+
+##### account information
+administrator account
+username：admin
+password：123456
+
+ordinary users account
+username：user
+password：123456
+
 ![截图](https://github.com/xtthaop/image-lib/blob/master/image/screenshot.png?raw=true)
 
 ## Project setup
@@ -41,15 +53,6 @@ module.exports = {
   }
 }
 ```
-
-### account information
-管理员账号
-用户名：admin
-密码：123456
-
-普通用户账号
-用户名：user
-密码：123456
 
 ### reference
 [vue-element-admin](https://github.com/PanJiaChen/vue-element-admin.git)

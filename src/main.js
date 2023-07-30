@@ -1,39 +1,23 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router/index.js'
-import store from './store/index.js'
-
-import ElementUI from 'element-ui'
-import './styles/element-variables.scss'
-
 import 'normalize.css/normalize.css'
-import '@/styles/index.scss'
 
-import './icons' // icon
-import './permission'
+import { createApp } from 'vue'
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import App from './App.vue'
+import router from './router/index'
 
-import Cookies from 'js-cookie'
-import permission from './directive/permission'
-import { getDicts } from '@/api/admin/sys-dict-data'
-import { parseTime, resetForm, selectDictLabel, md5Password } from '@/utils/costum'
+import { toHorizontalLine } from '@/utils/index'
 
-import Pagination from '@/components/Pagination'
+const app = createApp(App)
 
-Vue.use(ElementUI, { size: Cookies.get('size') || 'medium' })
-Vue.use(permission)
+app.use(ElementPlus)
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+  const iconName = 'el-icon-' + toHorizontalLine(key)
+  app.component(iconName, component)
+}
 
-Vue.component('Pagination', Pagination)
+app.use(router)
 
-Vue.prototype.getDicts = getDicts
-Vue.prototype.parseTime = parseTime
-Vue.prototype.resetForm = resetForm
-Vue.prototype.selectDictLabel = selectDictLabel
-Vue.prototype.md5Password = md5Password
-
-Vue.config.productionTip = false
-
-new Vue({
-  router,
-  store,
-  render: h => h(App),
-}).$mount('#app')
+app.mount('#app')

@@ -1,59 +1,35 @@
 # comodo-admin-web
 
-## back end
-[comodo-admin-api](https://github.com/xtthaop/comodo-admin-api.git)
+This template should help get you started developing with Vue 3 in Vite.
 
-## demo
-[DEMO](https://zxctb.top:8081)
+## Recommended IDE Setup
 
-#### account information
-administrator account    
-username：admin    
-password：123456    
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
 
-ordinary users account   
-username：user   
-password：123456     
+## Customize configuration
 
-![截图](https://github.com/xtthaop/image-lib/blob/master/image/screenshot.png?raw=true)
+See [Vite Configuration Reference](https://vitejs.dev/config/).
 
-## Project setup
-```
+## Project Setup
+
+```sh
 npm install
 ```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
+### Compile and Hot-Reload for Development
+
+```sh
+npm run dev
 ```
 
-### Compiles and minifies for production
-```
+### Compile and Minify for Production
+
+```sh
 npm run build
 ```
 
-### Lints and fixes files
-```
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
 npm run lint
 ```
-
-### change to your proxy config
-```js
-// vue.config.js
-module.exports = {
-  devServer: {
-    port: 3030,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:56890',
-        changeOrigin: true,
-        pathRewrite: {'/api' : ''},
-      }
-    }
-  }
-}
-```
-
-### reference
-[vue-element-admin](https://github.com/PanJiaChen/vue-element-admin.git)
-[go-admin-ui](https://github.com/go-admin-team/go-admin-ui.git)

@@ -1,56 +1,35 @@
 {
-  "name": "comodo",
-  "version": "0.1.0",
+  "name": "comodo-admin-web",
+  "version": "2.0.0",
   "private": true,
+  "packageManager": "pnpm@8.6.10",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
+    "format": "prettier --write src/"
   },
   "dependencies": {
-    "@riophae/vue-treeselect": "^0.4.0",
-    "axios": "^0.19.2",
-    "core-js": "^3.6.5",
-    "element-ui": "^2.15.5",
-    "js-cookie": "^2.2.1",
-    "js-md5": "^0.7.3",
+    "@element-plus/icons-vue": "^2.1.0",
+    "element-plus": "^2.3.7",
     "normalize.css": "^8.0.1",
-    "nprogress": "^0.2.0",
-    "path-to-regexp": "^6.2.0",
-    "vue": "^2.6.11",
-    "vue-router": "^3.3.4",
-    "vuex": "^3.5.1"
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.2",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.4.0",
-    "@vue/cli-plugin-eslint": "^4.4.0",
-    "@vue/cli-service": "^4.4.0",
-    "babel-eslint": "^10.1.0",
-    "babel-plugin-component": "^1.1.1",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "node-sass": "^4.14.1",
-    "sass-loader": "^8.0.2",
-    "svg-sprite-loader": "^6.0.9",
-    "vue-template-compiler": "^2.6.11"
+    "@rushstack/eslint-patch": "^1.2.0",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/eslint-config-prettier": "^7.1.0",
+    "eslint": "^8.39.0",
+    "eslint-plugin-vue": "^9.11.0",
+    "prettier": "^2.8.8",
+    "sass": "^1.63.6",
+    "vite": "^4.3.9",
+    "vite-plugin-html": "^3.2.0"
   },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "babel-eslint"
-    },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ]
+  "engines": {
+    "node": "18.17.0"
+  }
 }

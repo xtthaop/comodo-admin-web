@@ -19,7 +19,7 @@ import { getJigsaw } from '@/api/user'
 
 export default {
   name: 'Captcha',
-  data(){
+  data() {
     return {
       mx: 2,
       w: 50,
@@ -29,14 +29,14 @@ export default {
       puzzleLeft: 0,
       btnStyle: {
         left: 0,
-        transition: ''
+        transition: '',
       },
       downX: 0,
       offset: 0,
       status: {
         width: 0,
         background: '#67C23A',
-        transition: ''
+        transition: '',
       },
       btnShow: true,
     }
@@ -45,22 +45,22 @@ export default {
     captchaVisible: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   watch: {
     captchaVisible(val) {
-      if(val){
+      if (val) {
         this.btnShow = true
         this.puzzleLeft = 0
         this.btnStyle.left = 0
         this.status.width = 0
         this.canvasInt()
       }
-    }
+    },
   },
   methods: {
     canvasInt() {
-      getJigsaw().then(res => {
+      getJigsaw().then((res) => {
         this.draw(res.data)
       })
     },
@@ -74,7 +74,7 @@ export default {
       // 重绘清空画布
       imgDom.height = this.height
       puzzleDom.height = this.height
-      
+
       const dstImg = new Image()
       const jigsawImg = new Image()
 
@@ -102,10 +102,10 @@ export default {
     },
     move(e) {
       const { x } = e
-      this.offset = (x - this.downX)
+      this.offset = x - this.downX
       const { offset } = this
 
-      if (offset >= (320 - 52) || offset <= 0) return
+      if (offset >= 320 - 52 || offset <= 0) return
 
       this.puzzleLeft = offset + 'px'
       this.btnStyle.left = offset + 'px'
@@ -130,8 +130,8 @@ export default {
       this.puzzleLeft = 0
       this.btnStyle.left = 0
       this.canvasInt()
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -144,7 +144,8 @@ export default {
     width: 320px;
     height: 170px;
 
-    #img, #puzzle {
+    #img,
+    #puzzle {
       width: 100%;
       height: 100%;
     }
@@ -177,7 +178,7 @@ export default {
       top: -6px;
       width: 52px;
       height: 52px;
-      background: #409EFF;
+      background: #409eff;
       border-radius: 100%;
       text-align: center;
       i {
@@ -192,7 +193,7 @@ export default {
       height: 40px;
       line-height: 40px;
       text-align: center;
-      background: #EBEEF5;
+      background: #ebeef5;
       border-radius: 20px;
       font-size: 14px;
       color: #606266;

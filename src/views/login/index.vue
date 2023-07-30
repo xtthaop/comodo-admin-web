@@ -2,17 +2,16 @@
   <div class="login-container">
     <div class="login-card">
       <el-form :model="loginForm" class="login-form" ref="loginForm" :rules="rules">
-
         <div class="login-card-title">
           <img class="logo" src="@/assets/logo.png" />
-          <h1 class="title">comodo-admin</h1>
+          <h1 class="title">{{ systemName }}</h1>
         </div>
 
         <el-form-item prop="username">
-          <el-input 
+          <el-input
             ref="username"
             tabindex="1"
-            v-model="loginForm.username" 
+            v-model="loginForm.username"
             placeholder="请输入用户名"
             prefix-icon="el-icon-user"
             clearable
@@ -21,17 +20,17 @@
 
         <el-tooltip v-model="capsTootip" content="已开启大写锁定" placement="right" manual>
           <el-form-item prop="password">
-            <el-input 
+            <el-input
               ref="password"
               tabindex="2"
-              v-model="loginForm.password" 
-              placeholder="请输入密码" 
+              v-model="loginForm.password"
+              placeholder="请输入密码"
               show-password
               prefix-icon="el-icon-lock"
               clearable
-              @keyup.native="checkCapslock"
+              @keyup="checkCapslock"
               @blur="capsTootip = false"
-              @keyup.enter.native="handleLogin"
+              @keyup.enter="handleLogin"
             ></el-input>
           </el-form-item>
         </el-tooltip>
@@ -44,30 +43,28 @@
           v-model="captchaVisible"
         >
           <i :class="['el-icon-close', 'popover-close']" @click="captchaVisible = false"></i>
-          <captcha ref="captcha" @verify="verify" :captchaVisible="captchaVisible"></captcha>
-          <el-button 
-            slot="reference"
-            type="primary"
-            @click="handleLogin"
-            style="width:100%;"
-          >登录</el-button>
+          <!-- <captcha ref="captcha" @verify="verify" :captchaVisible="captchaVisible"></captcha> -->
+          <template #reference>
+            <el-button type="primary" @click="handleLogin" style="width: 100%">登录</el-button>
+          </template>
         </el-popover>
-
       </el-form>
     </div>
   </div>
 </template>
 
 <script>
-import Captcha from './components/Captcha'
+// import Captcha from './components/Captcha.vue'
+import { systemName } from '@/settings.js'
 
 export default {
-  name: 'Login',
+  name: 'LoginPage',
   components: {
-    Captcha
+    // Captcha,
   },
   data() {
     return {
+      systemName,
       loginForm: {
         username: 'admin',
         password: '123456',
@@ -75,11 +72,11 @@ export default {
       capsTootip: false,
       rules: {
         username: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
-        password: [{ required: true, message: '密码不能为空', trigger: 'blur' }]
+        password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
       },
       redirect: undefined,
       otherQuery: {},
-      captchaVisible: false
+      captchaVisible: false,
     }
   },
   mounted() {
@@ -91,19 +88,19 @@ export default {
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         const query = route.query
         if (query) {
           this.redirect = query.redirect
           this.otherQuery = this.getOtherQuery(query)
         }
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   methods: {
     handleLogin() {
-      this.$refs.loginForm.validate(valid => {
+      this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.captchaVisible = true
         } else {
@@ -114,26 +111,29 @@ export default {
     verify(x) {
       const password = this.loginForm.password.trim()
       const username = this.loginForm.username.trim()
-      const data = { 
-        username, 
+      const data = {
+        username,
         password: this.md5Password(password),
-        x 
+        x,
       }
 
-      this.$store.dispatch('user/login', data).then(() => {
-        this.$refs.captcha.handleVerifySuccess()
-        this.captchaVisible = false
-        this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-      }).catch((error) => {
-        if (error.code === 4021) {
+      this.$store
+        .dispatch('user/login', data)
+        .then(() => {
+          this.$refs.captcha.handleVerifySuccess()
           this.captchaVisible = false
-        }
-        this.$refs.captcha.handleVerifyFail()
-      })
+          this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+        })
+        .catch((error) => {
+          if (error.code === 4021) {
+            this.captchaVisible = false
+          }
+          this.$refs.captcha.handleVerifyFail()
+        })
     },
     checkCapslock(e) {
       const { key } = e
-      this.capsTootip = key && key.length === 1 && (key >= 'A' && key <= 'Z')
+      this.capsTootip = key && key.length === 1 && key >= 'A' && key <= 'Z'
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
@@ -142,8 +142,8 @@ export default {
         }
         return acc
       }, {})
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -162,7 +162,7 @@ $bg: #ebeff5;
     margin: 130px auto 0;
     padding: 80px 50px;
     background: #fff;
-    border: 1px solid #C7CBD3;
+    border: 1px solid #c7cbd3;
     border-radius: 5px;
 
     .login-card-title {

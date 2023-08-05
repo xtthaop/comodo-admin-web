@@ -1,4 +1,4 @@
-export const systemName = 'comodo-admin'
+export const systemName = 'Comodo Admin'
 export const showSettings = true
 export const tagsView = true
 export const fixedHeader = true

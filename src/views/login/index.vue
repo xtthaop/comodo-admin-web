@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <div class="login-card">
-      <el-form :model="loginForm" class="login-form" ref="loginForm" :rules="rules">
+      <el-form :model="loginForm" ref="loginForm" :rules="rules">
         <div class="login-card-title">
           <img class="logo" src="@/assets/logo.png" />
           <h1 class="title">{{ systemName }}</h1>
@@ -18,7 +18,7 @@
           ></el-input>
         </el-form-item>
 
-        <el-tooltip v-model="capsTootip" content="已开启大写锁定" placement="right" manual>
+        <el-tooltip :visible="capsTootip" content="已开启大写锁定" placement="right">
           <el-form-item prop="password">
             <el-input
               ref="password"
@@ -35,15 +35,12 @@
           </el-form-item>
         </el-tooltip>
 
-        <el-popover
-          placement="top"
-          title="完成拼图验证"
-          width="344"
-          trigger="manual"
-          v-model="captchaVisible"
-        >
-          <i :class="['el-icon-close', 'popover-close']" @click="captchaVisible = false"></i>
-          <!-- <captcha ref="captcha" @verify="verify" :captchaVisible="captchaVisible"></captcha> -->
+        <el-popover placement="top" width="344" :visible="captchaVisible">
+          <SliderCaptcha
+            ref="captcha"
+            @verify="verify"
+            v-model:captchaVisible="captchaVisible"
+          ></SliderCaptcha>
           <template #reference>
             <el-button type="primary" @click="handleLogin" style="width: 100%">登录</el-button>
           </template>
@@ -54,13 +51,13 @@
 </template>
 
 <script>
-// import Captcha from './components/Captcha.vue'
+import SliderCaptcha from './components/SliderCaptcha.vue'
 import { systemName } from '@/settings.js'
 
 export default {
   name: 'LoginPage',
   components: {
-    // Captcha,
+    SliderCaptcha,
   },
   data() {
     return {
@@ -148,12 +145,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$bg: #ebeff5;
-
 .login-container {
   width: 100%;
-  min-height: 100%;
-  background-color: $bg;
+  height: 100%;
+  background-color: #ebeff5;
   overflow: hidden;
 
   .login-card {
@@ -166,13 +161,15 @@ $bg: #ebeff5;
     border-radius: 5px;
 
     .login-card-title {
-      text-align: center;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       margin-bottom: 50px;
 
       .logo {
         width: 39px;
         height: 39px;
-        vertical-align: middle;
         margin-right: 12px;
       }
 
@@ -183,13 +180,7 @@ $bg: #ebeff5;
         line-height: 50px;
         font-size: 22px;
         font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
-        vertical-align: middle;
       }
-    }
-
-    .login-form {
-      width: 100%;
-      min-width: 100%;
     }
   }
 }

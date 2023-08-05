@@ -1,5 +1,17 @@
 <template>
   <div class="captcha-container">
+    <div class="header">
+      <div>
+        <span style="margin-right: 5px">完成拼图验证</span>
+        <span style="color: #409eff; cursor: pointer" @click="canvasInt">换一张</span>
+      </div>
+      <el-icon
+        style="font-size: 1.2em; cursor: pointer"
+        @click="$emit('update:captchaVisible', false)"
+      >
+        <Close />
+      </el-icon>
+    </div>
     <div class="img-container">
       <canvas id="puzzle" width="320" height="170" :style="{ left: puzzleLeft }"></canvas>
       <canvas id="img" width="320" height="170"></canvas>
@@ -7,7 +19,7 @@
     <div class="slider-container" id="slider">
       <div class="status" :style="status"><span v-show="!btnShow">拼接成功！</span></div>
       <div class="btn" @mousedown.prevent="drag" :style="btnStyle" v-show="btnShow">
-        <i class="el-icon-right"></i>
+        <el-icon><Right /></el-icon>
       </div>
       <div class="track">向右滑动完成拼图</div>
     </div>
@@ -18,14 +30,16 @@
 import { getJigsaw } from '@/api/user'
 
 export default {
-  name: 'Captcha',
+  name: 'SliderCaptcha',
+  emits: ['update:captchaVisible', 'verify'],
+  props: {
+    captchaVisible: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
-      mx: 2,
-      w: 50,
-      width: 320,
-      height: 170,
-
       puzzleLeft: 0,
       btnStyle: {
         left: 0,
@@ -40,12 +54,6 @@ export default {
       },
       btnShow: true,
     }
-  },
-  props: {
-    captchaVisible: {
-      type: Boolean,
-      default: false,
-    },
   },
   watch: {
     captchaVisible(val) {
@@ -72,8 +80,8 @@ export default {
       const puzzleCtx = puzzleDom.getContext('2d')
 
       // 重绘清空画布
-      imgDom.height = this.height
-      puzzleDom.height = this.height
+      imgDom.height = 170
+      puzzleDom.height = 170
 
       const dstImg = new Image()
       const jigsawImg = new Image()
@@ -82,16 +90,15 @@ export default {
       jigsawImg.src = imgInfo.jigsaw_img
 
       dstImg.onload = () => {
-        imgCtx.drawImage(dstImg, 0, 0, this.width, this.height)
+        imgCtx.drawImage(dstImg, 0, 0, 320, 170)
       }
 
       jigsawImg.onload = () => {
-        puzzleCtx.drawImage(jigsawImg, this.mx, imgInfo.y, this.w, this.w)
+        puzzleCtx.drawImage(jigsawImg, 2, imgInfo.y, 50, 50)
       }
     },
     drag(e) {
-      const { x } = e
-      this.downX = x
+      this.downX = e.x
 
       this.btnStyle.transition = ''
       this.status.transition = ''
@@ -101,22 +108,19 @@ export default {
       document.addEventListener('mouseup', this.up)
     },
     move(e) {
-      const { x } = e
-      this.offset = x - this.downX
-      const { offset } = this
+      this.offset = e.x - this.downX
 
-      if (offset >= 320 - 52 || offset <= 0) return
+      if (this.offset >= 320 - 52 || this.offset <= 0) return
 
-      this.puzzleLeft = offset + 'px'
-      this.btnStyle.left = offset + 'px'
-      this.status.width = offset + 50 + 'px'
+      this.puzzleLeft = this.offset + 'px'
+      this.btnStyle.left = this.offset + 'px'
+      this.status.width = this.offset + 50 + 'px'
     },
     up() {
       document.getElementById('slider').removeEventListener('mousemove', this.move)
       document.removeEventListener('mouseup', this.up)
 
-      const { offset } = this
-      this.$emit('verify', offset)
+      this.$emit('verify', this.offset)
     },
     handleVerifySuccess() {
       this.btnShow = false
@@ -139,10 +143,20 @@ export default {
 .captcha-container {
   width: 320px;
 
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+  }
+
   .img-container {
     position: relative;
     width: 320px;
     height: 170px;
+    background-color: #eee;
+    border-radius: 8px;
+    overflow: hidden;
 
     #img,
     #puzzle {
@@ -174,16 +188,19 @@ export default {
     }
 
     .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: absolute;
       top: -6px;
       width: 52px;
       height: 52px;
       background: #409eff;
       border-radius: 100%;
-      text-align: center;
+      cursor: pointer;
+
       i {
         font-size: 24px;
-        line-height: 50px;
         color: #fff;
       }
     }

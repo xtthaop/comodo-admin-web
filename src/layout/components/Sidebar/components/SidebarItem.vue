@@ -2,18 +2,15 @@
   <div v-if="!item.hidden">
     <template v-if="hasNoShowingChild(item.children)">
       <AppLink v-if="item.meta" :to="resolvePath(item)">
-        <el-menu-item :index="resolvePath(item)" :class="{ 'submenu-title-noDropdown': !isNest }">
-          <Item
-            :icon="item.meta.icon || (item.meta && item.meta.icon)"
-            :title="item.meta.title"
-          ></Item>
+        <el-menu-item :index="resolvePath(item)" :class="{ 'submenu-title-no-dropdown': !isNest }">
+          <MenuItem :icon="item.meta.icon" :title="item.meta.title"></MenuItem>
         </el-menu-item>
       </AppLink>
     </template>
 
-    <el-submenu v-else ref="subMenu" :index="resolvePath(item)">
-      <template slot="title">
-        <Item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title"></Item>
+    <el-sub-menu v-else :index="resolvePath(item)">
+      <template v-if="item.meta" #title>
+        <MenuItem :icon="item.meta.icon" :title="item.meta.title"></MenuItem>
       </template>
 
       <SidebarItem
@@ -21,26 +18,23 @@
         :key="resolveKey(child)"
         :is-nest="true"
         :item="child"
-        :base-path="resolvePath(child)"
         class="nest-menu"
       ></SidebarItem>
-    </el-submenu>
+    </el-sub-menu>
   </div>
 </template>
 
 <script>
-import path from 'path'
-import { isExternal } from '@/utils/validate'
-import Item from './Item.vue'
+import MenuItem from './Item.vue'
 import AppLink from './Link.vue'
 import FixiOSBug from './FixiOSBug'
+import utils from './utils'
 
 export default {
   name: 'SidebarItem',
-  components: { Item, AppLink },
-  mixins: [FixiOSBug],
+  mixins: [FixiOSBug, utils],
+  components: { MenuItem, AppLink },
   props: {
-    // route object
     item: {
       type: Object,
       required: true,
@@ -49,13 +43,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    basePath: {
-      type: String,
-      default: '',
-    },
-  },
-  data() {
-    return {}
   },
   methods: {
     hasNoShowingChild(children = []) {
@@ -75,23 +62,11 @@ export default {
     },
     resolvePath(item) {
       if (!item.path) {
-        return String(item.meta && item.meta.id)
+        const id = item.meta?.id || ''
+        return `path-${id}`
       }
 
-      if (isExternal(item.path)) {
-        return item.path
-      }
-
-      if (isExternal(this.basePath)) {
-        return this.basePath
-      }
-
-      return path.resolve(this.basePath, item.path)
-    },
-    resolveKey(route) {
-      const path = route.path ? route.path : ''
-      const id = route.meta && route.meta.id ? route.meta.id : ''
-      return '' + path + id
+      return item.path
     },
   },
 }

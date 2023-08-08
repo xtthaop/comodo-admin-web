@@ -1,6 +1,6 @@
 import { getDynamicRoutes } from '@/api/permission'
 import { constantRoutes } from '@/router'
-import Layout from '@/layout'
+import Layout from '@/layout/index.vue'
 
 const _import = (component) => {
   return () => import('@/views' + component)

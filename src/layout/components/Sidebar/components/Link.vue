@@ -1,6 +1,6 @@
 <template>
   <component :is="type" v-bind="linkProps(to)">
-    <slot />
+    <slot></slot>
   </component>
 </template>
 
@@ -8,6 +8,7 @@
 import { isExternal } from '@/utils/validate'
 
 export default {
+  name: 'AppLink',
   props: {
     to: {
       type: String,
@@ -37,7 +38,7 @@ export default {
       }
 
       return {
-        to: to,
+        to,
       }
     },
   },

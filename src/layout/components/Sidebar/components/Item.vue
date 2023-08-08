@@ -1,7 +1,8 @@
 <script>
+import { h } from 'vue'
+
 export default {
   name: 'MenuItem',
-  functional: true,
   props: {
     icon: {
       type: String,
@@ -12,22 +13,21 @@ export default {
       default: '',
     },
   },
-  render(h, context) {
-    const { icon, title } = context.props
+  render() {
+    const { icon, title } = this
     const vnodes = []
 
     if (icon) {
       if (icon.includes('el-icon')) {
-        vnodes.push(<i class={[icon, 'sub-el-icon']} />)
+        vnodes.push(h('i', { class: [icon, 'sub-el-icon'] }))
       } else {
-        vnodes.push(<svg-icon icon-class={icon} />)
+        vnodes.push(h('svg-icon', { iconClass: icon }))
       }
     }
 
     if (title) {
-      vnodes.push(<span slot="title">{title}</span>)
+      vnodes.push(h('span', {}, title+'1111111111111111111'))
     }
-
     return vnodes
   },
 }

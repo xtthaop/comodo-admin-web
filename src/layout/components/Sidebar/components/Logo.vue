@@ -1,57 +1,56 @@
 <template>
-  <div class="sidebar-logo-container" :class="{ collapse: collapse }" :style="{ backgroundColor }">
-    <transition name="sidebarLogoFade">
+  <div class="sidebar-logo-container" :class="{ collapse }" :style="{ backgroundColor }">
+    <transition name="sidebar-logo-fade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo" />
-        <h1 v-else class="sidebar-title" :style="{ color: titleColor }">{{ title }}</h1>
+        <img class="sidebar-logo" :src="logo" />
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo" />
-        <h1 class="sidebar-title" :style="{ color: titleColor }">{{ title }}</h1>
+        <img class="sidebar-logo" :src="logo" />
+        <h1 class="sidebar-title" :style="{ color: titleColor }">{{ systemName }}</h1>
       </router-link>
     </transition>
   </div>
 </template>
 
 <script>
-import variables from '@/styles/variables.scss'
+import variables from '../variables.module.scss'
 import logo from '@/assets/logo.png'
+import { systemName } from '@/settings'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'SidebarLogo',
-  props: {
-    collapse: {
-      type: Boolean,
-      required: true,
-    },
-  },
   data() {
     return {
-      title: 'comodo-admin',
-      logo: logo,
+      logo,
+      systemName,
     }
   },
   computed: {
+    ...mapGetters(['sidebar']),
+    ...mapState({
+      pageStyle: (state) => state.settings.pageStyle,
+    }),
     titleColor() {
       return this.pageStyle === 'dark' ? variables.titleDarkColor : variables.titleLightColor
     },
     backgroundColor() {
       return this.pageStyle === 'dark' ? variables.logoDarkBg : variables.logoLightBg
     },
-    pageStyle() {
-      return this.$store.state.settings.pageStyle
+    collapse() {
+      return !this.sidebar.opened
     },
   },
 }
 </script>
 
 <style lang="scss" scoped>
-.sidebarLogoFade-enter-active {
+.sidebar-logo-fade-enter-active {
   transition: opacity 1.5s;
 }
 
-.sidebarLogoFade-enter,
-.sidebarLogoFade-leave-to {
+.sidebar-logo-fade-enter,
+.sidebar-logo-fade-leave-to {
   opacity: 0;
 }
 

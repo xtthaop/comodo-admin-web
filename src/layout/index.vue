@@ -5,7 +5,7 @@
       class="drawer-bg"
       @click="handleClickOutside"
     ></div>
-    <BaseSidebar :is-light="pageStyle === 'light'"></BaseSidebar>
+    <BaseSidebar></BaseSidebar>
     <!-- <div :class="{ hasTagsView: needTagsView }" class="main-container">
       <div :class="{ 'fixed-header': fixedHeader }">
         <Navbar></Navbar>
@@ -34,15 +34,12 @@ export default {
     ...mapGetters(['sidebar']),
     ...mapState({
       device: (state) => state.app.device,
-      showSettings: (state) => state.settings.showSettings,
       needTagsView: (state) => state.settings.tagsView,
       fixedHeader: (state) => state.settings.fixedHeader,
-      pageStyle: (state) => state.settings.pageStyle,
     }),
     classObj() {
       return {
         hideSidebar: !this.sidebar.opened,
-        openSidebar: this.sidebar.opened,
         withoutAnimation: this.sidebar.withoutAnimation,
         mobile: this.device === 'mobile',
       }

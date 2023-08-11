@@ -26,7 +26,7 @@ export default {
     }
 
     if (title) {
-      vnodes.push(h('span', {}, title+'1111111111111111111'))
+      vnodes.push(h('span', {}, title + '1111111111111111111'))
     }
     return vnodes
   },

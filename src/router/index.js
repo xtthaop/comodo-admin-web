@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import Login from '@/views/login/index.vue'
 import Dashboard from '@/views/dashboard/index.vue'
+import Page404 from '@/views/error-page/404.vue'
 
 export const constantRoutes = [
   {
@@ -21,6 +22,13 @@ export const constantRoutes = [
     name: 'Dashboard',
     component: Dashboard,
     meta: { title: '首页', affix: true, layout: true, icon: 'dashboard' },
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'Page404',
+    component: Page404,
+    hidden: true,
+    meta: { layout: false },
   },
 ]
 

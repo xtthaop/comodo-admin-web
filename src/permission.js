@@ -8,42 +8,36 @@ NProgress.configure({ showSpinner: false })
 
 const whiteList = ['/login']
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to) => {
   NProgress.start()
 
   const hasToken = getToken()
-
   if (hasToken) {
     if (to.path === '/login') {
-      next({ path: '/' })
-      NProgress.done()
+      return { path: '/' }
     } else {
       const hasRoles = store.getters.roles && store.getters.roles.length > 0
       if (hasRoles) {
-        next()
+        return true
       } else {
         try {
           await store.dispatch('user/getUserInfo')
-          // const accessRoutes = 
           await store.dispatch('permission/generateRoutes')
-          // router.addRoute(...accessRoutes)
-          next({ ...to, replace: true })
-        } catch(error) {
+          return to.fullPath
+        } catch (error) {
+          console.error(error || 'Has Error')
           await store.dispatch('user/resetToken')
-          console.log(error || 'Has Error')
-          const otherQuery = window.location.search.substr(1)
-          next(`/login?redirect=${to.path}&${otherQuery}`)
-          NProgress.done()
+          const otherQuery = window.location.search.substring(1)
+          return `/login?redirect=${to.path}&${otherQuery}`
         }
       }
     }
   } else {
-    if (whiteList.indexOf(to.path) !== -1){
-      next()
+    if (whiteList.indexOf(to.path) !== -1) {
+      return true
     } else {
-      const otherQuery = window.location.search.substr(1)
-      next(`/login?redirect=${to.path}&${otherQuery}`)
-      NProgress.done()
+      const otherQuery = window.location.search.substring(1)
+      return `/login?redirect=${to.path}&${otherQuery}`
     }
   }
 })

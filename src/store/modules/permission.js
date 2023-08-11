@@ -1,12 +1,18 @@
 import { getDynamicRoutes } from '@/api/permission'
 import { constantRoutes } from '@/router'
 import Layout from '@/layout/index.vue'
+import router from '@/router'
 
+const modules = import.meta.glob('@/views/**/*.vue')
 const _import = (component) => {
-  return () => import('@/views' + component)
+  if (!component) return
+  return modules['/src/views' + component + '.vue']
 }
 
-function generateDynamicRoutes(routes, routerConfig, data) {
+function generateDynamicRoutes(data) {
+  const routerConfig = []
+  const routes = []
+
   data.forEach((item) => {
     const route = {
       path: item.path,
@@ -25,27 +31,37 @@ function generateDynamicRoutes(routes, routerConfig, data) {
     }
 
     if (item.menu_type === 'C') {
-      routerConfig.push(route)
+      routerConfig.push({ ...route })
     }
 
-    if (item.children.length) {
-      route.children = []
-      generateDynamicRoutes(route.children, routerConfig, item.children)
-    }
+    const { routerConfig: childrenRouterConfig, routes: childrenRoutes } = generateDynamicRoutes(
+      item.children
+    )
 
+    routerConfig.push(...childrenRouterConfig)
+    route.children = childrenRoutes
     routes.push(route)
   })
+
+  return {
+    routerConfig,
+    routes,
+  }
 }
 
 const state = {
   routes: [],
-  addRoutes: [],
+  removeRoutes: [],
 }
 
 const mutations = {
   SET_ROUTES: (state, routes) => {
-    state.addRoutes = routes
     state.routes = constantRoutes.concat(routes)
+  },
+  SET_REMOVE_ROUTES: (state, routerConfig) => {
+    routerConfig.forEach((item) => {
+      state.removeRoutes.push(router.addRoute(item))
+    })
   },
 }
 
@@ -55,11 +71,9 @@ const actions = {
       getDynamicRoutes()
         .then((res) => {
           const { data } = res
-          const routes = []
-          const routerConfig = []
-          generateDynamicRoutes(routes, routerConfig, data)
-          routerConfig.push({ path: '*', redirect: '/404', hidden: true })
+          const { routes, routerConfig } = generateDynamicRoutes(data)
           commit('SET_ROUTES', routes)
+          commit('SET_REMOVE_ROUTES', routerConfig)
           resolve(routerConfig)
         })
         .catch((error) => {

@@ -61,10 +61,10 @@
         <div class="setting-drawer-title">主题设置</div>
         <div class="drawer-item">
           <span>主题色</span>
-          <theme-picker
+          <!-- <theme-picker
             style="float: right; height: 26px; margin: -3px 8px 0 0"
             @change="themeChange"
-          />
+          /> -->
         </div>
       </div>
       <el-divider />
@@ -88,11 +88,11 @@
 </template>
 
 <script>
-import ThemePicker from '@/components/ThemePicker'
+// import ThemePicker from '@/components/ThemePicker/index.vue'
 import { addClass, removeClass } from '@/utils'
 
 export default {
-  components: { ThemePicker },
+  // components: { ThemePicker },
   data() {
     return {}
   },

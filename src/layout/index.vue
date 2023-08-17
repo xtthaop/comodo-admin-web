@@ -6,18 +6,18 @@
       @click="handleClickOutside"
     ></div>
     <BaseSidebar></BaseSidebar>
-    <!-- <div :class="{ hasTagsView: needTagsView }" class="main-container">
+    <div :class="{ hasTagsView: needTagsView }" class="main-container">
       <div :class="{ 'fixed-header': fixedHeader }">
-        <Navbar></Navbar>
-        <TagsView v-if="needTagsView" />
+        <BaseNavbar></BaseNavbar>
+        <!-- <TagsView v-if="needTagsView" /> -->
       </div>
-      <AppMain></AppMain>
-    </div> -->
+      <!-- <AppMain></AppMain> -->
+    </div>
   </div>
 </template>
 
 <script>
-import { BaseSidebar } from './components'
+import { BaseSidebar, BaseNavbar } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState, mapGetters } from 'vuex'
 
@@ -25,7 +25,7 @@ export default {
   name: 'MainLayout',
   components: {
     BaseSidebar,
-    // Navbar,
+    BaseNavbar,
     // AppMain,
     // TagsView,
   },
@@ -76,6 +76,19 @@ export default {
   background: #000;
   opacity: 0.3;
   z-index: 999;
+}
+
+.main-container {
+  min-height: 100%;
+  transition: margin-left 0.28s;
+  margin-left: $sideBarWidth;
+  position: relative;
+}
+
+.hideSidebar {
+  .main-container {
+    margin-left: $sideBarHideWidth;
+  }
 }
 
 .fixed-header {

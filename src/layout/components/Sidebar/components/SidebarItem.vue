@@ -1,31 +1,33 @@
 <template>
-  <div v-if="!item.hidden">
-    <template v-if="hasNoShowingChild(item.children)">
-      <AppLink v-if="item.meta" :to="resolvePath(item)">
-        <el-menu-item :index="resolvePath(item)" :class="{ 'submenu-title-no-dropdown': !isNest }">
-          <MenuItem :icon="item.meta.icon" :title="item.meta.title"></MenuItem>
-        </el-menu-item>
-      </AppLink>
+  <div v-if="item.hidden"></div>
+
+  <div v-else-if="hasNoShowingChild(item.children)">
+    <AppLink v-if="item.meta" :to="resolvePath(item)">
+      <el-menu-item :index="resolvePath(item)" :class="{ 'submenu-title-no-dropdown': !isNest }">
+        <ItemIcon :icon="item.meta.icon"></ItemIcon>
+        <template #title>{{ item.meta.title }}</template>
+      </el-menu-item>
+    </AppLink>
+  </div>
+
+  <el-sub-menu v-else ref="subMenu" :index="resolvePath(item)">
+    <template v-if="item.meta" #title>
+      <ItemIcon :icon="item.meta.icon"></ItemIcon>
+      <span>{{ item.meta.title }}</span>
     </template>
 
-    <el-sub-menu v-else :index="resolvePath(item)">
-      <template v-if="item.meta" #title>
-        <MenuItem :icon="item.meta.icon" :title="item.meta.title"></MenuItem>
-      </template>
-
-      <SidebarItem
-        v-for="child in item.children"
-        :key="resolveKey(child)"
-        :is-nest="true"
-        :item="child"
-        class="nest-menu"
-      ></SidebarItem>
-    </el-sub-menu>
-  </div>
+    <SidebarItem
+      v-for="child in item.children"
+      :key="resolveKey(child)"
+      :is-nest="true"
+      :item="child"
+      class="nest-menu"
+    ></SidebarItem>
+  </el-sub-menu>
 </template>
 
 <script>
-import MenuItem from './Item.vue'
+import ItemIcon from './ItemIcon.vue'
 import AppLink from './Link.vue'
 import FixiOSBug from './FixiOSBug'
 import utils from './utils'
@@ -33,7 +35,7 @@ import utils from './utils'
 export default {
   name: 'SidebarItem',
   mixins: [FixiOSBug, utils],
-  components: { MenuItem, AppLink },
+  components: { AppLink, ItemIcon },
   props: {
     item: {
       type: Object,

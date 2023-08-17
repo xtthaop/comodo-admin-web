@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { createHtmlPlugin } from 'vite-plugin-html'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 
 import { systemName } from './src/settings'
 
@@ -16,6 +17,10 @@ export default defineConfig({
           systemName,
         },
       },
+    }),
+    createSvgIconsPlugin({
+      iconDirs: [fileURLToPath(new URL('./src/icons/svg', import.meta.url))],
+      symbolId: 'icon-[dir]-[name]',
     }),
   ],
   resolve: {

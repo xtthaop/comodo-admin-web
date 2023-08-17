@@ -39,7 +39,7 @@ export default {
     classObj() {
       return {
         hasLogo: this.showLogo,
-        [this.pageStyle]: true,
+        light: this.isLight,
       }
     },
     styleObj() {
@@ -53,6 +53,7 @@ export default {
         menuHoverBg,
         menuLightHoverBg,
       } = variables
+
       return {
         '--el-menu-text-color': this.isLight ? menuLightText : menuText,
         '--el-menu-active-color': this.isLight ? menuLightActiveText : menuActiveText,
@@ -75,14 +76,17 @@ export default {
       return !this.sidebar.opened
     },
   },
-  created() {
-    console.log(this.permissionroutes)
-  },
 }
 </script>
 
 <style lang="scss">
 @import './variables.module.scss';
+
+.hideSidebar {
+  .sidebar-container {
+    width: $sideBarHideWidth !important;
+  }
+}
 
 // 全局样式
 .sidebar-container {

@@ -1,5 +1,5 @@
 <template>
-  <svg :class="svgClass" aria-hidden="true" v-bind="$attrs">
+  <svg :class="classObj" aria-hidden="true" v-bind="$attrs">
     <use :href="iconName" />
   </svg>
 </template>
@@ -8,22 +8,22 @@
 export default {
   name: 'SvgIcon',
   props: {
-    iconClass: {
+    name: {
       type: String,
       required: true,
     },
-    className: {
+    svgClass: {
       type: String,
       default: '',
     },
   },
   computed: {
     iconName() {
-      return `#icon-${this.iconClass}`
+      return `#icon-${this.name}`
     },
-    svgClass() {
-      if (this.className) {
-        return 'svg-icon ' + this.className
+    classObj() {
+      if (this.svgClass) {
+        return 'svg-icon ' + this.svgClass
       } else {
         return 'svg-icon'
       }
@@ -36,7 +36,6 @@ export default {
 .svg-icon {
   width: 1em;
   height: 1em;
-  vertical-align: -0.15em;
   fill: currentColor;
   overflow: hidden;
 }

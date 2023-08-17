@@ -11,6 +11,9 @@ import App from './App.vue'
 import router from './router/index'
 import store from './store/index'
 
+import SvgIcon from '@/components/SvgIcon/index.vue'
+import 'virtual:svg-icons-register'
+
 import { toHorizontalLine } from '@/utils/index'
 import { parseTime, resetForm, selectDictLabel, md5Password } from '@/utils/costum'
 
@@ -22,6 +25,8 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   const iconName = 'el-icon-' + toHorizontalLine(key)
   app.component(iconName, component)
 }
+
+app.component('SvgIcon', SvgIcon)
 
 app.use(router)
 app.use(store)

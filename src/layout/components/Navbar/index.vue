@@ -47,15 +47,15 @@
 </template>
 
 <script>
-import RightPanel from '@/components/RightPanel'
-import Settings from './component/Settings'
+import RightPanel from '@/components/RightPanel/index.vue'
+import Settings from './component/Settings/index.vue'
 import { mapGetters, mapState } from 'vuex'
-import ResetPwdForm from './component/ResetPwdForm'
-import Hamburger from '@/components/Hamburger'
-import Breadcrumb from '@/components/Breadcrumb'
+import ResetPwdForm from './component/ResetPwdForm.vue'
+import Hamburger from '@/components/Hamburger/index.vue'
+import Breadcrumb from '@/components/Breadcrumb/index.vue'
 
 export default {
-  name: 'Navbar',
+  name: 'BaseNavbar',
   components: {
     ResetPwdForm,
     Hamburger,

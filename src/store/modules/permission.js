@@ -30,7 +30,7 @@ function generateDynamicRoutes(data) {
       },
     }
 
-    if (item.menu_type === 'C') {
+    if (item.menu_type === 'C' && !item.is_frame) {
       routerConfig.push({ ...route })
     }
 

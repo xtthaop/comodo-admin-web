@@ -3,14 +3,14 @@
 
   <div v-else-if="hasNoShowingChild(item.children)">
     <AppLink v-if="item.meta" :to="resolvePath(item)">
-      <el-menu-item :index="resolvePath(item)" :class="{ 'submenu-title-no-dropdown': !isNest }">
+      <el-menu-item :index="resolveIndex(item)" :class="{ 'submenu-title-no-dropdown': !isNest }">
         <ItemIcon :icon="item.meta.icon"></ItemIcon>
         <template #title>{{ item.meta.title }}</template>
       </el-menu-item>
     </AppLink>
   </div>
 
-  <el-sub-menu v-else ref="subMenu" :index="resolvePath(item)">
+  <el-sub-menu v-else ref="subMenu" :index="resolveIndex(item)" :hide-timeout="10000000">
     <template v-if="item.meta" #title>
       <ItemIcon :icon="item.meta.icon"></ItemIcon>
       <span>{{ item.meta.title }}</span>
@@ -29,8 +29,9 @@
 <script>
 import ItemIcon from './ItemIcon.vue'
 import AppLink from './Link.vue'
-import FixiOSBug from './FixiOSBug'
+import FixiOSBug from './FixiOSBug' // 待验证
 import utils from './utils'
+import { isExternal } from '@/utils/validate'
 
 export default {
   name: 'SidebarItem',
@@ -63,6 +64,18 @@ export default {
       return false
     },
     resolvePath(item) {
+      if (!item.path) {
+        const id = item.meta?.id || ''
+        return `path-${id}`
+      }
+
+      return item.path
+    },
+    resolveIndex(item) {
+      if (item.path && isExternal(item.path)) {
+        return null
+      }
+
       if (!item.path) {
         const id = item.meta?.id || ''
         return `path-${id}`

@@ -7,6 +7,7 @@
         :collapse="isCollapse"
         :unique-opened="false"
         :collapse-transition="false"
+        :popperEffect="pageStyle"
         :style="styleObj"
         mode="vertical"
       >
@@ -52,6 +53,12 @@ export default {
         menuBg,
         menuHoverBg,
         menuLightHoverBg,
+        subMenuBg,
+        subMenuLightBg,
+        subMenuHover,
+        subMenuLightHover,
+        menuActiveBg,
+        menuLightActiveBg,
       } = variables
 
       return {
@@ -59,6 +66,11 @@ export default {
         '--el-menu-active-color': this.isLight ? menuLightActiveText : menuActiveText,
         '--el-menu-bg-color': this.isLight ? menuLightBg : menuBg,
         '--el-menu-hover-bg-color': this.isLight ? menuLightHoverBg : menuHoverBg,
+        '--el-menu-active-bg-color': this.isLight ? menuLightActiveBg : menuActiveBg,
+        '--el-sub-menu-bg-color': this.isLight ? subMenuLightBg : subMenuBg,
+        '--el-sub-menu-hover-bg-color': this.isLight ? subMenuLightHover : subMenuHover,
+        '--el-menu-item-height': '40px',
+        '--el-menu-sub-item-height': '40px',
       }
     },
     activeMenu() {
@@ -80,6 +92,8 @@ export default {
 </script>
 
 <style lang="scss">
+// 注意这里是全局样式
+
 @import './variables.module.scss';
 
 .hideSidebar {
@@ -88,14 +102,13 @@ export default {
   }
 }
 
-// 全局样式
 .sidebar-container {
   position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
   width: $sideBarWidth !important;
-  height: 500px;
+  height: 100%;
   overflow: hidden;
   transition: width 0.28s;
   font-size: 0px;
@@ -123,22 +136,16 @@ export default {
   }
 
   .el-menu {
-    width: 100% !important;
-    height: 100%;
     // 不显示边框
     border: none;
   }
 
-  a {
-    display: inline-block;
-    width: 100%;
-    overflow: hidden;
-  }
-
+  // 水平方向超出容器范围则隐藏
   .scrollbar-wrapper {
+    padding-left: 3px;
+    padding-right: 2px;
     overflow-x: hidden !important;
   }
-
   // 永远不显示水平滚动条
   .el-scrollbar__bar.is-horizontal {
     display: none;
@@ -147,5 +154,43 @@ export default {
   .el-scrollbar__bar.is-vertical {
     right: 0;
   }
+
+  // 自定义菜单样式
+  .el-menu-item,
+  .el-sub-menu__title {
+    margin: 5px 0;
+    border-radius: 10px;
+  }
+
+  // 自定义选中菜单背景样式
+  .el-menu-item.is-active {
+    background-color: var(--el-menu-active-bg-color);
+  }
+
+  // 自定义子菜单样式
+  .el-sub-menu > .el-menu {
+    margin-left: -3px;
+    margin-right: -3px;
+    // 创建 BFC
+    overflow: hidden;
+    // 自定义背景色
+    background-color: var(--el-sub-menu-bg-color);
+
+    .nest-menu {
+      padding-left: 3px;
+      padding-right: 4px;
+    }
+
+    // 自定义鼠标移上去的背景色
+    .el-menu-item:not(.is-active):hover,
+    .el-sub-menu__title:not(.is-active):hover {
+      background-color: var(--el-sub-menu-hover-bg-color);
+    }
+  }
+  .el-sub-menu.is-active .el-sub-menu__title {
+    color: var(--el-menu-active-color);
+  }
 }
+
+// 折叠菜单时弹出菜单样式一致
 </style>

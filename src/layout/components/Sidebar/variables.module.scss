@@ -6,15 +6,15 @@ $titleLightColor: #303133;
 
 // sidebar
 $sideBarWidth: 210px;
-$sideBarHideWidth: 64px;
+$sideBarHideWidth: 70px;
 
 // sidebar dark
 $menuText: #bfcbd9;
-$menuActiveText: #409eff;
-$subMenuActiveText: #f4f4f5;
+$menuActiveText: #fff;
 
 $menuBg: #304156;
 $menuHoverBg: #263445;
+$menuActiveBg: #1b5cb6;
 
 $subMenuBg: #1f2d3d;
 $subMenuHover: #001528;
@@ -22,12 +22,12 @@ $subMenuHover: #001528;
 // sidebar light
 $menuLightText: #696969;
 $menuLightActiveText: #409eff;
-$subMenuActiveLightText: #409efe;
 
 $menuLightBg: #fff;
 $menuLightHoverBg: #f0f1f5;
+$menuLightActiveBg: #e6f4ff;
 
-$subMenuLightBg: #fff;
+$subMenuLightBg: #f9f9f9;
 $subMenuLightHover: #f0f1f5;
 
 :export {
@@ -44,10 +44,10 @@ $subMenuLightHover: #f0f1f5;
   // sidebar dark
   menuText: $menuText;
   menuActiveText: $menuActiveText;
-  subMenuActiveText: $subMenuActiveText;
 
   menuBg: $menuBg;
   menuHoverBg: $menuHoverBg;
+  menuActiveBg: $menuActiveBg;
 
   subMenuBg: $subMenuBg;
   subMenuHover: $subMenuHover;
@@ -55,10 +55,10 @@ $subMenuLightHover: #f0f1f5;
   // sidebar light
   menuLightText: $menuLightText;
   menuLightActiveText: $menuLightActiveText;
-  subMenuActiveLightText: $subMenuActiveLightText;
 
   menuLightBg: $menuLightBg;
   menuLightHoverBg: $menuLightHoverBg;
+  menuLightActiveBg: $menuLightActiveBg;
 
   subMenuLightBg: $subMenuLightBg;
   subMenuLightHover: $subMenuLightHover;

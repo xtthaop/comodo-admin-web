@@ -1,12 +1,10 @@
 <template>
-  <i class="el-icon">
-    <template v-if="icon">
-      <template v-if="isElIcon">
-        <component :is="icon" class="sub-el-icon"></component>
-      </template>
-      <template v-else>
-        <svg-icon :name="icon"></svg-icon>
-      </template>
+  <i v-if="icon" class="el-icon">
+    <template v-if="isElIcon">
+      <component :is="icon" class="sub-el-icon"></component>
+    </template>
+    <template v-else>
+      <svg-icon :name="icon"></svg-icon>
     </template>
   </i>
 </template>

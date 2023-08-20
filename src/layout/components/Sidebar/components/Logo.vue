@@ -49,7 +49,7 @@ export default {
   transition: opacity 1.5s;
 }
 
-.sidebar-logo-fade-enter,
+.sidebar-logo-fade-enter-from,
 .sidebar-logo-fade-leave-to {
   opacity: 0;
 }

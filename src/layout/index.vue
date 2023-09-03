@@ -6,7 +6,7 @@
       @click="handleClickOutside"
     ></div>
     <BaseSidebar></BaseSidebar>
-    <div :class="{ hasTagsView: needTagsView }" class="main-container">
+    <div class="main-container" :class="{ hasTagsView: needTagsView }">
       <div :class="{ 'fixed-header': fixedHeader }">
         <BaseNavbar></BaseNavbar>
         <!-- <TagsView v-if="needTagsView" /> -->

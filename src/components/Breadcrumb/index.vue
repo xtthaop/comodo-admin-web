@@ -14,18 +14,20 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { compile } from 'path-to-regexp'
+import utils from '@/layout/components/Sidebar/components/utils'
 
 export default {
+  name: 'BaseBreadcrumb',
+  mixins: [utils],
   data() {
     return {
       levelList: null,
     }
   },
   computed: {
-    routes() {
-      return this.$store.state.permission.routes
-    },
+    ...mapGetters(['permissionroutes']),
   },
   watch: {
     $route(route) {
@@ -57,30 +59,10 @@ export default {
       }
     },
     getBreadcrumb() {
-      let matched = []
+      const matched = []
       const lastMatched = this.$route.matched[this.$route.matched.length - 1]
-      this.getMatched(
-        this.routes,
-        (lastMatched.meta && lastMatched.meta.id) || lastMatched.path,
-        matched
-      )
-
-      const first = matched[0]
-
-      if (!this.isDashboard(first)) {
-        matched = [{ path: '/dashboard', meta: { title: '首页' } }].concat(matched)
-      }
-
-      this.levelList = matched.filter(
-        (item) => item.meta && item.meta.title && item.meta.breadcrumb !== false
-      )
-    },
-    isDashboard(route) {
-      const name = route && route.name
-      if (!name) {
-        return false
-      }
-      return name.trim().toLocaleLowerCase() === 'Dashboard'.toLocaleLowerCase()
+      this.getMatched(this.permissionroutes, lastMatched.meta?.id || lastMatched.path, matched)
+      this.levelList = matched.filter((item) => item.meta?.title)
     },
     pathCompile(path) {
       const { params } = this.$route
@@ -98,11 +80,6 @@ export default {
       }
       this.$router.push(this.pathCompile(path))
     },
-    resolveKey(item) {
-      const path = item.path ? item.path : ''
-      const id = item.meta && item.meta.id ? item.meta.id : ''
-      return '' + path + id
-    },
   },
 }
 </script>
@@ -119,4 +96,23 @@ export default {
     cursor: text;
   }
 }
+
+// .breadcrumb-enter-active,
+// .breadcrumb-leave-active {
+//   transition: all 0.5s;
+// }
+
+// .breadcrumb-enter-from,
+// .breadcrumb-leave-to {
+//   opacity: 0;
+//   transform: translateX(20px);
+// }
+
+// .breadcrumb-move {
+//   transition: all 0.5s;
+// }
+
+// .breadcrumb-leave-active {
+//   position: absolute;
+// }
 </style>

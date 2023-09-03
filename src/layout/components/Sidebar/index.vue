@@ -49,9 +49,6 @@ export default {
       }
       return path
     },
-    isLight() {
-      return this.pageStyle === 'light'
-    },
     isCollapse() {
       return !this.sidebar.opened
     },

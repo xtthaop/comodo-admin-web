@@ -1,13 +1,13 @@
 <template>
   <div class="navbar">
-    <Hamburger
+    <BaseHamburger
       id="hamburger-container"
       :is-active="sidebar.opened"
       class="hamburger-container"
       @toggleClick="toggleSideBar"
     />
 
-    <Breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
+    <BaseBreadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
       <el-dropdown
@@ -51,15 +51,15 @@ import RightPanel from '@/components/RightPanel/index.vue'
 import Settings from './component/Settings/index.vue'
 import { mapGetters, mapState } from 'vuex'
 import ResetPwdForm from './component/ResetPwdForm.vue'
-import Hamburger from '@/components/Hamburger/index.vue'
-import Breadcrumb from '@/components/Breadcrumb/index.vue'
+import BaseHamburger from '@/components/Hamburger/index.vue'
+import BaseBreadcrumb from '@/components/Breadcrumb/index.vue'
 
 export default {
   name: 'BaseNavbar',
   components: {
     ResetPwdForm,
-    Hamburger,
-    Breadcrumb,
+    BaseHamburger,
+    BaseBreadcrumb,
     RightPanel,
     Settings,
   },

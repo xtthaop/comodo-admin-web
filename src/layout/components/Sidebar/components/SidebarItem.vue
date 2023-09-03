@@ -10,7 +10,13 @@
     </AppLink>
   </div>
 
-  <el-sub-menu v-else ref="subMenu" :index="resolveIndex(item)" :hide-timeout="10000000">
+  <el-sub-menu
+    v-else
+    ref="subMenu"
+    :index="resolveIndex(item)"
+    :popper-class="`sidebar-popper ${pageStyle}`"
+    :popper-offset="12"
+  >
     <template v-if="item.meta" #title>
       <ItemIcon :icon="item.meta.icon"></ItemIcon>
       <span>{{ item.meta.title }}</span>
@@ -32,6 +38,7 @@ import AppLink from './Link.vue'
 import FixiOSBug from './FixiOSBug' // 待验证
 import utils from './utils'
 import { isExternal } from '@/utils/validate'
+import { mapState } from 'vuex'
 
 export default {
   name: 'SidebarItem',
@@ -46,6 +53,11 @@ export default {
       type: Boolean,
       default: false,
     },
+  },
+  computed: {
+    ...mapState({
+      pageStyle: (state) => state.settings.pageStyle,
+    }),
   },
   methods: {
     hasNoShowingChild(children = []) {

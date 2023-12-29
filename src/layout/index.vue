@@ -11,13 +11,13 @@
         <BaseNavbar></BaseNavbar>
         <!-- <TagsView v-if="needTagsView" /> -->
       </div>
-      <!-- <AppMain></AppMain> -->
+      <AppMain></AppMain>
     </div>
   </div>
 </template>
 
 <script>
-import { BaseSidebar, BaseNavbar } from './components'
+import { BaseSidebar, BaseNavbar, AppMain } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState, mapGetters } from 'vuex'
 
@@ -26,7 +26,7 @@ export default {
   components: {
     BaseSidebar,
     BaseNavbar,
-    // AppMain,
+    AppMain,
     // TagsView,
   },
   mixins: [ResizeMixin],

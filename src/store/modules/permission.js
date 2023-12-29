@@ -6,7 +6,7 @@ import router from '@/router'
 const modules = import.meta.glob('@/views/**/*.vue')
 const _import = (component) => {
   if (!component) return
-  return modules['/src/views' + component + '.vue']
+  return modules['/src/views' + component]
 }
 
 function generateDynamicRoutes(data) {
@@ -51,16 +51,16 @@ function generateDynamicRoutes(data) {
 
 const state = {
   routes: [],
-  removeRoutes: [],
+  routerConfig: [],
 }
 
 const mutations = {
   SET_ROUTES: (state, routes) => {
     state.routes = constantRoutes.concat(routes)
   },
-  SET_REMOVE_ROUTES: (state, routerConfig) => {
+  SET_ROUTER_CONFIG: (state, routerConfig) => {
     routerConfig.forEach((item) => {
-      state.removeRoutes.push(router.addRoute(item))
+      state.routerConfig.push(router.addRoute(item))
     })
   },
 }
@@ -73,7 +73,7 @@ const actions = {
           const { data } = res
           const { routes, routerConfig } = generateDynamicRoutes(data)
           commit('SET_ROUTES', routes)
-          commit('SET_REMOVE_ROUTES', routerConfig)
+          commit('SET_ROUTER_CONFIG', routerConfig)
           resolve(routerConfig)
         })
         .catch((error) => {

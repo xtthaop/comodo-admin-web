@@ -7,7 +7,7 @@ let messageBoxFlag = 0
 
 const service = axios.create({
   baseURL: '',
-  timeout: 5000,
+  // timeout: 5000,
   // `validateStatus` 定义了对于给定的 HTTP 状态码是 resolve 还是 reject promise，
   // 如果 `validateStatus` 返回 `true` (或者设置为 `null` 或 `undefined`)，
   // 则 promise 将会 resolved，否则是 rejected。

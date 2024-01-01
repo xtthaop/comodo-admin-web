@@ -7,18 +7,16 @@
         :key="tag.path"
         :class="isActive(tag) ? 'active' : ''"
         :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
-        tag="span"
         class="tags-view-item"
-        :style="tagItemStyleObj"
-        @click.middle.native="!isAffix(tag) ? closeSelectedTag(tag) : ''"
-        @contextmenu.prevent.native="openMenu(tag, $event)"
+        @click.middle="!isAffix(tag) ? closeSelectedTag(tag) : ''"
+        @contextmenu.prevent="openMenu(tag, $event)"
       >
         {{ tag.title }}
         <span
           v-if="!isAffix(tag)"
           class="el-icon-close"
           @click.prevent.stop="closeSelectedTag(tag)"
-        />
+        ></span>
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
@@ -31,10 +29,10 @@
 </template>
 
 <script>
-import ScrollPane from './ScrollPane'
-import path from 'path'
+import ScrollPane from './ScrollPane.vue'
 
 export default {
+  name: 'TagsView',
   components: { ScrollPane },
   data() {
     return {
@@ -51,14 +49,6 @@ export default {
     },
     routes() {
       return this.$store.state.permission.routes
-    },
-    theme() {
-      return this.$store.state.settings.theme
-    },
-    tagItemStyleObj() {
-      return {
-        '--active-color': this.theme,
-      }
     },
   },
   watch: {
@@ -85,11 +75,11 @@ export default {
     isAffix(tag) {
       return tag.meta && tag.meta.affix
     },
-    filterAffixTags(routes, basePath = '/') {
+    filterAffixTags(routes) {
       let tags = []
       routes.forEach((route) => {
         if (route.meta && route.meta.affix) {
-          const tagPath = path.resolve(basePath, route.path)
+          const tagPath = route.path
           tags.push({
             fullPath: tagPath,
             path: tagPath,

@@ -9,7 +9,7 @@
     <div class="main-container" :class="{ hasTagsView: needTagsView }">
       <div :class="{ 'fixed-header': fixedHeader }">
         <BaseNavbar></BaseNavbar>
-        <!-- <TagsView v-if="needTagsView" /> -->
+        <TagsView v-if="needTagsView" />
       </div>
       <AppMain></AppMain>
     </div>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { BaseSidebar, BaseNavbar, AppMain } from './components'
+import { BaseSidebar, BaseNavbar, AppMain, TagsView } from './components/index'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState, mapGetters } from 'vuex'
 
@@ -27,7 +27,7 @@ export default {
     BaseSidebar,
     BaseNavbar,
     AppMain,
-    // TagsView,
+    TagsView,
   },
   mixins: [ResizeMixin],
   computed: {

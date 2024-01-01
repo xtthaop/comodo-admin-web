@@ -82,7 +82,7 @@
                           class="el-input__icon"
                           style="width: 25px"
                         />
-                        <i v-else class="el-icon-search el-input__icon"></i>
+                        <el-icon v-else class="el-input__icon"><Search /></el-icon>
                       </template>
                     </el-input>
                   </template>

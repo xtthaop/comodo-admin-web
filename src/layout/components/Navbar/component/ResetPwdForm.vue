@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :title="title" :visible.sync="dialogVisible" width="600px" :append-to-body="true">
+    <el-dialog :title="title" v-model="dialogVisible" width="600px" :append-to-body="true">
       <el-form ref="resetPwdForm" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="旧密码" prop="old_password">
           <el-input
@@ -27,10 +27,10 @@
           />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <template #footer>
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
-      </div>
+      </template>
     </el-dialog>
   </div>
 </template>

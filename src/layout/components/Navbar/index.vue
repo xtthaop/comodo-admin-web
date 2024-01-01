@@ -10,45 +10,41 @@
     <BaseBreadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
-      <el-dropdown
-        class="avatar-container"
-        trigger="hover"
-        @visible-change="(val) => (avatarDropdown = val)"
-        :show-timeout="0"
-      >
-        <div class="avatar-wrapper">
-          <div class="avatar" :style="{ background: avatarBackground }">
-            <span>{{ firstOfUsername }}</span>
-          </div>
-          <i class="el-icon-caret-bottom"></i>
-        </div>
-
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item @click.native="handleModifyPassword">修改密码</el-dropdown-item>
-          <el-dropdown-item @click.native="handleLogOut">退出登录</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
       <div
         class="setting-wrapper"
-        :style="{ background: theme }"
         v-if="showSettings"
         @click.stop="settingVisible = !settingVisible"
       >
-        <i class="el-icon-setting"></i>
+        <el-icon class="setting-icon"><Setting /></el-icon>
       </div>
+      <el-dropdown class="avatar-container" trigger="hover" :show-timeout="0">
+        <div class="avatar-wrapper">
+          <div class="avatar">
+            <span>{{ firstOfUsername }}</span>
+          </div>
+          <el-icon class="caret-bottom"><CaretBottom /></el-icon>
+        </div>
+
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="handleModifyPassword">修改密码</el-dropdown-item>
+            <el-dropdown-item @click="handleLogOut">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
     </div>
 
     <ResetPwdForm ref="modifyForm" @logout="handleLogOut"></ResetPwdForm>
 
-    <RightPanel v-if="showSettings" :show.sync="settingVisible">
-      <Settings />
+    <RightPanel v-if="showSettings" v-model:show="settingVisible">
+      <SystemSettings />
     </RightPanel>
   </div>
 </template>
 
 <script>
 import RightPanel from '@/components/RightPanel/index.vue'
-import Settings from './component/Settings/index.vue'
+import SystemSettings from './component/Settings/index.vue'
 import { mapGetters, mapState } from 'vuex'
 import ResetPwdForm from './component/ResetPwdForm.vue'
 import BaseHamburger from '@/components/Hamburger/index.vue'
@@ -61,12 +57,11 @@ export default {
     BaseHamburger,
     BaseBreadcrumb,
     RightPanel,
-    Settings,
+    SystemSettings,
   },
   data() {
     return {
       settingVisible: false,
-      avatarDropdown: false,
     }
   },
   computed: {
@@ -76,12 +71,6 @@ export default {
     }),
     firstOfUsername() {
       return this.username.substr(0, 1).toUpperCase()
-    },
-    theme() {
-      return this.$store.state.settings.theme
-    },
-    avatarBackground() {
-      return this.avatarDropdown ? this.theme : '#333'
     },
   },
   methods: {
@@ -123,19 +112,22 @@ export default {
 
   .right-menu {
     float: right;
+    display: flex;
+    align-items: center;
     height: 100%;
 
     .avatar-container {
-      float: right;
       cursor: pointer;
       margin-right: 20px;
 
       .avatar-wrapper {
+        display: flex;
+        align-items: center;
+
         .avatar {
           display: inline-block;
           width: 30px;
           height: 30px;
-          margin-top: 10px;
           background: #333;
           border-radius: 5px;
           text-align: center;
@@ -148,26 +140,25 @@ export default {
           }
         }
 
-        i {
-          vertical-align: top;
-          line-height: 50px;
+        .caret-bottom {
           margin-left: 5px;
         }
       }
     }
 
     .setting-wrapper {
-      float: right;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 30px;
       height: 30px;
-      margin-top: 10px;
       margin-right: 15px;
       border-radius: 5px;
       text-align: center;
       cursor: pointer;
+      background: var(--el-color-primary);
 
-      i {
-        line-height: 30px;
+      .setting-icon {
         color: #fff;
       }
     }

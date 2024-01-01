@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import store from '@/store'
 import Login from '@/views/login/index.vue'
 import Dashboard from '@/views/dashboard/index.vue'
 import Page404 from '@/views/error-page/404.vue'
@@ -38,8 +39,9 @@ const router = createRouter({
 })
 
 export function resetRouter() {
-  const newRouter = createRouter()
-  router.matcher = newRouter.matcher
+  store.state.permission.routerConfig.forEach((removeRouter) => {
+    removeRouter()
+  })
 }
 
 export default router

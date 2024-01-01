@@ -17,7 +17,6 @@
                   data-icon="check"
                   width="1em"
                   height="1em"
-                  :fill="theme"
                   aria-hidden="true"
                   focusable="false"
                   class=""
@@ -42,7 +41,6 @@
                   data-icon="check"
                   width="1em"
                   height="1em"
-                  :fill="theme"
                   aria-hidden="true"
                   focusable="false"
                   class=""
@@ -54,17 +52,6 @@
               </i>
             </div>
           </div>
-        </div>
-      </div>
-      <el-divider />
-      <div class="setting-drawer-content">
-        <div class="setting-drawer-title">主题设置</div>
-        <div class="drawer-item">
-          <span>主题色</span>
-          <!-- <theme-picker
-            style="float: right; height: 26px; margin: -3px 8px 0 0"
-            @change="themeChange"
-          /> -->
         </div>
       </div>
       <el-divider />
@@ -88,18 +75,14 @@
 </template>
 
 <script>
-// import ThemePicker from '@/components/ThemePicker/index.vue'
 import { addClass, removeClass } from '@/utils'
 
 export default {
-  // components: { ThemePicker },
+  name: 'SystemSetting',
   data() {
     return {}
   },
   computed: {
-    theme() {
-      return this.$store.state.settings.theme
-    },
     pageStyle() {
       return this.$store.state.settings.pageStyle
     },
@@ -138,12 +121,6 @@ export default {
     },
   },
   methods: {
-    themeChange(val) {
-      this.$store.dispatch('settings/changeSetting', {
-        key: 'theme',
-        value: val,
-      })
-    },
     handleChangePageStyle(val) {
       if (val === 'light') {
         addClass(document.body, 'light')

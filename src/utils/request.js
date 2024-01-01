@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { getToken } from '@/utils/auth'
-// import store from '@/store'
+import store from '@/store'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
 let messageBoxFlag = 0
@@ -55,9 +55,7 @@ service.interceptors.response.use(
         })
           .then(() => {
             messageBoxFlag = 0
-            // store.dispatch('user/resetToken').then(() => {
-            //   location.reload()
-            // })
+            store.dispatch('user/logout')
           })
           .catch(() => {
             messageBoxFlag = 0

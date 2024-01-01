@@ -25,8 +25,9 @@ router.beforeEach(async (to) => {
           await store.dispatch('permission/generateRoutes')
           return to.fullPath
         } catch (error) {
+          // eslint-disable-next-line
           console.error(error || 'Has Error')
-          await store.dispatch('user/resetToken')
+          await store.dispatch('user/logout')
           const otherQuery = window.location.search.substring(1)
           return `/login?redirect=${to.path}&${otherQuery}`
         }

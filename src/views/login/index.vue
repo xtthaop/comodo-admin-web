@@ -18,7 +18,7 @@
           ></el-input>
         </el-form-item>
 
-        <el-tooltip :visible="capsTootip" content="已开启大写锁定" placement="right">
+        <el-tooltip :visible="capsTootip" content="已开启大写锁定" placement="top">
           <el-form-item prop="password">
             <el-input
               ref="password"
@@ -35,7 +35,7 @@
           </el-form-item>
         </el-tooltip>
 
-        <el-popover placement="top" width="344" :visible="captchaVisible">
+        <el-popover placement="top" width="350" :visible="captchaVisible">
           <SliderCaptcha
             ref="captcha"
             @verify="verify"
@@ -123,6 +123,7 @@ export default {
         })
         .catch((error) => {
           if (error.code === 4021) {
+            // 用户名密码不匹配
             this.captchaVisible = false
           }
           this.$refs.captcha.handleVerifyFail()
@@ -159,7 +160,7 @@ export default {
     position: relative;
     width: 430px;
     margin: 130px auto 0;
-    padding: 80px 50px;
+    padding: 100px 50px 80px;
     background: #fff;
     border: 1px solid #c7cbd3;
     border-radius: 5px;
@@ -187,14 +188,5 @@ export default {
       }
     }
   }
-}
-
-.popover-close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 12px;
-  font-size: 16px;
-  cursor: pointer;
 }
 </style>

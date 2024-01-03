@@ -91,9 +91,9 @@ export default {
   }
 }
 
-.hideSidebar {
+.closeSidebar {
   .sidebar-container {
-    width: $sideBarHideWidth !important;
+    width: $sideBarCloseWidth !important;
   }
 }
 
@@ -197,5 +197,27 @@ body > div[id^='el-popper-container'] > .sidebar-popper {
     padding: 0 3px;
     border-radius: 10px;
   }
+}
+
+// 移动端
+.mobile {
+  .sidebar-container {
+    transition: transform 0.28s;
+    width: $sideBarWidth !important;
+  }
+
+  // 如果菜单处于折叠状态则将菜单移动到可视范围之外
+  &.closeSidebar {
+    .sidebar-container {
+      pointer-events: none;
+      transition-duration: 0.3s;
+      transform: translate3d(-$sideBarWidth, 0, 0);
+    }
+  }
+}
+
+// 动态效果控制
+.withoutAnimation .sidebar-container {
+  transition: none;
 }
 </style>

@@ -6,7 +6,7 @@ $titleLightColor: #303133;
 
 // sidebar
 $sideBarWidth: 210px;
-$sideBarHideWidth: 46px;
+$sideBarCloseWidth: 46px;
 
 // sidebar dark
 $menuText: #bfcbd9;
@@ -39,7 +39,7 @@ $subMenuLightHover: #f0f1f5;
 
   // sidebar
   sideBarWidth: $sideBarWidth;
-  sideBarHideWidth: $sideBarHideWidth;
+  sideBarCloseWidth: $sideBarCloseWidth;
 
   // sidebar dark
   menuText: $menuText;

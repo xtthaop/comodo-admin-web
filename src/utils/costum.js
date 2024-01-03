@@ -83,6 +83,6 @@ export function praseStrEmpty(str) {
 
 // md5密码
 import md5 from 'js-md5'
-export function md5Password(password, salt = 'comodo1996') {
+export function md5Password(password, salt = 'comodo-admin') {
   return md5(password + salt)
 }

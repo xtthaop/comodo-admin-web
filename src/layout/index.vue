@@ -39,7 +39,8 @@ export default {
     }),
     classObj() {
       return {
-        hideSidebar: !this.sidebar.opened,
+        closeSidebar: !this.sidebar.opened,
+        openSidebar: this.sidebar.opened,
         withoutAnimation: this.sidebar.withoutAnimation,
         mobile: this.device === 'mobile',
       }
@@ -61,11 +62,10 @@ export default {
   width: 100%;
   height: 100%;
 
-  // 暂时看不出有什么用
-  // &.mobile.openSidebar {
-  //   position: fixed;
-  //   top: 0;
-  // }
+  &.mobile.openSidebar {
+    position: fixed;
+    top: 0;
+  }
 }
 
 .drawer-bg {
@@ -85,9 +85,24 @@ export default {
   position: relative;
 }
 
-.hideSidebar {
+.closeSidebar {
   .main-container {
-    margin-left: $sideBarHideWidth;
+    margin-left: $sideBarCloseWidth;
+  }
+}
+
+.mobile {
+  .main-container {
+    margin-left: 0px;
+  }
+}
+
+.withoutAnimation {
+  .main-container {
+    transition: none;
+  }
+  .fixed-header {
+    transition: none;
   }
 }
 
@@ -100,8 +115,8 @@ export default {
   z-index: 9;
 }
 
-.hideSidebar .fixed-header {
-  width: calc(100% - #{$sideBarHideWidth});
+.closeSidebar .fixed-header {
+  width: calc(100% - #{$sideBarCloseWidth});
 }
 
 .mobile .fixed-header {

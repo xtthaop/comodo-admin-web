@@ -41,7 +41,7 @@
                 <template #label>
                   <span>菜单名称</span>
                 </template>
-                <el-input v-model="form.title" placeholder="请输入菜单名称" />
+                <el-input v-model="form.title" placeholder="请输入菜单名称" maxlength="128" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -49,7 +49,12 @@
                 <template #label>
                   <span>排序</span>
                 </template>
-                <el-input-number v-model="form.sort" controls-position="right" :min="0" />
+                <el-input-number
+                  v-model="form.sort"
+                  controls-position="right"
+                  :min="0"
+                  :max="100000"
+                />
               </el-form-item>
             </el-col>
 
@@ -80,7 +85,12 @@
                 >
                   <IconSelect ref="iconSelect" @selected="selected" />
                   <template #reference>
-                    <el-input v-model="form.icon" placeholder="点击选择图标" clearable>
+                    <el-input
+                      v-model="form.icon"
+                      placeholder="点击选择图标"
+                      clearable
+                      maxlength="128"
+                    >
                       <template #prefix>
                         <svg-icon
                           v-if="form.icon"
@@ -132,6 +142,7 @@
                   v-model="form.route_name"
                   placeholder="请输入路由名称"
                   :disabled="disabled"
+                  maxlength="128"
                 />
               </el-form-item>
             </el-col>
@@ -144,6 +155,7 @@
                   v-model="form.component"
                   placeholder="请输入组件路径"
                   :disabled="disabled"
+                  maxlength="255"
                 />
               </el-form-item>
             </el-col>
@@ -153,7 +165,12 @@
                 <template #label>
                   <span>{{ form.is_link ? '外链地址' : '路由地址' }}</span>
                 </template>
-                <el-input v-model="form.path" placeholder="请输入路由地址" :disabled="disabled" />
+                <el-input
+                  v-model="form.path"
+                  placeholder="请输入路由地址"
+                  :disabled="disabled"
+                  maxlength="255"
+                />
               </el-form-item>
             </el-col>
             <el-col :span="12" v-if="form.menu_type !== 'F'">
@@ -164,8 +181,8 @@
                 <el-input
                   v-model="form.permission"
                   placeholder="请输入权限标识"
-                  maxlength="50"
                   :disabled="disabled"
+                  maxlength="255"
                 />
               </el-form-item>
             </el-col>
@@ -186,7 +203,7 @@
                 <el-input
                   v-model="form.active_menu"
                   placeholder="请输入在访问此页面时需要高亮显示的菜单路由地址"
-                  maxlength="50"
+                  maxlength="255"
                   :disabled="disabled"
                 />
               </el-form-item>

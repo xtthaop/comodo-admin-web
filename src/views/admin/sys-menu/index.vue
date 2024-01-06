@@ -49,6 +49,7 @@
         />
         <el-table-column prop="menu_id" label="ID" align="center" width="60px" />
         <el-table-column prop="icon" label="图标" align="center" width="80px">
+          <!-- TODO: 引入 el-icon 图标 -->
           <template #default="scope">
             <span v-if="!scope.row.icon">——</span>
             <span v-else><svg-icon :name="scope.row.icon" /></span>
@@ -84,6 +85,13 @@
               <span v-if="!scope.row.permission">——</span>
               <span v-else>{{ scope.row.permission }}</span>
             </span>
+          </template>
+        </el-table-column>
+        <el-table-column label="菜单类型" align="center" :show-overflow-tooltip="true">
+          <template #default="scope">
+            <span v-if="scope.row.menu_type === 'F'">页面夹</span>
+            <span v-else-if="scope.row.menu_type === 'P'">页面</span>
+            <span v-else>按钮</span>
           </template>
         </el-table-column>
         <el-table-column label="组件路径" align="center" :show-overflow-tooltip="true">
@@ -177,15 +185,9 @@ export default {
   },
   methods: {
     getApiList() {
-      this.loading = true
-      getApiList()
-        .then((res) => {
-          this.allApiList = res.data.sys_api_list
-          this.loading = false
-        })
-        .catch(() => {
-          this.loading = false
-        })
+      getApiList().then((res) => {
+        this.allApiList = res.data.sys_api_list
+      })
     },
     getType(type) {
       switch (type) {

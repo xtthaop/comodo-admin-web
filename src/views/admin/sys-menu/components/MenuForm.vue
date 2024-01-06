@@ -293,6 +293,7 @@ export default {
         value: 'id',
         label: 'label',
         children: 'children',
+        disabled: 'disabled',
       },
     }
   },
@@ -338,18 +339,34 @@ export default {
         this.sourceData.push(menu)
         this.menuOptions = this.sourceData.map((item) => this.normalizer(item))
         if (!this.form.parent_id) this.form.parent_id = 0
+        if (this.form.menu_id) {
+          this.$nextTick(() => {
+            this.handleParentMenuChange(this.form.parent_id)
+          })
+        }
       })
     },
     normalizer(node) {
       let children = node.children.filter((item) => item.menu_type !== 'B')
       if (!(children && !children.length)) {
-        children = node.children.map((item) => this.normalizer(item))
+        children = children.map((item) => this.normalizer(item))
+      }
+
+      let disabled = false
+      // 编辑时选择父菜单不能选自身
+      if (this.form.menu_id && this.form.menu_id === node.menu_id) {
+        disabled = true
+      }
+      // 编辑菜单管理页面时父菜单不能为页面必须为页面夹
+      if (this.form.menu_id && this.form.permission === 'admin:sysmenu' && node.menu_type === 'P') {
+        disabled = true
       }
 
       return {
         id: node.menu_id,
         label: node.title,
         children,
+        disabled,
         nodeData: node,
       }
     },

@@ -18,6 +18,7 @@
               :label="dict.dict_label"
               :value="dict.dict_value"
             />
+            <el-option key="2" label="未知" value="2" />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -93,15 +94,7 @@
         </el-table-column>
         <el-table-column label="状态" align="center" width="80">
           <template #default="scope">
-            <el-tag
-              :type="
-                scope.row.visible === 1
-                  ? scope.row.menu_type === 'F'
-                    ? 'info'
-                    : 'success'
-                  : 'danger'
-              "
-            >
+            <el-tag :type="visibleType(scope.row.visible)">
               {{ visibleFormat(scope.row) }}
             </el-tag>
           </template>
@@ -119,6 +112,7 @@
               type="primary"
               icon="el-icon-plus"
               @click="handleAdd(scope.row)"
+              v-if="scope.row.menu_type !== 'B'"
               >新增</el-button
             >
             <el-button
@@ -255,10 +249,20 @@ export default {
         .catch(() => {})
     },
     visibleFormat(row) {
-      if (row.menu_type === 'F') {
+      if (row.menu_type === 'B') {
         return ' —— '
       }
       return this.selectDictLabel(this.visibleOptions, row.visible)
+    },
+    visibleType(visible) {
+      switch (visible) {
+        case 0:
+          return 'danger'
+        case 1:
+          return 'success'
+        case 2:
+          return 'info'
+      }
     },
   },
 }

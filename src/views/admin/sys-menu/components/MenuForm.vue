@@ -1,6 +1,12 @@
 <template>
   <div>
-    <el-dialog :title="title" v-model="dialogVisible" width="700px">
+    <el-dialog
+      :title="title"
+      v-model="dialogVisible"
+      :close-on-click-modal="false"
+      :draggable="true"
+      width="700px"
+    >
       <div class="form-container" ref="formContainer">
         <el-form
           ref="menuForm"
@@ -41,7 +47,7 @@
             <el-col :span="12">
               <el-form-item prop="sort">
                 <template #label>
-                  <span>显示排序</span>
+                  <span>排序</span>
                 </template>
                 <el-input-number v-model="form.sort" controls-position="right" :min="0" />
               </el-form-item>
@@ -57,14 +63,14 @@
                   :disabled="disabled"
                   @change="handleMenuTypeChange"
                 >
-                  <el-radio label="M" :disabled="parentMenuType === 'C'">页面夹</el-radio>
-                  <el-radio label="C" :disabled="parentMenuType === 'C'">页面</el-radio>
-                  <el-radio label="F">按钮</el-radio>
+                  <el-radio label="F" :disabled="parentMenuType === 'P'">页面夹</el-radio>
+                  <el-radio label="P">页面</el-radio>
+                  <el-radio label="B">按钮</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
 
-            <el-col :span="24" v-if="form.menu_type != 'F'">
+            <el-col :span="24" v-if="form.menu_type != 'B'">
               <el-form-item label="菜单图标">
                 <el-popover
                   placement="bottom-start"
@@ -90,7 +96,34 @@
               </el-form-item>
             </el-col>
 
-            <el-col :span="12" v-if="form.menu_type === 'C'">
+            <el-col :span="12" v-if="form.menu_type != 'B'">
+              <el-form-item>
+                <template #label>
+                  <span>是否显示</span>
+                </template>
+                <el-radio-group v-model="form.visible" :disabled="disabled || isInnerPage">
+                  <el-radio
+                    v-for="dict in visibleOptions"
+                    :key="dict.dict_value"
+                    :label="Number(dict.dict_value)"
+                    >{{ dict.dict_label }}</el-radio
+                  >
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12" v-if="form.menu_type === 'P'">
+              <el-form-item>
+                <template #label>
+                  <span>是否外链</span>
+                </template>
+                <el-radio-group v-model="form.is_link" :disabled="disabled || isInnerPage">
+                  <el-radio :label="1">是</el-radio>
+                  <el-radio :label="0">否</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
               <el-form-item prop="route_name">
                 <template #label>
                   <span>路由名称</span>
@@ -102,7 +135,7 @@
                 />
               </el-form-item>
             </el-col>
-            <el-col :span="12" v-if="form.menu_type === 'C'">
+            <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
               <el-form-item prop="component">
                 <template #label>
                   <span>组件路径</span>
@@ -115,26 +148,15 @@
               </el-form-item>
             </el-col>
 
-            <el-col :span="12" v-if="form.menu_type === 'C'">
-              <el-form-item>
-                <template #label>
-                  <span>是否外链</span>
-                </template>
-                <el-radio-group v-model="form.is_frame" :disabled="disabled">
-                  <el-radio label="1">是</el-radio>
-                  <el-radio label="0">否</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12" v-if="form.menu_type === 'C'">
+            <el-col :span="12" v-if="form.menu_type === 'P'">
               <el-form-item prop="path">
                 <template #label>
-                  <span>路由地址</span>
+                  <span>{{ form.is_link ? '外链地址' : '路由地址' }}</span>
                 </template>
                 <el-input v-model="form.path" placeholder="请输入路由地址" :disabled="disabled" />
               </el-form-item>
             </el-col>
-            <el-col :span="12" v-if="form.menu_type !== 'M'">
+            <el-col :span="12" v-if="form.menu_type !== 'F'">
               <el-form-item>
                 <template #label>
                   <span>权限标识</span>
@@ -148,45 +170,56 @@
               </el-form-item>
             </el-col>
 
-            <el-col :span="12" v-if="form.menu_type != 'F'">
+            <el-col
+              :span="24"
+              v-if="
+                form.menu_type === 'P' &&
+                !form.is_link &&
+                parentMenuType === 'P' &&
+                form.menu_type === 'P'
+              "
+            >
               <el-form-item>
                 <template #label>
-                  <span>菜单状态</span>
+                  <span>高亮菜单</span>
                 </template>
-                <el-radio-group v-model="form.visible" :disabled="disabled">
-                  <el-radio
-                    v-for="dict in visibleOptions"
-                    :key="dict.dict_value"
-                    :label="dict.dict_value"
-                    >{{ dict.dict_label }}</el-radio
-                  >
-                </el-radio-group>
+                <el-input
+                  v-model="form.active_menu"
+                  placeholder="请输入在访问此页面时需要高亮显示的菜单路由地址"
+                  maxlength="50"
+                  :disabled="disabled"
+                />
               </el-form-item>
             </el-col>
-            <el-col :span="12" v-if="form.menu_type === 'C'">
+
+            <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
               <el-form-item>
                 <template #label>
                   <span>显示布局</span>
                 </template>
                 <el-radio-group v-model="form.layout" :disabled="disabled">
-                  <el-radio label="1">是</el-radio>
-                  <el-radio label="0">否</el-radio>
+                  <el-radio :label="1">是</el-radio>
+                  <el-radio :label="0">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
-            <el-col :span="12" v-if="form.menu_type === 'C'">
+            <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
               <el-form-item>
                 <template #label>
+                  <!-- TODO: 验证使用缓存的话路由名称是否必填 -->
                   <span>使用缓存</span>
                 </template>
                 <el-radio-group v-model="form.cache" :disabled="disabled">
-                  <el-radio label="1">是</el-radio>
-                  <el-radio label="0">否</el-radio>
+                  <el-radio :label="1">是</el-radio>
+                  <el-radio :label="0">否</el-radio>
                 </el-radio-group>
               </el-form-item>
             </el-col>
 
-            <el-col :span="24" v-if="form.menu_type !== 'M'">
+            <el-col
+              :span="24"
+              v-if="form.menu_type === 'B' || (form.menu_type === 'P' && !form.is_link)"
+            >
               <el-form-item>
                 <template #label>
                   <span>接口权限</span>
@@ -246,25 +279,27 @@ export default {
     return {
       title: '',
       dialogVisible: false,
-      form: {
-        apis: [],
-      },
+      form: {},
       rules: {
         title: [{ required: true, message: '菜单标题不能为空', trigger: 'blur' }],
-        sort: [{ required: true, message: '菜单顺序不能为空', trigger: 'blur' }],
         component: [{ required: true, message: '组件路径不能为空', trigger: 'blur' }],
         path: [{ required: true, message: '路由地址不能为空', trigger: 'blur' }],
       },
       menuOptions: [],
       disabled: false,
+      parent: '',
       parentMenuType: '',
       defaultProps: {
         value: 'id',
         label: 'label',
         children: 'children',
-        disabled: 'isDisabled',
       },
     }
+  },
+  computed: {
+    isInnerPage() {
+      return this.parentMenuType === 'P' && this.form.menu_type === 'P'
+    },
   },
   methods: {
     open(type, item) {
@@ -280,10 +315,6 @@ export default {
           this.disabled = true
         }
         this.form = Object.assign({}, item)
-        this.form.is_frame = String(this.form.is_frame)
-        this.form.layout = String(this.form.layout)
-        this.form.visible = String(this.form.visible)
-        this.form.cache = String(this.form.cache)
         this.form.apis = this.form.api_list.map((api) => api.id)
         this.title = '修改菜单'
       }
@@ -299,7 +330,7 @@ export default {
         this.sourceData = []
         const menu = {
           menu_id: 0,
-          menu_type: 'M',
+          menu_type: 'F',
           title: '根目录',
           children: [],
         }
@@ -310,38 +341,41 @@ export default {
       })
     },
     normalizer(node) {
-      let children = node.children.filter((item) => item.menu_type !== 'F')
+      let children = node.children.filter((item) => item.menu_type !== 'B')
       if (!(children && !children.length)) {
         children = node.children.map((item) => this.normalizer(item))
-      }
-
-      let isDisabled = false
-      if (
-        node.menu_type === 'F' ||
-        node.menu_id === this.form.menu_id ||
-        (node.menu_type !== 'M' && node.menu_type === this.form.menu_type)
-      ) {
-        isDisabled = true
       }
 
       return {
         id: node.menu_id,
         label: node.title,
         children,
-        isDisabled,
         nodeData: node,
       }
     },
     handleMenuTypeChange() {
       this.menuOptions = this.sourceData.map((item) => this.normalizer(item))
+      this.handleInnerPage(this.parent)
     },
     handleParentMenuChange(val) {
-      this.handleChangeParentMenuType(this.$refs.treeSelect.getNode(val).data.nodeData)
+      const treeNode = this.$refs.treeSelect.getNode(val)
+      this.handleChangeParentMenuType(treeNode.data.nodeData)
     },
     handleChangeParentMenuType(node) {
+      this.parent = node
       this.parentMenuType = node.menu_type
-      if (this.parentMenuType === 'C') {
-        this.form.menu_type = 'F'
+      if (this.parentMenuType === 'P' && this.form.menu_type === 'F') {
+        this.form.menu_type = 'P'
+      }
+      this.handleInnerPage(node)
+    },
+    handleInnerPage(node) {
+      if (this.isInnerPage) {
+        this.form.visible = 0
+        this.form.is_link = 0
+        this.form.active_menu = node.path
+      } else {
+        this.form.active_menu = undefined
       }
     },
     reset() {
@@ -350,21 +384,21 @@ export default {
         parent_id: 0,
         route_name: undefined,
         icon: undefined,
-        menu_type: 'M',
+        menu_type: 'F',
         apis: [],
         sort: 0,
-        is_frame: '0',
-        visible: '1',
+        is_link: 0,
+        visible: 1,
         title: undefined,
         component: undefined,
         path: undefined,
         permission: undefined,
-        layout: '1',
-        cache: '0',
+        layout: 1,
+        cache: 0,
+        active_menu: undefined,
       }
       this.disabled = false
       this.parentMenuType = ''
-      this.resetForm('menuForm')
     },
     selected(name) {
       this.form.icon = name
@@ -372,31 +406,54 @@ export default {
     submitForm() {
       this.$refs.menuForm.validate((valid) => {
         if (valid) {
+          const data = this.convertFormContent()
           if (this.form.menu_id === undefined) {
-            this.handleAddMenu()
+            this.handleAddMenu(data)
           } else {
-            this.handleUpdateMenu()
+            this.handleUpdateMenu(data)
           }
         }
       })
     },
-    handleAddMenu() {
-      addMenu(this.form).then(() => {
+    handleAddMenu(data) {
+      addMenu(data).then(() => {
         this.$message.success('新增成功')
         this.$emit('update')
         this.dialogVisible = false
       })
     },
-    handleUpdateMenu() {
-      updateMenu(this.form).then(() => {
+    handleUpdateMenu(data) {
+      updateMenu(data).then(() => {
         this.$message.success('修改成功')
         this.$emit('update')
         this.dialogVisible = false
       })
     },
+    convertFormContent() {
+      const { parent_id, menu_id, title, sort, menu_type } = this.form
+      const baseObj = { parent_id, menu_id, title, sort, menu_type }
+      switch (menu_type) {
+        case 'F': {
+          const { icon, visible } = this.form
+          return Object.assign(baseObj, { icon, visible })
+        }
+        case 'P': {
+          const { icon, visible, is_link } = this.form
+          if (is_link) {
+            const { path, permission } = this.form
+            return Object.assign(baseObj, { icon, visible, is_link, path, permission })
+          } else {
+            return Object.assign({}, this.form)
+          }
+        }
+        case 'B': {
+          const { permission, apis } = this.form
+          return Object.assign(baseObj, { visible: 2, permission, apis })
+        }
+      }
+    },
     cancel() {
       this.dialogVisible = false
-      this.reset()
     },
   },
 }

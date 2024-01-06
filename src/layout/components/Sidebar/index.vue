@@ -183,7 +183,7 @@ body > div[id^='el-popper-container'] > .sidebar-popper {
   }
 }
 
-// 折叠菜单时弹出菜单样式一致
+// 折叠菜单时弹出菜单保持样式一致
 .sidebar-popper {
   @include custom-style($isLight: false);
 

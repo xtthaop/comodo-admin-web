@@ -79,7 +79,7 @@
               <el-form-item label="菜单图标">
                 <el-popover
                   placement="bottom-start"
-                  width="460"
+                  width="605"
                   trigger="click"
                   @show="$refs['iconSelect'].reset()"
                 >
@@ -87,7 +87,7 @@
                   <template #reference>
                     <el-input
                       v-model="form.icon"
-                      placeholder="点击选择图标"
+                      placeholder="请选择图标"
                       clearable
                       maxlength="128"
                     >
@@ -140,7 +140,7 @@
                 </template>
                 <el-input
                   v-model="form.route_name"
-                  placeholder="请输入路由名称"
+                  placeholder="示例：SysMenu"
                   :disabled="disabled"
                   maxlength="128"
                 />
@@ -153,7 +153,7 @@
                 </template>
                 <el-input
                   v-model="form.component"
-                  placeholder="请输入组件路径"
+                  placeholder="示例：/admin/sys-menu/index.vue"
                   :disabled="disabled"
                   maxlength="255"
                 />
@@ -167,7 +167,9 @@
                 </template>
                 <el-input
                   v-model="form.path"
-                  placeholder="请输入路由地址"
+                  :placeholder="
+                    form.is_link ? '示例：https://www.zxctb.top' : '示例：/admin/sys-menu'
+                  "
                   :disabled="disabled"
                   maxlength="255"
                 />
@@ -180,7 +182,7 @@
                 </template>
                 <el-input
                   v-model="form.permission"
-                  placeholder="请输入权限标识"
+                  placeholder="示例：admin:sysmenu"
                   :disabled="disabled"
                   maxlength="255"
                 />
@@ -202,7 +204,7 @@
                 </template>
                 <el-input
                   v-model="form.active_menu"
-                  placeholder="请输入在访问此页面时需要高亮显示的菜单路由地址"
+                  placeholder="请输入在访问此页面时需要高亮显示的菜单路由地址如：/admin/sys-menu"
                   maxlength="255"
                   :disabled="disabled"
                 />

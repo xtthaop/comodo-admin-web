@@ -4,7 +4,7 @@
       v-model="name"
       style="margin-bottom: 10px"
       clearable
-      placeholder="请输入图标名称"
+      placeholder="搜索图标"
       @clear="filterIcons"
       @input="filterIcons"
     >

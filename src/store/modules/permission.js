@@ -27,10 +27,12 @@ function generateDynamicRoutes(data) {
         cache: item.cache,
         id: item.menu_id,
         pid: item.parent_id,
+        menu_type: item.menu_type,
+        activeMenu: item.active_menu,
       },
     }
 
-    if (item.menu_type === 'C' && !item.is_frame) {
+    if (item.menu_type === 'P' && !item.is_link) {
       routerConfig.push({ ...route })
     }
 

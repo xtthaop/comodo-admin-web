@@ -290,6 +290,7 @@ export default {
       form: {},
       rules: {
         title: [{ required: true, message: '菜单标题不能为空', trigger: 'blur' }],
+        sort: [{ required: true, message: '排序不能为空', trigger: 'blur' }],
         component: [{ required: true, message: '组件路径不能为空', trigger: 'blur' }],
         path: [{ required: true, message: '路由地址不能为空', trigger: 'blur' }],
       },

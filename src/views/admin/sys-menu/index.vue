@@ -52,7 +52,7 @@
           <!-- TODO: 引入 el-icon 图标 -->
           <template #default="scope">
             <span v-if="!scope.row.icon">——</span>
-            <span v-else><svg-icon :name="scope.row.icon" /></span>
+            <span v-else><UniIcon :icon="scope.row.icon" /></span>
           </template>
         </el-table-column>
         <el-table-column prop="sort" label="排序" align="center" width="60px" />
@@ -158,11 +158,13 @@
 import { getMenuList, getMenuTree, deleteMenu } from '@/api/admin/sys-menu'
 import { getApiList } from '@/api/admin/sys-api'
 import MenuForm from './components/MenuForm.vue'
+import UniIcon from '@/components/UniIcon/index.vue'
 
 export default {
   name: 'SysMenu',
   components: {
     MenuForm,
+    UniIcon,
   },
   data() {
     return {

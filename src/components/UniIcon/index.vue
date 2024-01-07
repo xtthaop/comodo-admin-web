@@ -13,7 +13,7 @@
 const elIconRE = /^el-icon/
 
 export default {
-  name: 'ItemIcon',
+  name: 'UniIcon',
   props: {
     icon: {
       type: String,

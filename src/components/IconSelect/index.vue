@@ -7,23 +7,43 @@
       placeholder="搜索图标"
       @clear="filterIcons"
       @input="filterIcons"
-    >
-      <template #suffix>
-        <i class="el-icon-search el-input__icon"></i>
-      </template>
-    </el-input>
+    ></el-input>
 
-    <div class="icon-list">
-      <div v-for="(item, index) in iconList" :key="index" @click="selectedIcon(item)">
-        <svg-icon :name="item" style="height: 35px; width: 16px; margin-right: 5px" />
-        <span>{{ item }}</span>
-      </div>
-    </div>
+    <el-tabs tab-position="top" type="border-card">
+      <el-tab-pane label="自定义 SVG">
+        <div class="icon-list">
+          <div
+            v-for="(item, index) in iconList"
+            class="icon-item"
+            :key="index"
+            @click="selectedIcon(item)"
+          >
+            <svg-icon :name="item" style="margin-right: 5px" />
+            <span>{{ item }}</span>
+          </div>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="Element Icon">
+        <div class="icon-list">
+          <div
+            v-for="(item, index) in elementIconList"
+            class="icon-item"
+            :key="index"
+            @click="selectedElementIcon(item)"
+          >
+            <el-icon style="margin-right: 5px"><component :is="item" /></el-icon>
+            <span>{{ item }}</span>
+          </div>
+        </div>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
 <script>
 import icons from './requireIcons'
+import elementIcons from './requireElementIcons'
+import { toHorizontalLine } from '@/utils/index'
 
 export default {
   name: 'IconSelect',
@@ -31,18 +51,25 @@ export default {
     return {
       name: '',
       iconList: icons,
+      elementIconList: elementIcons,
     }
   },
   methods: {
     filterIcons() {
       if (this.name) {
         this.iconList = this.iconList.filter((item) => item.includes(this.name))
+        this.elementIconList = this.elementIconList.filter((item) => item.includes(this.name))
       } else {
         this.iconList = icons
+        this.elementIconList = elementIcons
       }
     },
     selectedIcon(name) {
       this.$emit('selected', name)
+      document.body.click()
+    },
+    selectedElementIcon(name) {
+      this.$emit('selected', `el-icon-${toHorizontalLine(name)}`)
       document.body.click()
     },
     reset() {
@@ -62,18 +89,16 @@ export default {
     height: 200px;
     overflow-y: scroll;
 
-    div {
+    .icon-item {
+      display: inline-flex;
+      align-items: center;
       height: 35px;
       line-height: 35px;
-      margin-bottom: -5px;
       cursor: pointer;
       width: 33%;
-      float: left;
     }
 
     span {
-      display: inline-block;
-      vertical-align: -0.15em;
       fill: currentColor;
       overflow: hidden;
     }

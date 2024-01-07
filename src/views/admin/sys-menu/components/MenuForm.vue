@@ -77,12 +77,7 @@
 
             <el-col :span="24" v-if="form.menu_type != 'B'">
               <el-form-item label="菜单图标">
-                <el-popover
-                  placement="bottom-start"
-                  width="605"
-                  trigger="click"
-                  @show="$refs['iconSelect'].reset()"
-                >
+                <el-popover width="605" trigger="click" @show="$refs['iconSelect'].reset()">
                   <IconSelect ref="iconSelect" @selected="selected" />
                   <template #reference>
                     <el-input
@@ -92,9 +87,9 @@
                       maxlength="128"
                     >
                       <template #prefix>
-                        <svg-icon
+                        <UniIcon
                           v-if="form.icon"
-                          :name="form.icon"
+                          :icon="form.icon"
                           class="el-input__icon"
                           style="width: 25px"
                         />
@@ -189,15 +184,7 @@
               </el-form-item>
             </el-col>
 
-            <el-col
-              :span="24"
-              v-if="
-                form.menu_type === 'P' &&
-                !form.is_link &&
-                parentMenuType === 'P' &&
-                form.menu_type === 'P'
-              "
-            >
+            <el-col :span="24" v-if="form.menu_type === 'P' && !form.is_link && isInnerPage">
               <el-form-item>
                 <template #label>
                   <span>高亮菜单</span>
@@ -278,11 +265,13 @@
 <script>
 import { getMenuTree, addMenu, updateMenu } from '@/api/admin/sys-menu'
 import IconSelect from '@/components/IconSelect/index.vue'
+import UniIcon from '@/components/UniIcon/index.vue'
 
 export default {
   name: 'MenuForm',
   components: {
     IconSelect,
+    UniIcon,
   },
   props: {
     visibleOptions: {
@@ -499,8 +488,8 @@ export default {
 .form-container {
   width: 100%;
   padding: 0 20px;
-  max-height: 390px;
-  overflow-y: scroll;
+  height: 500px;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 </style>

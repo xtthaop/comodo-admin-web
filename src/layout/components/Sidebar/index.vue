@@ -154,10 +154,15 @@ export default {
   .el-sub-menu > .el-menu {
     margin-left: -3px;
     margin-right: -3px;
-    // 创建 BFC
+    // 创建 BFC 消除上下外边距重叠导致的抖动
     overflow: hidden;
     // 自定义背景色
     background-color: var(--el-sub-menu-bg-color);
+
+    // 没有子节点时不显示消除空页面夹点击时抖动问题
+    &:empty {
+      display: none;
+    }
 
     .nest-menu {
       padding-left: 3px;

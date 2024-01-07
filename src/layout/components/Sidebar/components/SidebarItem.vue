@@ -1,9 +1,9 @@
 <template>
-  <div v-if="item.hidden"></div>
+  <div v-if="item.hidden" style="display: none"></div>
 
   <div v-else-if="hasNoShowingChild(item.children)">
     <AppLink v-if="item.meta" :to="resolvePath(item)">
-      <el-menu-item :index="resolveIndex(item)" :class="{ 'submenu-title-no-dropdown': !isNest }">
+      <el-menu-item :index="resolveIndex(item)">
         <ItemIcon :icon="item.meta.icon"></ItemIcon>
         <template #title>{{ item.meta.title }}</template>
       </el-menu-item>
@@ -25,7 +25,6 @@
     <SidebarItem
       v-for="child in item.children"
       :key="resolveKey(child)"
-      :is-nest="true"
       :item="child"
       class="nest-menu"
     ></SidebarItem>
@@ -33,25 +32,20 @@
 </template>
 
 <script>
-import ItemIcon from './ItemIcon.vue'
+import ItemIcon from '@/components/UniIcon/index.vue'
 import AppLink from './Link.vue'
-import FixiOSBug from './FixiOSBug' // 待验证
 import utils from './utils'
 import { isExternal } from '@/utils/validate'
 import { mapState } from 'vuex'
 
 export default {
   name: 'SidebarItem',
-  mixins: [FixiOSBug, utils],
+  mixins: [utils],
   components: { AppLink, ItemIcon },
   props: {
     item: {
       type: Object,
       required: true,
-    },
-    isNest: {
-      type: Boolean,
-      default: false,
     },
   },
   computed: {

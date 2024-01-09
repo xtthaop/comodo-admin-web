@@ -2,11 +2,7 @@
   <el-breadcrumb class="app-breadcrumb" separator="/">
     <transition-group name="breadcrumb">
       <el-breadcrumb-item v-for="(item, index) in levelList" :key="resolveKey(item)">
-        <span
-          v-if="item.redirect === 'noRedirect' || index == levelList.length - 1"
-          class="no-redirect"
-          >{{ item.meta.title }}</span
-        >
+        <span v-if="index == levelList.length - 1" class="no-redirect">{{ item.meta.title }}</span>
         <a v-else @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
       </el-breadcrumb-item>
     </transition-group>
@@ -44,16 +40,16 @@ export default {
   methods: {
     getMatched(routes, sign, array) {
       for (let i = 0; i < routes.length; i++) {
-        if (routes[i].children && routes[i].children.length > 0) {
-          const res = this.getMatched(routes[i].children, sign, array)
-          if (res) {
-            array.unshift(routes[i])
-            return true
-          }
+        if (routes[i].meta?.id === sign || routes[i].path === sign) {
+          array.unshift(routes[i])
+          return true
         } else {
-          if ((routes[i].meta && routes[i].meta.id === sign) || routes[i].path === sign) {
-            array.unshift(routes[i])
-            return true
+          if (routes[i].children && routes[i].children.length > 0) {
+            const res = this.getMatched(routes[i].children, sign, array)
+            if (res) {
+              array.unshift(routes[i])
+              return true
+            }
           }
         }
       }
@@ -64,18 +60,16 @@ export default {
       this.getMatched(this.permissionroutes, lastMatched.meta?.id || lastMatched.path, matched)
       this.levelList = matched.filter((item) => item.meta?.title)
     },
+    // 深层次嵌套的路由跳转到存在动态参数的上一级时可根据此函数匹配到上一级参数
     pathCompile(path) {
       const { params } = this.$route
       var toPath = compile(path)
       return toPath(params)
     },
     handleLink(item) {
-      const { redirect, path, meta } = item
-      if (redirect) {
-        this.$router.push(redirect)
-        return
-      }
-      if (meta.type === 'M') {
+      const { path, meta, children } = item
+      if (meta.type === 'F') {
+        this.$router.push(this.pathCompile(children[0].path))
         return
       }
       this.$router.push(this.pathCompile(path))
@@ -96,23 +90,4 @@ export default {
     cursor: text;
   }
 }
-
-// .breadcrumb-enter-active,
-// .breadcrumb-leave-active {
-//   transition: all 0.5s;
-// }
-
-// .breadcrumb-enter-from,
-// .breadcrumb-leave-to {
-//   opacity: 0;
-//   transform: translateX(20px);
-// }
-
-// .breadcrumb-move {
-//   transition: all 0.5s;
-// }
-
-// .breadcrumb-leave-active {
-//   position: absolute;
-// }
 </style>

@@ -10,14 +10,7 @@
     <BaseBreadcrumb id="breadcrumb-container" class="breadcrumb-container" />
 
     <div class="right-menu">
-      <div
-        class="setting-wrapper"
-        v-if="showSettings"
-        @click.stop="settingVisible = !settingVisible"
-      >
-        <el-icon class="setting-icon"><Setting /></el-icon>
-      </div>
-      <el-dropdown class="avatar-container" trigger="hover" :show-timeout="0">
+      <el-dropdown class="avatar-container" trigger="hover" :show-timeout="200">
         <div class="avatar-wrapper">
           <div class="avatar">
             <span>{{ firstOfUsername }}</span>
@@ -28,7 +21,10 @@
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="handleModifyPassword">修改密码</el-dropdown-item>
-            <el-dropdown-item @click="handleLogOut">退出登录</el-dropdown-item>
+            <el-dropdown-item v-if="showSettings" @click.stop="settingVisible = !settingVisible"
+              >系统设置</el-dropdown-item
+            >
+            <el-dropdown-item divided @click="handleLogOut">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -36,14 +32,20 @@
 
     <ResetPwdForm ref="modifyForm" @logout="handleLogOut"></ResetPwdForm>
 
-    <RightPanel v-if="showSettings" v-model:show="settingVisible">
+    <el-drawer
+      v-model="settingVisible"
+      direction="rtl"
+      :append-to-body="true"
+      :show-close="false"
+      :with-header="false"
+      :size="260"
+    >
       <SystemSettings />
-    </RightPanel>
+    </el-drawer>
   </div>
 </template>
 
 <script>
-import RightPanel from '@/components/RightPanel/index.vue'
 import SystemSettings from './component/Settings/index.vue'
 import { mapGetters, mapState } from 'vuex'
 import ResetPwdForm from './component/ResetPwdForm.vue'
@@ -56,7 +58,6 @@ export default {
     ResetPwdForm,
     BaseHamburger,
     BaseBreadcrumb,
-    RightPanel,
     SystemSettings,
   },
   data() {
@@ -120,6 +121,10 @@ export default {
       cursor: pointer;
       margin-right: 20px;
 
+      :deep(.el-tooltip__trigger:focus-visible) {
+        outline: unset;
+      }
+
       .avatar-wrapper {
         display: flex;
         align-items: center;
@@ -143,23 +148,6 @@ export default {
         .caret-bottom {
           margin-left: 5px;
         }
-      }
-    }
-
-    .setting-wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 30px;
-      height: 30px;
-      margin-right: 15px;
-      border-radius: 5px;
-      text-align: center;
-      cursor: pointer;
-      background: var(--el-color-primary);
-
-      .setting-icon {
-        color: #fff;
       }
     }
   }

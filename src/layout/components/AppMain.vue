@@ -31,26 +31,19 @@ export default {
 }
 
 .fixed-header + .app-main {
+  min-height: 100vh;
   padding-top: 50px;
 }
 
-.hasTagsView {
+.has-tags-view {
   .app-main {
     /* 84 = navbar + tags-view = 50 + 34 */
     min-height: calc(100vh - 84px);
   }
 
   .fixed-header + .app-main {
+    min-height: 100vh;
     padding-top: 84px;
-  }
-}
-</style>
-
-<style lang="scss">
-// fix css style bug in open el-dialog
-.el-popup-parent--hidden {
-  .fixed-header {
-    padding-right: 15px;
   }
 }
 </style>

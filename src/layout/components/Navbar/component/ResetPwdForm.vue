@@ -72,11 +72,6 @@ export default {
       this.dialogVisible = true
     },
     reset() {
-      this.form = {
-        old_password: undefined,
-        new_password: undefined,
-        confirm_password: undefined,
-      }
       this.resetForm('resetPwdForm')
     },
     submitForm() {
@@ -95,7 +90,6 @@ export default {
       })
     },
     cancel() {
-      this.reset()
       this.dialogVisible = false
     },
   },

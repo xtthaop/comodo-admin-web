@@ -178,14 +178,9 @@ export default {
 }
 
 // 清除弹出框的边框和背景
-body > div[id^='el-popper-container'] > .sidebar-popper {
-  border: none;
-  background-color: transparent;
-
-  .sidebar-popper {
-    border: none;
-    background-color: transparent;
-  }
+.sidebar-popper {
+  border: none !important;
+  background-color: transparent !important;
 }
 
 // 折叠菜单时弹出菜单保持样式一致

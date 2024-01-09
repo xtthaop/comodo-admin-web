@@ -2,7 +2,7 @@
   <div class="drawer-container">
     <div>
       <div class="setting-drawer-content">
-        <div class="setting-drawer-title">页面设置</div>
+        <div class="setting-drawer-title">风格设置</div>
         <div class="setting-drawer-block-checbox">
           <div class="setting-drawer-block-checbox-item" @click="handleChangePageStyle('light')">
             <img src="@/assets/light.svg" alt="light" />
@@ -58,16 +58,16 @@
       <div class="setting-drawer-content">
         <div class="setting-drawer-title">布局设置</div>
         <div class="drawer-item">
-          <span>开启标签视图</span>
-          <el-switch v-model="tagsView" class="drawer-switch" />
+          <span>显示系统标识</span>
+          <el-switch v-model="sidebarLogo" class="drawer-switch" />
         </div>
         <div class="drawer-item">
           <span>固定顶部导航</span>
           <el-switch v-model="fixedHeader" class="drawer-switch" />
         </div>
         <div class="drawer-item">
-          <span>显示系统标识</span>
-          <el-switch v-model="sidebarLogo" class="drawer-switch" />
+          <span>开启标签视图</span>
+          <el-switch v-model="tagsView" class="drawer-switch" />
         </div>
       </div>
     </div>
@@ -122,10 +122,10 @@ export default {
   },
   methods: {
     handleChangePageStyle(val) {
-      if (val === 'light') {
-        addClass(document.body, 'light')
+      if (val === 'dark') {
+        addClass(document.documentElement, 'dark')
       } else {
-        removeClass(document.body, 'light')
+        removeClass(document.documentElement, 'dark')
       }
 
       this.$store.dispatch('settings/changeSetting', {
@@ -139,7 +139,7 @@ export default {
 
 <style lang="scss" scoped>
 .drawer-container {
-  padding: 24px;
+  padding: 10px;
   font-size: 14px;
   line-height: 1.5;
   word-wrap: break-word;

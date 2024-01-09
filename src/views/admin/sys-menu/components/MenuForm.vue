@@ -396,12 +396,21 @@ export default {
       this.handleInnerPage(node)
     },
     handleInnerPage(node) {
+      if (this.form.menu_id) return
       if (this.isInnerPage) {
         this.form.visible = 0
         this.form.is_link = 0
-        this.form.active_menu = node.path
+        this.changeActiveMenu(node)
       } else {
         this.form.active_menu = undefined
+      }
+    },
+    changeActiveMenu(node) {
+      if (!node.visible) {
+        const parentNode = this.$refs.treeSelect.getNode(node.parent_id)
+        this.changeActiveMenu(parentNode.data.nodeData)
+      } else {
+        this.form.active_menu = node.path
       }
     },
     reset() {

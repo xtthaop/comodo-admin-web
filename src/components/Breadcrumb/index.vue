@@ -12,7 +12,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import { compile } from 'path-to-regexp'
-import utils from '@/layout/components/Sidebar/components/utils'
+import utils from '@/layout/components/Sidebar/mixins/utils'
 
 export default {
   name: 'BaseBreadcrumb',

@@ -34,7 +34,7 @@
 <script>
 import ItemIcon from '@/components/UniIcon/index.vue'
 import AppLink from './Link.vue'
-import utils from './utils'
+import utils from '../mixins/utils'
 import { isExternal } from '@/utils/validate'
 import { mapState } from 'vuex'
 

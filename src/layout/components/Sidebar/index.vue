@@ -20,7 +20,7 @@
 import { mapState, mapGetters } from 'vuex'
 import SidebarLogo from './components/Logo.vue'
 import SidebarItem from './components/SidebarItem.vue'
-import utils from './components/utils'
+import utils from './mixins/utils'
 
 export default {
   name: 'BaseSidebar',

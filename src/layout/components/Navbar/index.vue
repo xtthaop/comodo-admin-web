@@ -51,9 +51,12 @@ import { mapGetters, mapState } from 'vuex'
 import ResetPwdForm from './component/ResetPwdForm.vue'
 import BaseHamburger from '@/components/Hamburger/index.vue'
 import BaseBreadcrumb from '@/components/Breadcrumb/index.vue'
+import Cookies from 'js-cookie'
+import utils from './mixins/utils'
 
 export default {
   name: 'BaseNavbar',
+  mixins: [utils],
   components: {
     ResetPwdForm,
     BaseHamburger,
@@ -69,10 +72,15 @@ export default {
     ...mapGetters(['sidebar', 'username']),
     ...mapState({
       showSettings: (state) => state.settings.showSettings,
+      pageStyle: (state) => state.settings.pageStyle,
     }),
     firstOfUsername() {
       return this.username.substr(0, 1).toUpperCase()
     },
+  },
+  created() {
+    const pageStyle = Cookies.get('pageStyle') || this.pageStyle
+    this.handleChangePageStyle(pageStyle)
   },
   methods: {
     toggleSideBar() {

@@ -75,10 +75,11 @@
 </template>
 
 <script>
-import { addClass, removeClass } from '@/utils'
+import utils from '../../mixins/utils'
 
 export default {
   name: 'SystemSetting',
+  mixins: [utils],
   data() {
     return {}
   },
@@ -118,20 +119,6 @@ export default {
           value: val,
         })
       },
-    },
-  },
-  methods: {
-    handleChangePageStyle(val) {
-      if (val === 'dark') {
-        addClass(document.documentElement, 'dark')
-      } else {
-        removeClass(document.documentElement, 'dark')
-      }
-
-      this.$store.dispatch('settings/changeSetting', {
-        key: 'pageStyle',
-        value: val,
-      })
     },
   },
 }

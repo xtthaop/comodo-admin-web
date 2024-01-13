@@ -12,7 +12,7 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="hover" :show-timeout="200">
         <div class="avatar-wrapper">
-          <div class="avatar">
+          <div :class="['avatar', pageStyle]">
             <span>{{ firstOfUsername }}</span>
           </div>
           <el-icon class="caret-bottom"><CaretBottom /></el-icon>
@@ -141,13 +141,19 @@ export default {
           display: inline-block;
           width: 30px;
           height: 30px;
-          background: #333;
+          background: #2b2f3a;
+          color: #fff;
           border-radius: 5px;
           text-align: center;
           transition: all 0.1s;
 
+          &.light {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            color: #303133;
+          }
+
           span {
-            color: #fff;
             line-height: 30px;
             font-size: 16px;
           }

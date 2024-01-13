@@ -5,10 +5,11 @@ const state = {
 
 const mutations = {
   ADD_VISITED_VIEW: (state, view) => {
-    if (state.visitedViews.some((v) => v.path === view.path)) return
+    if (view.meta.noTagView === true) return
+    if (state.visitedViews.some((v) => v.fullPath === view.fullPath)) return
     state.visitedViews.push(
       Object.assign({}, view, {
-        title: view.meta.title || 'no-name',
+        title: view.meta?.title || '未知',
       })
     )
   },
@@ -21,7 +22,7 @@ const mutations = {
 
   DEL_VISITED_VIEW: (state, view) => {
     for (const [i, v] of state.visitedViews.entries()) {
-      if (v.path === view.path) {
+      if (v.fullPath === view.fullPath) {
         state.visitedViews.splice(i, 1)
         break
       }
@@ -34,7 +35,7 @@ const mutations = {
 
   DEL_OTHERS_VISITED_VIEWS: (state, view) => {
     state.visitedViews = state.visitedViews.filter((v) => {
-      return v.meta.affix || v.path === view.path
+      return v.meta.affix || v.fullPath === view.fullPath
     })
   },
   DEL_OTHERS_CACHED_VIEWS: (state, view) => {
@@ -55,22 +56,9 @@ const mutations = {
   DEL_ALL_CACHED_VIEWS: (state) => {
     state.cachedViews = []
   },
-
-  UPDATE_VISITED_VIEW: (state, view) => {
-    for (let v of state.visitedViews) {
-      if (v.path === view.path) {
-        v = Object.assign(v, view)
-        break
-      }
-    }
-  },
 }
 
 const actions = {
-  addView({ dispatch }, view) {
-    dispatch('addVisitedView', view)
-    dispatch('addCachedView', view)
-  },
   addVisitedView({ commit }, view) {
     commit('ADD_VISITED_VIEW', view)
   },
@@ -145,10 +133,6 @@ const actions = {
       commit('DEL_ALL_CACHED_VIEWS')
       resolve([...state.cachedViews])
     })
-  },
-
-  updateVisitedView({ commit }, view) {
-    commit('UPDATE_VISITED_VIEW', view)
   },
 }
 

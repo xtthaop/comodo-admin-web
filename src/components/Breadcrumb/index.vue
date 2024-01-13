@@ -64,7 +64,7 @@ export default {
     pathCompile(path) {
       const { params } = this.$route
       var toPath = compile(path)
-      return toPath(params)
+      return toPath(params) + window.location.search
     },
     handleLink(item) {
       const { path, meta, children } = item

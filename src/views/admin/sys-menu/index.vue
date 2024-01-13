@@ -49,7 +49,6 @@
         />
         <el-table-column prop="menu_id" label="ID" align="center" width="60px" />
         <el-table-column prop="icon" label="图标" align="center" width="80px">
-          <!-- TODO: 引入 el-icon 图标 -->
           <template #default="scope">
             <span v-if="!scope.row.icon">——</span>
             <span v-else><UniIcon :icon="scope.row.icon" /></span>

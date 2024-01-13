@@ -1,16 +1,11 @@
 <template>
-  <el-scrollbar
-    ref="scrollContainer"
-    :vertical="false"
-    class="scroll-container"
-    @wheel.prevent="handleScroll"
-  >
-    <slot />
+  <el-scrollbar ref="scrollContainer" class="scroll-container" @wheel.prevent="handleScroll">
+    <slot></slot>
   </el-scrollbar>
 </template>
 
 <script>
-const tagAndTagSpacing = 4 // tagAndTagSpacing
+const tagAndTagSpacing = 5
 
 export default {
   name: 'ScrollPane',
@@ -32,9 +27,8 @@ export default {
   },
   methods: {
     handleScroll(e) {
-      const eventDelta = -e.wheelDelta || e.deltaY * 40
-      const $scrollWrapper = this.scrollWrapper
-      $scrollWrapper.scrollLeft = $scrollWrapper.scrollLeft + eventDelta / 4
+      const eventDelta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
+      this.scrollWrapper.scrollLeft += eventDelta / 5
     },
     emitScroll() {
       this.$emit('scroll')
@@ -89,13 +83,8 @@ export default {
   overflow: hidden;
   width: 100%;
 
-  :deep() {
-    .el-scrollbar__bar {
-      bottom: 0px;
-    }
-    .el-scrollbar__wrap {
-      height: 49px;
-    }
+  :deep(.el-scrollbar__bar) {
+    bottom: 0px;
   }
 }
 </style>

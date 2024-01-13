@@ -4,22 +4,24 @@
       <router-link
         v-for="tag in visitedViews"
         ref="tag"
-        :key="tag.path"
+        class="tags-view-item"
+        :key="tag.fullPath"
         :class="isActive(tag) ? 'active' : ''"
         :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
-        class="tags-view-item"
-        @click.middle="!isAffix(tag) ? closeSelectedTag(tag) : ''"
         @contextmenu.prevent="openMenu(tag, $event)"
       >
         {{ tag.title }}
-        <span
-          v-if="!isAffix(tag)"
+        <el-icon
+          v-if="!isAffix(tag) && isActive(tag)"
           class="el-icon-close"
           @click.prevent.stop="closeSelectedTag(tag)"
-        ></span>
+        >
+          <Close />
+        </el-icon>
       </router-link>
     </scroll-pane>
     <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
+      <!--TODO: 菜单选择缓存时路由名称必填，头像焕肤-->
       <li @click="refreshSelectedTag(selectedTag)">刷新当前标签页</li>
       <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">关闭当前标签页</li>
       <li @click="closeOthersTags">关闭其他标签页</li>
@@ -30,6 +32,7 @@
 
 <script>
 import ScrollPane from './ScrollPane.vue'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'TagsView',
@@ -44,12 +47,10 @@ export default {
     }
   },
   computed: {
-    visitedViews() {
-      return this.$store.state.tagsView.visitedViews
-    },
-    routes() {
-      return this.$store.state.permission.routes
-    },
+    ...mapGetters(['permissionroutes']),
+    ...mapState({
+      visitedViews: (state) => state.tagsView.visitedViews,
+    }),
   },
   watch: {
     $route() {
@@ -70,7 +71,7 @@ export default {
   },
   methods: {
     isActive(route) {
-      return route.path === this.$route.path
+      return route.fullPath === this.$route.fullPath
     },
     isAffix(tag) {
       return tag.meta && tag.meta.affix
@@ -88,7 +89,7 @@ export default {
           })
         }
         if (route.children) {
-          const tempTags = this.filterAffixTags(route.children, route.path)
+          const tempTags = this.filterAffixTags(route.children)
           if (tempTags.length >= 1) {
             tags = [...tags, ...tempTags]
           }
@@ -97,18 +98,19 @@ export default {
       return tags
     },
     initTags() {
-      const affixTags = (this.affixTags = this.filterAffixTags(this.routes))
+      const affixTags = (this.affixTags = this.filterAffixTags(this.permissionroutes))
       for (const tag of affixTags) {
-        // Must have tag name
+        this.$store.dispatch('tagsView/addVisitedView', tag)
         if (tag.name) {
-          this.$store.dispatch('tagsView/addVisitedView', tag)
+          this.$store.dispatch('tagsView/addCachedView', tag)
         }
       }
     },
     addTags() {
       const { name } = this.$route
+      this.$store.dispatch('tagsView/addVisitedView', this.$route)
       if (name) {
-        this.$store.dispatch('tagsView/addView', this.$route)
+        this.$store.dispatch('tagsView/addCachedView', this.$route)
       }
       return false
     },
@@ -116,12 +118,8 @@ export default {
       const tags = this.$refs.tag
       this.$nextTick(() => {
         for (const tag of tags) {
-          if (tag.to.path === this.$route.path) {
+          if (tag.to.fullPath === this.$route.fullPath) {
             this.$refs.scrollPane.moveToTarget(tag)
-            // when query is different then update
-            if (tag.to.fullPath !== this.$route.fullPath) {
-              this.$store.dispatch('tagsView/updateVisitedView', this.$route)
-            }
             break
           }
         }
@@ -129,10 +127,11 @@ export default {
     },
     refreshSelectedTag(view) {
       this.$store.dispatch('tagsView/delCachedView', view).then(() => {
-        const { fullPath } = view
+        const { path, query } = view
         this.$nextTick(() => {
           this.$router.replace({
-            path: '/redirect' + fullPath,
+            path: '/redirect' + path,
+            query,
           })
         })
       })
@@ -146,13 +145,11 @@ export default {
     },
     closeOthersTags() {
       this.$router.push(this.selectedTag)
-      this.$store.dispatch('tagsView/delOthersViews', this.selectedTag).then(() => {
-        this.moveToCurrentTag()
-      })
+      this.$store.dispatch('tagsView/delOthersViews', this.selectedTag)
     },
     closeAllTags(view) {
       this.$store.dispatch('tagsView/delAllViews').then(({ visitedViews }) => {
-        if (this.affixTags.some((tag) => tag.path === view.path)) {
+        if (this.affixTags.some((tag) => tag.fullPath === view.fullPath)) {
           return
         }
         this.toLastView(visitedViews, view)
@@ -167,21 +164,21 @@ export default {
         // you can adjust it according to your needs.
         if (view.name === 'Dashboard') {
           // to reload home page
-          this.$router.replace({ path: '/redirect' + view.fullPath })
+          this.$router.replace({ path: '/redirect' + view.path, query: view.query })
         } else {
           this.$router.push('/')
         }
       }
     },
     openMenu(tag, e) {
-      const menuMinWidth = 105
+      const menuMinWidth = 116
       const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
       const offsetWidth = this.$el.offsetWidth // container width
       const maxLeft = offsetWidth - menuMinWidth // left boundary
-      const left = e.clientX - offsetLeft + 15 // 15: margin right
+      const left = e.clientX - offsetLeft + 15
 
       if (left > maxLeft) {
-        this.left = maxLeft
+        this.left = left - menuMinWidth - 30
       } else {
         this.left = left
       }
@@ -206,14 +203,20 @@ export default {
   width: 100%;
   background: #fff;
   border-bottom: 1px solid #eee;
+
   .tags-view-wrapper {
+    display: flex;
+    align-items: center;
+
     .tags-view-item {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
       position: relative;
       cursor: pointer;
       height: 25px;
       line-height: 25px;
       border: 1px solid #e4e7ed;
+      border-radius: 5px;
       color: #495060;
       background: #fff;
       padding: 0 8px;
@@ -227,29 +230,33 @@ export default {
         margin-right: 10px;
       }
       &.active {
-        color: var(--active-color);
-        border-color: #e4e7ed;
-        &::before {
-          content: '';
-          background: var(--active-color);
-          display: inline-block;
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-          position: relative;
-          margin-right: 2px;
+        color: var(--el-color-primary);
+        border-color: var(--el-color-primary);
+      }
+
+      .el-icon-close {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        text-align: center;
+        transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        transform-origin: 100% 50%;
+        margin-left: 8px;
+        &:hover {
+          background-color: #fe5f57;
+          color: #fff;
         }
       }
     }
   }
   .contextmenu {
+    position: absolute;
     margin: 0;
     background: #fff;
     z-index: 3000;
-    position: absolute;
     list-style-type: none;
     padding: 5px 0;
-    border-radius: 4px;
+    border-radius: 5px;
     font-size: 12px;
     font-weight: 400;
     color: #333;
@@ -259,34 +266,7 @@ export default {
       padding: 7px 16px;
       cursor: pointer;
       &:hover {
-        background: #eee;
-      }
-    }
-  }
-}
-</style>
-
-<style lang="scss">
-//reset element css of el-icon-close
-.tags-view-wrapper {
-  .tags-view-item {
-    .el-icon-close {
-      width: 16px;
-      height: 16px;
-      vertical-align: 2px;
-      border-radius: 50%;
-      text-align: center;
-      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-      transform-origin: 100% 50%;
-      margin-left: 2px;
-      &:before {
-        transform: scale(0.9);
-        display: inline-block;
-        vertical-align: -3px;
-      }
-      &:hover {
-        background-color: #b4bccc;
-        color: #fff;
+        background: #e6f4ff;
       }
     }
   }

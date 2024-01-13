@@ -104,7 +104,7 @@
             <el-col :span="12" v-if="form.menu_type != 'B'">
               <el-form-item>
                 <template #label>
-                  <span>是否显示</span>
+                  <span>是否显示菜单</span>
                 </template>
                 <el-radio-group v-model="form.visible" :disabled="disabled || isInnerPage">
                   <el-radio
@@ -119,7 +119,7 @@
             <el-col :span="12" v-if="form.menu_type === 'P'">
               <el-form-item>
                 <template #label>
-                  <span>是否外链</span>
+                  <span>是否为外部链接</span>
                 </template>
                 <el-radio-group v-model="form.is_link" :disabled="disabled || isInnerPage">
                   <el-radio :label="1">是</el-radio>
@@ -129,9 +129,51 @@
             </el-col>
 
             <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
-              <el-form-item prop="route_name">
+              <el-form-item>
                 <template #label>
-                  <span>路由名称</span>
+                  <span>是否使用缓存</span>
+                </template>
+                <el-radio-group
+                  v-model="form.cache"
+                  :disabled="disabled"
+                  @change="$refs.menuForm.clearValidate('route_name')"
+                >
+                  <el-radio :label="1">使用</el-radio>
+                  <el-radio :label="0">不使用</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
+              <el-form-item>
+                <template #label>
+                  <span>是否显示布局</span>
+                </template>
+                <el-radio-group v-model="form.layout" :disabled="disabled">
+                  <el-radio :label="1">显示</el-radio>
+                  <el-radio :label="0">不显示</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
+              <el-form-item
+                prop="route_name"
+                :rules="
+                  form.cache
+                    ? [{ required: this.form?.cache, message: '路由名称不能为空', trigger: 'blur' }]
+                    : null
+                "
+              >
+                <template #label>
+                  <span style="margin-right: 5px; vertical-align: middle">路由名称</span>
+                  <el-tooltip
+                    v-if="form.cache"
+                    content="使用缓存需保持路由名称与组件名称一致"
+                    placement="top"
+                    effect="light"
+                  >
+                    <el-tag effect="light" type="danger" size="small">重要提醒</el-tag>
+                  </el-tooltip>
                 </template>
                 <el-input
                   v-model="form.route_name"
@@ -195,30 +237,6 @@
                   maxlength="255"
                   :disabled="disabled"
                 />
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
-              <el-form-item>
-                <template #label>
-                  <span>显示布局</span>
-                </template>
-                <el-radio-group v-model="form.layout" :disabled="disabled">
-                  <el-radio :label="1">是</el-radio>
-                  <el-radio :label="0">否</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
-              <el-form-item>
-                <template #label>
-                  <!-- TODO: 验证使用缓存的话路由名称是否必填 -->
-                  <span>使用缓存</span>
-                </template>
-                <el-radio-group v-model="form.cache" :disabled="disabled">
-                  <el-radio :label="1">是</el-radio>
-                  <el-radio :label="0">否</el-radio>
-                </el-radio-group>
               </el-form-item>
             </el-col>
 

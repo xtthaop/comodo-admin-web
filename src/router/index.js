@@ -4,8 +4,15 @@ import store from '@/store'
 import Login from '@/views/login/index.vue'
 import Dashboard from '@/views/dashboard/index.vue'
 import Page404 from '@/views/error-page/404.vue'
+import BaseRedirect from '@/views/redirect/index.vue'
 
 export const constantRoutes = [
+  {
+    path: '/redirect/:path(.*)',
+    hidden: true,
+    component: BaseRedirect,
+    meta: { layout: true, noTagView: true },
+  },
   {
     path: '/login',
     name: 'LoginPage',

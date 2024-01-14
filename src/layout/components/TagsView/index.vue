@@ -23,7 +23,6 @@
       </div>
     </scroll-pane>
     <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
-      <!--TODO: 标签可拖动位置 -->
       <li @click="refreshSelectedTag(selectedTag)">刷新当前标签页</li>
       <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">关闭当前标签页</li>
       <li @click="closeOthersTags">关闭其他标签页</li>
@@ -56,7 +55,7 @@ export default {
         return this.$store.state.tagsView.visitedViews
       },
       set(value) {
-        this.$store.commit('updateList', value)
+        this.$store.dispatch('tagsView/updateList', value)
       },
     },
   },
@@ -84,8 +83,20 @@ export default {
   methods: {
     initDraggable() {
       const el = document.getElementById('draggable-tags')
-      const sortableOptions = { group: 'draggable-tags', animation: 500, ghostClass: 'ghost' }
+      const sortableOptions = {
+        group: 'draggable-tags',
+        animation: 500,
+        ghostClass: 'ghost',
+        onUpdate: this.onDragUpdate,
+      }
       this._sortable = new Sortable(el, sortableOptions)
+    },
+    onDragUpdate(evt) {
+      const { oldIndex, newIndex } = evt
+      const newList = [...this.visitedViews]
+      newList.splice(newIndex, 0, newList.splice(oldIndex, 1)[0])
+      this.visitedViews = newList
+      this.$refs.tag.splice(newIndex, 0, this.$refs.tag.splice(oldIndex, 1)[0])
     },
     isActive(route) {
       return route.fullPath === this.$route.fullPath

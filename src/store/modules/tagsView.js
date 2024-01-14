@@ -56,6 +56,10 @@ const mutations = {
   DEL_ALL_CACHED_VIEWS: (state) => {
     state.cachedViews = []
   },
+
+  UPDATE_LIST: (state, viewList) => {
+    state.visitedViews = viewList
+  },
 }
 
 const actions = {
@@ -133,6 +137,10 @@ const actions = {
       commit('DEL_ALL_CACHED_VIEWS')
       resolve([...state.cachedViews])
     })
+  },
+
+  updateList({ commit }, viewList) {
+    commit('UPDATE_LIST', viewList)
   },
 }
 

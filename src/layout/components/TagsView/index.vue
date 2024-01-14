@@ -1,27 +1,29 @@
 <template>
   <div id="tags-view-container" class="tags-view-container">
     <scroll-pane ref="scrollPane" class="tags-view-wrapper" @scroll="handleScroll">
-      <router-link
-        v-for="tag in visitedViews"
-        ref="tag"
-        class="tags-view-item"
-        :key="tag.fullPath"
-        :class="isActive(tag) ? 'active' : ''"
-        :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
-        @contextmenu.prevent="openMenu(tag, $event)"
-      >
-        {{ tag.title }}
-        <el-icon
-          v-if="!isAffix(tag) && isActive(tag)"
-          class="el-icon-close"
-          @click.prevent.stop="closeSelectedTag(tag)"
+      <div id="draggable-tags">
+        <router-link
+          v-for="tag in visitedViews"
+          ref="tag"
+          class="tags-view-item"
+          :key="tag.fullPath"
+          :class="isActive(tag) ? 'active' : ''"
+          :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
+          @contextmenu.prevent="openMenu(tag, $event)"
         >
-          <Close />
-        </el-icon>
-      </router-link>
+          {{ tag.title }}
+          <el-icon
+            v-if="!isAffix(tag) && isActive(tag)"
+            class="el-icon-close"
+            @click.prevent.stop="closeSelectedTag(tag)"
+          >
+            <Close />
+          </el-icon>
+        </router-link>
+      </div>
     </scroll-pane>
     <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
-      <!--TODO: 菜单选择缓存时路由名称必填，头像焕肤-->
+      <!--TODO: 标签可拖动位置 -->
       <li @click="refreshSelectedTag(selectedTag)">刷新当前标签页</li>
       <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">关闭当前标签页</li>
       <li @click="closeOthersTags">关闭其他标签页</li>
@@ -31,8 +33,9 @@
 </template>
 
 <script>
+import Sortable from 'sortablejs'
 import ScrollPane from './ScrollPane.vue'
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'TagsView',
@@ -48,9 +51,14 @@ export default {
   },
   computed: {
     ...mapGetters(['permissionroutes']),
-    ...mapState({
-      visitedViews: (state) => state.tagsView.visitedViews,
-    }),
+    visitedViews: {
+      get() {
+        return this.$store.state.tagsView.visitedViews
+      },
+      set(value) {
+        this.$store.commit('updateList', value)
+      },
+    },
   },
   watch: {
     $route() {
@@ -68,8 +76,17 @@ export default {
   mounted() {
     this.initTags()
     this.addTags()
+    this.initDraggable()
+  },
+  beforeUnmount() {
+    if (this._sortable !== undefined) this._sortable.destroy()
   },
   methods: {
+    initDraggable() {
+      const el = document.getElementById('draggable-tags')
+      const sortableOptions = { group: 'draggable-tags', animation: 500, ghostClass: 'ghost' }
+      this._sortable = new Sortable(el, sortableOptions)
+    },
     isActive(route) {
       return route.fullPath === this.$route.fullPath
     },
@@ -270,5 +287,9 @@ export default {
       }
     }
   }
+}
+
+.ghost {
+  opacity: 0;
 }
 </style>

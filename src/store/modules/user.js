@@ -60,9 +60,9 @@ const actions = {
         })
     })
   },
-  logout({ commit, state }) {
+  logout({ commit }) {
     return new Promise((resolve, reject) => {
-      logout({ token: state.token })
+      logout()
         .then(() => {
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
@@ -73,6 +73,15 @@ const actions = {
         .catch((error) => {
           reject(error)
         })
+    })
+  },
+  resetToken({ commit }) {
+    return new Promise((resolve) => {
+      commit('SET_TOKEN', '')
+      commit('SET_ROLES', [])
+      removeToken()
+      resetRouter()
+      resolve()
     })
   },
 }

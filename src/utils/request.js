@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { getToken } from '@/utils/auth'
 import store from '@/store'
+import router from '@/router'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
 let messageBoxFlag = 0
@@ -53,9 +54,11 @@ service.interceptors.response.use(
           cancelButtonText: '取消',
           type: 'warning',
         })
-          .then(() => {
+          .then(async () => {
             messageBoxFlag = 0
-            store.dispatch('user/logout')
+            await store.dispatch('user/resetToken')
+            const location = window.location
+            router.push(`/login?redirect=${location.pathname}&${location.search.substring(1)}`)
           })
           .catch(() => {
             messageBoxFlag = 0

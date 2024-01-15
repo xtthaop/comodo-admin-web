@@ -18,11 +18,10 @@ export function login(data) {
 }
 
 // 退出登录
-export function logout(data) {
+export function logout() {
   return request({
     url: '/api/user/logout',
     method: 'post',
-    data,
   })
 }
 

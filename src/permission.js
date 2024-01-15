@@ -26,10 +26,16 @@ router.beforeEach(async (to) => {
           return to.fullPath
         } catch (error) {
           // eslint-disable-next-line
-          console.error(error || 'Has Error')
-          await store.dispatch('user/logout')
-          const otherQuery = window.location.search.substring(1)
-          return `/login?redirect=${to.path}&${otherQuery}`
+          console.error(error || 'Permission has error when routing...')
+          try {
+            await store.dispatch('user/logout')
+            const otherQuery = window.location.search.substring(1)
+            return `/login?redirect=${to.path}&${otherQuery}`
+          } catch (e) {
+            // eslint-disable-next-line
+            console.error(e || 'Logout has error when routing...')
+            return false
+          }
         }
       }
     }

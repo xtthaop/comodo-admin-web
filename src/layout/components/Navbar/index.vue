@@ -100,7 +100,7 @@ export default {
 <style lang="scss" scoped>
 .navbar {
   height: 50px;
-  background-color: #f5f5f5;
+  background-color: #fff;
 
   .hamburger-container {
     line-height: 46px;
@@ -109,10 +109,6 @@ export default {
     cursor: pointer;
     transition: all 0.3s;
     -webkit-tap-highlight-color: transparent;
-
-    &:hover {
-      background: rgba(0, 0, 0, 0.025);
-    }
   }
 
   .breadcrumb-container {

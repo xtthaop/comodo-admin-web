@@ -23,10 +23,10 @@
       </div>
     </scroll-pane>
     <ul v-show="visible" :style="{ left: left + 'px', top: top + 'px' }" class="contextmenu">
-      <li @click="refreshSelectedTag(selectedTag)">刷新当前标签页</li>
-      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">关闭当前标签页</li>
-      <li @click="closeOthersTags">关闭其他标签页</li>
-      <li @click="closeAllTags(selectedTag)">关闭所有标签页</li>
+      <li @click="refreshSelectedTag(selectedTag)">刷新</li>
+      <li v-if="!isAffix(selectedTag)" @click="closeSelectedTag(selectedTag)">关闭</li>
+      <li @click="closeOthersTags">关闭其他</li>
+      <li @click="closeAllTags(selectedTag)">关闭所有</li>
     </ul>
   </div>
 </template>
@@ -177,9 +177,6 @@ export default {
     },
     closeAllTags(view) {
       this.$store.dispatch('tagsView/delAllViews').then(({ visitedViews }) => {
-        if (this.affixTags.some((tag) => tag.fullPath === view.fullPath)) {
-          return
-        }
         this.toLastView(visitedViews, view)
       })
     },

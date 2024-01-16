@@ -152,13 +152,13 @@ export default {
 <style lang="scss" scoped>
 .login-container {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
   background-color: #ebeff5;
   overflow: hidden;
 
   .login-card {
     position: relative;
-    width: 430px;
+    width: 380px;
     margin: 130px auto 0;
     padding: 100px 50px 80px;
     background: #fff;

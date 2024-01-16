@@ -18,7 +18,13 @@
     </div>
     <div class="slider-container" id="slider">
       <div class="status" :style="status"><span v-show="!btnShow">拼接成功！</span></div>
-      <div class="btn" @mousedown.prevent="drag" :style="btnStyle" v-show="btnShow">
+      <div
+        class="btn"
+        @mousedown.prevent="drag"
+        @touchstart.prevent="drag"
+        :style="btnStyle"
+        v-show="btnShow"
+      >
         <el-icon><Right /></el-icon>
       </div>
       <div class="track">向右滑动完成拼图</div>
@@ -98,7 +104,7 @@ export default {
       }
     },
     drag(e) {
-      this.downX = e.x
+      this.downX = e.x || e.touches[0].pageX
 
       this.btnStyle.transition = ''
       this.status.transition = ''
@@ -106,9 +112,13 @@ export default {
 
       document.getElementById('slider').addEventListener('mousemove', this.move)
       document.addEventListener('mouseup', this.up)
+
+      document.getElementById('slider').addEventListener('touchmove', this.move)
+      document.addEventListener('touchend', this.up)
     },
     move(e) {
-      this.offset = e.x - this.downX
+      const x = e.x || e.touches[0].pageX
+      this.offset = x - this.downX
 
       if (this.offset >= 320 - 52 || this.offset <= 0) return
 
@@ -119,6 +129,9 @@ export default {
     up() {
       document.getElementById('slider').removeEventListener('mousemove', this.move)
       document.removeEventListener('mouseup', this.up)
+
+      document.getElementById('slider').removeEventListener('touchmove', this.move)
+      document.removeEventListener('touchend', this.up)
 
       this.$emit('verify', this.offset)
     },

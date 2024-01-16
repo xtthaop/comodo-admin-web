@@ -19,8 +19,8 @@
       </el-form>
 
       <template #footer>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -55,12 +55,7 @@ export default {
       this.dialogVisible = true
     },
     reset() {
-      this.form = {
-        id: undefined,
-        title: undefined,
-        path: undefined,
-        type: undefined,
-      }
+      this.form.id = undefined
       this.resetForm('apiForm')
     },
     submitForm() {
@@ -89,7 +84,6 @@ export default {
       })
     },
     cancel() {
-      this.reset()
       this.dialogVisible = false
     },
   },

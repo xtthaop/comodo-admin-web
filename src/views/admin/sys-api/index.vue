@@ -58,7 +58,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" prop="created_at" width="160px">
+        <el-table-column label="创建时间" prop="created_at" width="180px">
           <template #default="scope">
             <span>{{ parseTime(scope.row.created_at) }}</span>
           </template>

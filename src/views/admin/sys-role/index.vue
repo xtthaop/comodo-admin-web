@@ -98,7 +98,7 @@
 
 <script>
 import RoleForm from './components/RoleForm.vue'
-import { getRoleList, deleteRole, changeRoleStatus } from '@/api/admin/sys-role'
+import { getRoleList, deleteRole, updateRole } from '@/api/admin/sys-role'
 
 export default {
   name: 'SysRole',
@@ -154,11 +154,8 @@ export default {
         type: 'warning',
       })
         .then(() => {
-          const data = {
-            role_id: row.role_id,
-            status: row.status,
-          }
-          changeRoleStatus(data).catch(() => {
+          const data = Object.assign(row, { status: row.status })
+          updateRole(data).catch(() => {
             row.status = row.status === 0 ? 1 : 0
           })
         })

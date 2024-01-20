@@ -331,6 +331,7 @@ export default {
   },
   methods: {
     open(type, item) {
+      this.dialogVisible = true
       this.reset()
       if (type === 'add') {
         if (item) {
@@ -342,12 +343,11 @@ export default {
         if (item.permission === 'admin:sysmenu') {
           this.disabled = true
         }
-        this.form = Object.assign({}, item)
+        Object.assign(this.form, item)
         this.form.apis = this.form.api_list.map((api) => api.id)
         this.title = '修改菜单'
       }
 
-      this.dialogVisible = true
       this.getTreeSelect()
       this.$nextTick(() => {
         this.$refs.formContainer.scrollTop = 0

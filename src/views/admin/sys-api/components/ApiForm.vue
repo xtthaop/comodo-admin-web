@@ -1,9 +1,15 @@
 <template>
   <div>
-    <el-dialog :title="title" v-model="dialogVisible" width="500px">
+    <el-dialog
+      :title="title"
+      v-model="dialogVisible"
+      :close-on-click-modal="false"
+      :draggable="true"
+      width="500px"
+    >
       <el-form ref="apiForm" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="接口名称" prop="title">
-          <el-input v-model="form.title" placeholder="接口名称" />
+          <el-input v-model="form.title" placeholder="接口名称" maxlength="128" />
         </el-form-item>
         <el-form-item label="请求类型" prop="type">
           <el-select v-model="form.type" placeholder="请选择请求类型" clearable>
@@ -14,7 +20,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="接口路径" prop="path">
-          <el-input v-model="form.path" placeholder="请求地址" />
+          <el-input v-model="form.path" placeholder="请求地址" maxlength="128" />
         </el-form-item>
       </el-form>
 
@@ -45,14 +51,16 @@ export default {
   },
   methods: {
     open(item) {
+      this.dialogVisible = true
+      this.reset()
       if (!item) {
-        this.reset()
         this.title = '新增接口'
       } else {
-        this.form = Object.assign({}, item)
+        this.$nextTick(() => {
+          Object.assign(this.form, item)
+        })
         this.title = '编辑接口'
       }
-      this.dialogVisible = true
     },
     reset() {
       this.form.id = undefined

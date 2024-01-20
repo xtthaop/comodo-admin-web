@@ -1,22 +1,38 @@
 <template>
   <div>
-    <el-dialog :title="title" v-model="dialogVisible" width="600px">
+    <el-dialog
+      :title="title"
+      v-model="dialogVisible"
+      :close-on-click-modal="false"
+      :draggable="true"
+      width="600px"
+    >
       <el-form ref="roleForm" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="角色名称" prop="role_name">
-          <el-input v-model="form.role_name" placeholder="请输入角色名称" />
+          <el-input v-model="form.role_name" placeholder="请输入角色名称" maxlength="128" />
         </el-form-item>
         <el-form-item label="角色标识" prop="role_key">
-          <el-input v-model="form.role_key" placeholder="请输入权限字符" :disabled="disabled" />
+          <el-input
+            v-model="form.role_key"
+            placeholder="请输入权限字符"
+            :disabled="disabled"
+            maxlength="128"
+          />
         </el-form-item>
         <el-form-item label="角色顺序" prop="role_sort">
-          <el-input-number v-model="form.role_sort" controls-position="right" :min="0" />
+          <el-input-number
+            v-model="form.role_sort"
+            controls-position="right"
+            :min="0"
+            :max="100000"
+          />
         </el-form-item>
-        <el-form-item label="状态">
+        <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status" :disabled="disabled">
             <el-radio
               v-for="dict in statusOptions"
               :key="dict.dict_value"
-              :label="dict.dict_value"
+              :label="Number(dict.dict_value)"
               >{{ dict.dict_label }}</el-radio
             >
           </el-radio-group>
@@ -35,8 +51,14 @@
             <span style="color: #ccc; font-weight: 500">系统管理员不需要设置菜单权限</span>
           </div>
         </el-form-item>
-        <el-form-item label="备注">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+        <el-form-item label="备注" prop="remark">
+          <el-input
+            v-model="form.remark"
+            type="textarea"
+            placeholder="请输入内容"
+            maxlength="255"
+            show-word-limit
+          />
         </el-form-item>
       </el-form>
       <template #footer>
@@ -64,7 +86,8 @@ export default {
       title: '',
       dialogVisible: false,
       form: {
-        sysMenu: [],
+        role_sort: 0,
+        status: 1,
       },
       rules: {
         role_name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
@@ -84,6 +107,7 @@ export default {
   },
   methods: {
     open(item) {
+      this.dialogVisible = true
       this.reset()
       if (!item) {
         this.title = '新增角色'
@@ -91,17 +115,18 @@ export default {
         if (item.role_key === 'admin') {
           this.disabled = true
         }
-        this.form = Object.assign({}, item)
-        this.form.status = String(this.form.status)
         this.$nextTick(() => {
-          this.handleSetCheckedKeys(this.form.menu_list.map((i) => i.menu_id))
+          Object.assign(this.form, item)
         })
         this.title = '编辑角色'
       }
-      this.dialogVisible = true
+
+      this.$nextTick(() => {
+        this.handleSetCheckedKeys(this.form.menu_ids)
+      })
     },
     handleSetCheckedKeys(menuIds) {
-      if (menuIds.length) {
+      if (menuIds && menuIds.length) {
         const filterCheckedKeys = []
         menuIds.forEach((item) => {
           const node = this.$refs.menuTree.getNode(item)
@@ -120,18 +145,8 @@ export default {
       })
     },
     reset() {
-      if (this.$refs.menuTree !== undefined) {
-        this.$refs.menuTree.setCheckedKeys([])
-      }
-      this.form = {
-        role_id: undefined,
-        role_name: undefined,
-        role_key: undefined,
-        role_sort: 0,
-        status: '1',
-        menu_ids: [],
-        remark: undefined,
-      }
+      this.form.role_id = undefined
+      this.form.menu_ids = undefined
       this.disabled = false
       this.resetForm('roleForm')
     },
@@ -165,7 +180,6 @@ export default {
       })
     },
     cancel() {
-      this.reset()
       this.dialogVisible = false
     },
   },

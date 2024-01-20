@@ -21,16 +21,7 @@ export function addRole(data) {
 // 更新角色
 export function updateRole(data) {
   return request({
-    url: '/api/sys_role/update_role',
-    method: 'put',
-    data: data,
-  })
-}
-
-// 改变角色状态
-export function changeRoleStatus(data) {
-  return request({
-    url: '/api/sys_role/change_role_status',
+    url: '/api/sys_role',
     method: 'put',
     data: data,
   })

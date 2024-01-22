@@ -7,270 +7,257 @@
       :draggable="true"
       width="700px"
     >
-      <div class="form-container" ref="formContainer">
-        <el-form
-          ref="menuForm"
-          :model="form"
-          :rules="rules"
-          label-position="top"
-          label-width="106px"
-        >
-          <el-row :gutter="20">
-            <el-col :span="24">
-              <el-form-item prop="parent_id">
-                <template #label>
-                  <span>父级菜单</span>
-                </template>
-                <el-tree-select
-                  ref="treeSelect"
-                  v-model="form.parent_id"
-                  :data="menuOptions"
-                  :props="defaultProps"
-                  value-key="id"
-                  placeholder="请选择父级菜单"
-                  check-strictly
-                  default-expand-all
-                  @change="handleParentMenuChange"
-                  style="width: 100%"
-                />
-              </el-form-item>
-            </el-col>
+      <el-form ref="menuForm" :model="form" :rules="rules" label-position="top" label-width="106px">
+        <el-row :gutter="20">
+          <el-col :span="24">
+            <el-form-item prop="parent_id">
+              <template #label>
+                <span>父级菜单</span>
+              </template>
+              <el-tree-select
+                ref="treeSelect"
+                v-model="form.parent_id"
+                :data="menuOptions"
+                :props="defaultProps"
+                value-key="id"
+                placeholder="请选择父级菜单"
+                check-strictly
+                default-expand-all
+                @change="handleParentMenuChange"
+                style="width: 100%"
+              />
+            </el-form-item>
+          </el-col>
 
-            <el-col :span="12">
-              <el-form-item prop="title">
-                <template #label>
-                  <span>菜单名称</span>
-                </template>
-                <el-input v-model="form.title" placeholder="请输入菜单名称" maxlength="128" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item prop="sort">
-                <template #label>
-                  <span>排序</span>
-                </template>
-                <el-input-number
-                  v-model="form.sort"
-                  controls-position="right"
-                  :min="0"
-                  :max="100000"
-                />
-              </el-form-item>
-            </el-col>
+          <el-col :span="12">
+            <el-form-item prop="title">
+              <template #label>
+                <span>菜单名称</span>
+              </template>
+              <el-input v-model="form.title" placeholder="请输入菜单名称" maxlength="128" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item prop="sort">
+              <template #label>
+                <span>排序</span>
+              </template>
+              <el-input-number
+                v-model="form.sort"
+                controls-position="right"
+                :min="0"
+                :max="100000"
+              />
+            </el-form-item>
+          </el-col>
 
-            <el-col :span="24">
-              <el-form-item prop="menu_type">
-                <template #label>
-                  <span>菜单类型</span>
-                </template>
-                <el-radio-group
-                  v-model="form.menu_type"
-                  :disabled="disabled"
-                  @change="handleMenuTypeChange"
-                >
-                  <el-radio label="F" :disabled="parentMenuType === 'P'">页面夹</el-radio>
-                  <el-radio label="P">页面</el-radio>
-                  <el-radio label="B">按钮</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="24" v-if="form.menu_type != 'B'">
-              <el-form-item label="菜单图标">
-                <el-popover width="605" trigger="click" @show="$refs['iconSelect'].reset()">
-                  <IconSelect ref="iconSelect" @selected="selected" />
-                  <template #reference>
-                    <el-input
-                      v-model="form.icon"
-                      placeholder="请选择图标"
-                      clearable
-                      maxlength="128"
-                    >
-                      <template #prefix>
-                        <UniIcon
-                          v-if="form.icon"
-                          :icon="form.icon"
-                          class="el-input__icon"
-                          style="width: 25px"
-                        />
-                        <el-icon v-else class="el-input__icon"><Search /></el-icon>
-                      </template>
-                    </el-input>
-                  </template>
-                </el-popover>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="12" v-if="form.menu_type != 'B'">
-              <el-form-item>
-                <template #label>
-                  <span>是否显示菜单</span>
-                </template>
-                <el-radio-group v-model="form.visible" :disabled="disabled || isInnerPage">
-                  <el-radio
-                    v-for="dict in visibleOptions"
-                    :key="dict.dict_value"
-                    :label="Number(dict.dict_value)"
-                    >{{ dict.dict_label }}</el-radio
-                  >
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12" v-if="form.menu_type === 'P'">
-              <el-form-item>
-                <template #label>
-                  <span>是否为外部链接</span>
-                </template>
-                <el-radio-group v-model="form.is_link" :disabled="disabled || isInnerPage">
-                  <el-radio :label="1">是</el-radio>
-                  <el-radio :label="0">否</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
-              <el-form-item>
-                <template #label>
-                  <span>是否使用缓存</span>
-                </template>
-                <el-radio-group
-                  v-model="form.cache"
-                  :disabled="disabled"
-                  @change="$refs.menuForm.clearValidate('route_name')"
-                >
-                  <el-radio :label="1">使用</el-radio>
-                  <el-radio :label="0">不使用</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-            <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
-              <el-form-item>
-                <template #label>
-                  <span>是否显示布局</span>
-                </template>
-                <el-radio-group v-model="form.layout" :disabled="disabled">
-                  <el-radio :label="1">显示</el-radio>
-                  <el-radio :label="0">不显示</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </el-col>
-
-            <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
-              <el-form-item
-                prop="route_name"
-                :rules="
-                  form.cache
-                    ? [{ required: this.form?.cache, message: '路由名称不能为空', trigger: 'blur' }]
-                    : null
-                "
+          <el-col :span="24">
+            <el-form-item prop="menu_type">
+              <template #label>
+                <span>菜单类型</span>
+              </template>
+              <el-radio-group
+                v-model="form.menu_type"
+                :disabled="disabled"
+                @change="handleMenuTypeChange"
               >
-                <template #label>
-                  <span style="margin-right: 5px; vertical-align: middle">路由名称</span>
-                  <el-tooltip
-                    v-if="form.cache"
-                    content="使用缓存需保持路由名称与组件名称一致"
-                    placement="top"
-                    effect="light"
-                  >
-                    <el-tag effect="light" type="danger" size="small">重要提醒</el-tag>
-                  </el-tooltip>
-                </template>
-                <el-input
-                  v-model="form.route_name"
-                  placeholder="示例：SysMenu"
-                  :disabled="disabled"
-                  maxlength="128"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
-              <el-form-item prop="component">
-                <template #label>
-                  <span>组件路径</span>
-                </template>
-                <el-input
-                  v-model="form.component"
-                  placeholder="示例：/admin/sys-menu/index.vue"
-                  :disabled="disabled"
-                  maxlength="255"
-                />
-              </el-form-item>
-            </el-col>
+                <el-radio label="F" :disabled="parentMenuType === 'P'">页面夹</el-radio>
+                <el-radio label="P">页面</el-radio>
+                <el-radio label="B">按钮</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
 
-            <el-col :span="12" v-if="form.menu_type === 'P'">
-              <el-form-item prop="path">
-                <template #label>
-                  <span>{{ form.is_link ? '外链地址' : '路由地址' }}</span>
+          <el-col :span="24" v-if="form.menu_type != 'B'">
+            <el-form-item label="菜单图标">
+              <el-popover width="605" trigger="click" @show="$refs['iconSelect'].reset()">
+                <IconSelect ref="iconSelect" @selected="selected" />
+                <template #reference>
+                  <el-input v-model="form.icon" placeholder="请选择图标" clearable maxlength="128">
+                    <template #prefix>
+                      <UniIcon
+                        v-if="form.icon"
+                        :icon="form.icon"
+                        class="el-input__icon"
+                        style="width: 25px"
+                      />
+                      <el-icon v-else class="el-input__icon"><Search /></el-icon>
+                    </template>
+                  </el-input>
                 </template>
-                <el-input
-                  v-model="form.path"
-                  :placeholder="
-                    form.is_link ? '示例：https://www.zxctb.top' : '示例：/admin/sys-menu'
-                  "
-                  :disabled="disabled"
-                  maxlength="255"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12" v-if="form.menu_type !== 'F'">
-              <el-form-item>
-                <template #label>
-                  <span>权限标识</span>
-                </template>
-                <el-input
-                  v-model="form.permission"
-                  placeholder="示例：admin:sysmenu"
-                  :disabled="disabled"
-                  maxlength="255"
-                />
-              </el-form-item>
-            </el-col>
+              </el-popover>
+            </el-form-item>
+          </el-col>
 
-            <el-col :span="24" v-if="form.menu_type === 'P' && !form.is_link && isInnerPage">
-              <el-form-item>
-                <template #label>
-                  <span>高亮菜单</span>
-                </template>
-                <el-input
-                  v-model="form.active_menu"
-                  placeholder="请输入在访问此页面时需要高亮显示的菜单路由地址如：/admin/sys-menu"
-                  maxlength="255"
-                  :disabled="disabled"
-                />
-              </el-form-item>
-            </el-col>
-
-            <el-col
-              :span="24"
-              v-if="form.menu_type === 'B' || (form.menu_type === 'P' && !form.is_link)"
-            >
-              <el-form-item>
-                <template #label>
-                  <span>接口权限</span>
-                </template>
-                <el-transfer
-                  v-model="form.apis"
-                  filterable
-                  :props="{
-                    key: 'id',
-                    label: 'title',
-                  }"
-                  :titles="['未授权', '已授权']"
-                  :format="{
-                    noChecked: '${total}',
-                    hasChecked: '${checked}/${total}',
-                  }"
-                  :data="allApiList"
+          <el-col :span="12" v-if="form.menu_type != 'B'">
+            <el-form-item>
+              <template #label>
+                <span>是否显示菜单</span>
+              </template>
+              <el-radio-group v-model="form.visible" :disabled="disabled || isInnerPage">
+                <el-radio
+                  v-for="dict in visibleOptions"
+                  :key="dict.dict_value"
+                  :label="Number(dict.dict_value)"
+                  >{{ dict.dict_label }}</el-radio
                 >
-                  <template v-slot="{ option }">
-                    <span>{{ option.title }}</span>
-                  </template>
-                </el-transfer>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
-      </div>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-if="form.menu_type === 'P'">
+            <el-form-item>
+              <template #label>
+                <span>是否为外部链接</span>
+              </template>
+              <el-radio-group v-model="form.is_link" :disabled="disabled || isInnerPage">
+                <el-radio :label="1">是</el-radio>
+                <el-radio :label="0">否</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
+            <el-form-item>
+              <template #label>
+                <span>是否使用缓存</span>
+              </template>
+              <el-radio-group
+                v-model="form.cache"
+                :disabled="disabled"
+                @change="$refs.menuForm.clearValidate('route_name')"
+              >
+                <el-radio :label="1">使用</el-radio>
+                <el-radio :label="0">不使用</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
+            <el-form-item>
+              <template #label>
+                <span>是否显示布局</span>
+              </template>
+              <el-radio-group v-model="form.layout" :disabled="disabled">
+                <el-radio :label="1">显示</el-radio>
+                <el-radio :label="0">不显示</el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
+            <el-form-item
+              prop="route_name"
+              :rules="
+                form.cache
+                  ? [{ required: this.form?.cache, message: '路由名称不能为空', trigger: 'blur' }]
+                  : null
+              "
+            >
+              <template #label>
+                <span style="margin-right: 5px; vertical-align: middle">路由名称</span>
+                <el-tooltip
+                  v-if="form.cache"
+                  content="使用缓存需保持路由名称与组件名称一致"
+                  placement="top"
+                  effect="light"
+                >
+                  <el-tag effect="light" type="danger" size="small">重要提醒</el-tag>
+                </el-tooltip>
+              </template>
+              <el-input
+                v-model="form.route_name"
+                placeholder="示例：SysMenu"
+                :disabled="disabled"
+                maxlength="128"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
+            <el-form-item prop="component">
+              <template #label>
+                <span>组件路径</span>
+              </template>
+              <el-input
+                v-model="form.component"
+                placeholder="示例：/admin/sys-menu/index.vue"
+                :disabled="disabled"
+                maxlength="255"
+              />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="12" v-if="form.menu_type === 'P'">
+            <el-form-item prop="path">
+              <template #label>
+                <span>{{ form.is_link ? '外链地址' : '路由地址' }}</span>
+              </template>
+              <el-input
+                v-model="form.path"
+                :placeholder="
+                  form.is_link ? '示例：https://www.zxctb.top' : '示例：/admin/sys-menu'
+                "
+                :disabled="disabled"
+                maxlength="255"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" v-if="form.menu_type !== 'F'">
+            <el-form-item>
+              <template #label>
+                <span>权限标识</span>
+              </template>
+              <el-input
+                v-model="form.permission"
+                placeholder="示例：admin:sysmenu"
+                :disabled="disabled"
+                maxlength="255"
+              />
+            </el-form-item>
+          </el-col>
+
+          <el-col :span="24" v-if="form.menu_type === 'P' && !form.is_link && isInnerPage">
+            <el-form-item>
+              <template #label>
+                <span>高亮菜单</span>
+              </template>
+              <el-input
+                v-model="form.active_menu"
+                placeholder="请输入在访问此页面时需要高亮显示的菜单路由地址如：/admin/sys-menu"
+                maxlength="255"
+                :disabled="disabled"
+              />
+            </el-form-item>
+          </el-col>
+
+          <el-col
+            :span="24"
+            v-if="form.menu_type === 'B' || (form.menu_type === 'P' && !form.is_link)"
+          >
+            <el-form-item>
+              <template #label>
+                <span>接口权限</span>
+              </template>
+              <el-transfer
+                v-model="form.apis"
+                filterable
+                :props="{
+                  key: 'id',
+                  label: 'title',
+                }"
+                :titles="['未授权', '已授权']"
+                :format="{
+                  noChecked: '${total}',
+                  hasChecked: '${checked}/${total}',
+                }"
+                :data="allApiList"
+              >
+                <template v-slot="{ option }">
+                  <span>{{ option.title }}</span>
+                </template>
+              </el-transfer>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
 
       <template #footer>
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -511,13 +498,3 @@ export default {
   },
 }
 </script>
-
-<style scoped>
-.form-container {
-  width: 100%;
-  padding: 0 20px;
-  height: 500px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-</style>

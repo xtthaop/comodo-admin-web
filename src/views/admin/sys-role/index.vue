@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card class="box-card">
+    <el-card shadow="never">
       <el-form ref="queryForm" :model="queryParams" :inline="true">
         <el-form-item prop="role_name">
           <el-input
@@ -154,8 +154,7 @@ export default {
         type: 'warning',
       })
         .then(() => {
-          const data = Object.assign(row, { status: row.status })
-          updateRole(data).catch(() => {
+          updateRole(row).catch(() => {
             row.status = row.status === 0 ? 1 : 0
           })
         })

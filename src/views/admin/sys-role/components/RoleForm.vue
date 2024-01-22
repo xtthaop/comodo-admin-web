@@ -45,10 +45,25 @@
               show-checkbox
               node-key="menu_id"
               :props="defaultProps"
-            />
+            >
+              <template #default="{ node }">
+                <el-icon style="vertical-align: middle; margin-right: 3px; opacity: 0.5">
+                  <template v-if="node.data.menu_type === 'F'">
+                    <Folder />
+                  </template>
+                  <template v-else-if="node.data.menu_type === 'P'">
+                    <Document />
+                  </template>
+                  <template v-else-if="node.data.menu_type === 'B'">
+                    <Help />
+                  </template>
+                </el-icon>
+                <span>{{ node.label }}</span>
+              </template>
+            </el-tree>
           </div>
           <div v-show="form.role_key === 'admin'">
-            <span style="color: #ccc; font-weight: 500">系统管理员不需要设置菜单权限</span>
+            <span style="color: #ccc; font-weight: 500">此角色默认拥有所有菜单权限</span>
           </div>
         </el-form-item>
         <el-form-item label="备注" prop="remark">

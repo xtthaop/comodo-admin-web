@@ -106,8 +106,8 @@ export default {
       })
     },
     verify(x) {
-      const password = this.loginForm.password.trim()
-      const username = this.loginForm.username.trim()
+      const password = this.loginForm.password
+      const username = this.loginForm.username
       const data = {
         username,
         password: this.md5Password(password),

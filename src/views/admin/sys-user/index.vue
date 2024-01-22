@@ -102,17 +102,20 @@
     </el-card>
 
     <UserForm ref="userForm" :statusOptions="statusOptions" @update="handleGetUserList" />
+    <ResetPwdForm ref="resetPwdForm" />
   </div>
 </template>
 
 <script>
 import UserForm from './components/UserForm.vue'
-import { getUserList, updateUser, deleteUser, resetPassword } from '@/api/admin/sys-user'
+import ResetPwdForm from './components/ResetPwdForm.vue'
+import { getUserList, updateUser, deleteUser } from '@/api/admin/sys-user'
 
 export default {
   name: 'SysUser',
   components: {
     UserForm,
+    ResetPwdForm,
   },
   data() {
     return {
@@ -188,30 +191,8 @@ export default {
         })
         .catch(() => {})
     },
-    validateNewPassword(value) {
-      if (!value) {
-        return false
-      } else {
-        return true
-      }
-    },
     handleResetPwd(row) {
-      this.$prompt(`请输入用户 ${row.username} 的新密码`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        inputValidator: this.validateNewPassword,
-        inputErrorMessage: '新密码不能为空',
-      })
-        .then(({ value }) => {
-          const data = {
-            user_id: row.user_id,
-            new_password: this.md5Password(value.trim()),
-          }
-          resetPassword(data).then(() => {
-            this.$message.success('修改成功')
-          })
-        })
-        .catch(() => {})
+      this.$refs.resetPwdForm.open(row)
     },
   },
 }

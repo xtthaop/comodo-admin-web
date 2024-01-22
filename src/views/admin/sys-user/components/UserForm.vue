@@ -1,21 +1,36 @@
 <template>
   <div>
-    <el-dialog :title="title" v-model="dialogVisible" draggable width="600px">
+    <el-dialog
+      :title="title"
+      v-model="dialogVisible"
+      :close-on-click-modal="false"
+      :draggable="true"
+      width="600px"
+    >
       <el-form ref="userForm" :model="form" :rules="rules" label-width="80px">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="用户名称" prop="username">
-              <el-input v-model="form.username" placeholder="请输入用户名称" />
+            <el-form-item label="登录名" prop="username">
+              <el-input
+                v-model="form.username"
+                placeholder="请输入用户登录名"
+                :disabled="disabled"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.user_id === undefined" label="用户密码" prop="password">
+            <el-form-item v-show="form.user_id === undefined" label="密码" prop="password">
               <el-input
                 v-model="form.password"
                 show-password
                 placeholder="请输入用户密码"
                 type="password"
               />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="姓名" prop="nickname">
+              <el-input v-model="form.nickname" placeholder="请输入用户姓名" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -29,7 +44,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="用户性别">
+            <el-form-item label="用户性别" prop="sex">
               <el-select v-model="form.sex" placeholder="请选择">
                 <el-option
                   v-for="dict in sexOptions"
@@ -40,25 +55,27 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="状态">
-              <el-radio-group v-model="form.status">
+          <el-col :span="24">
+            <el-form-item label="状态" prop="status">
+              <el-radio-group v-model="form.status" :disabled="disabled">
                 <el-radio
                   v-for="dict in statusOptions"
                   :key="dict.dict_value"
-                  :label="dict.dict_value"
+                  :label="Number(dict.dict_value)"
                   >{{ dict.dict_label }}</el-radio
                 >
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="角色">
+          <el-col :span="24">
+            <el-form-item label="角色" prop="role_ids">
               <el-select
                 v-model="form.role_ids"
                 multiple
                 placeholder="请选择"
                 @change="$forceUpdate()"
+                :disabled="disabled"
+                style="width: 100%"
               >
                 <el-option
                   v-for="item in roleOptions"
@@ -71,7 +88,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="24">
-            <el-form-item label="备注">
+            <el-form-item label="备注" prop="remark">
               <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
             </el-form-item>
           </el-col>
@@ -101,14 +118,14 @@ export default {
     return {
       title: '',
       dialogVisible: false,
-      form: {},
+      form: {
+        status: 1,
+      },
       rules: {
-        username: [{ required: true, message: '用户名称不能为空', trigger: 'blur' }],
-        password: [{ required: true, message: '用户密码不能为空', trigger: 'blur' }],
-        email: [
-          { required: true, message: '邮箱地址不能为空', trigger: 'blur' },
-          { type: 'email', message: "'请输入正确的邮箱地址", trigger: ['blur', 'change'] },
-        ],
+        username: [{ required: true, message: '登录名不能为空', trigger: 'blur' }],
+        nickname: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
+        password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
+        email: [{ type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }],
         phone: [
           { required: true, message: '手机号码不能为空', trigger: 'blur' },
           {
@@ -120,6 +137,7 @@ export default {
       },
       sexOptions: [],
       roleOptions: [],
+      disabled: false,
     }
   },
   created() {
@@ -130,29 +148,24 @@ export default {
   },
   methods: {
     open(item) {
+      this.dialogVisible = true
+      this.reset()
       if (!item) {
-        this.reset()
         this.title = '新增用户'
       } else {
-        this.form = Object.assign({}, item)
-        this.form.status = String(this.form.status)
-        this.form.role_ids = this.form.role_list.map((item) => item.role_id)
+        if (item.username === 'admin') {
+          this.disabled = true
+        }
+        this.$nextTick(() => {
+          Object.assign(this.form, item)
+        })
         this.title = '编辑用户'
       }
-      this.dialogVisible = true
     },
     reset() {
-      this.form = {
-        user_id: undefined,
-        username: undefined,
-        password: undefined,
-        phone: undefined,
-        email: undefined,
-        sex: undefined,
-        status: '1',
-        remark: undefined,
-        role_ids: [],
-      }
+      this.form.user_id = undefined
+      this.form.role_ids = []
+      this.disabled = false
       this.resetForm('userForm')
     },
     handleGetRole() {
@@ -184,7 +197,6 @@ export default {
       })
     },
     cancel() {
-      this.reset()
       this.dialogVisible = false
     },
   },

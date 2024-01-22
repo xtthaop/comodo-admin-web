@@ -36,15 +36,6 @@ export function updateUser(data) {
   })
 }
 
-// 修改用户状态
-export function changeUserStatus(data) {
-  return request({
-    url: '/api/sys_user/change_user_status',
-    method: 'put',
-    data,
-  })
-}
-
 // 重置用户密码
 export function resetPassword(data) {
   return request({

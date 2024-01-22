@@ -1,11 +1,11 @@
 <template>
   <div class="app-container">
-    <el-card class="box-card">
+    <el-card shadow="never">
       <el-form ref="queryForm" :model="queryParams" :inline="true">
         <el-form-item prop="username">
           <el-input
             v-model="queryParams.username"
-            placeholder="请输入用户名称"
+            placeholder="请输入登录名"
             clearable
             @keyup.enter="handleQuery"
           />
@@ -42,7 +42,8 @@
 
       <el-table v-loading="loading" :data="userList" border>
         <el-table-column label="ID" width="75" prop="user_id" />
-        <el-table-column label="用户名" prop="username" :show-overflow-tooltip="true" />
+        <el-table-column label="登录名" prop="username" :show-overflow-tooltip="true" />
+        <el-table-column label="姓名" prop="nickname" :show-overflow-tooltip="true" />
         <el-table-column label="手机号" prop="phone" />
         <el-table-column label="状态">
           <template #default="scope">
@@ -51,6 +52,7 @@
               :active-value="1"
               :inactive-value="0"
               @change="handleStatusChange(scope.row)"
+              :disabled="scope.row.username === 'admin'"
             />
           </template>
         </el-table-column>
@@ -70,6 +72,7 @@
               >修改</el-button
             >
             <el-button
+              v-show="scope.row.username !== 'admin'"
               v-actionpermission="['admin:sysuser:remove']"
               link
               type="primary"
@@ -78,6 +81,7 @@
               >删除</el-button
             >
             <el-button
+              v-show="scope.row.username !== 'admin'"
               v-actionpermission="['admin:sysuser:resetpassword']"
               link
               type="primary"
@@ -103,7 +107,7 @@
 
 <script>
 import UserForm from './components/UserForm.vue'
-import { getUserList, changeUserStatus, deleteUser, resetPassword } from '@/api/admin/sys-user'
+import { getUserList, updateUser, deleteUser, resetPassword } from '@/api/admin/sys-user'
 
 export default {
   name: 'SysUser',
@@ -159,11 +163,7 @@ export default {
         type: 'warning',
       })
         .then(() => {
-          const data = {
-            user_id: row.user_id,
-            status: row.status,
-          }
-          changeUserStatus(data).catch(() => {
+          updateUser(row).catch(() => {
             row.status = row.status === 0 ? 1 : 0
           })
         })
@@ -196,7 +196,7 @@ export default {
       }
     },
     handleResetPwd(row) {
-      this.$prompt('请输入"' + row.username + '"的新密码', '提示', {
+      this.$prompt(`请输入用户 ${row.username} 的新密码`, '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputValidator: this.validateNewPassword,
@@ -205,7 +205,7 @@ export default {
         .then(({ value }) => {
           const data = {
             user_id: row.user_id,
-            new_password: this.md5Password(value),
+            new_password: this.md5Password(value.trim()),
           }
           resetPassword(data).then(() => {
             this.$message.success('修改成功')

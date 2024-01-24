@@ -124,7 +124,10 @@ export default {
       rules: {
         username: [{ required: true, message: '登录名不能为空', trigger: 'blur' }],
         nickname: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
-        password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
+        password: [
+          { required: true, message: '密码不能为空', trigger: 'blur' },
+          { min: 6, max: 20, message: '密码长度需在 6 到 20 个字符', trigger: 'blur' },
+        ],
         email: [{ type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }],
         phone: [
           { required: true, message: '手机号码不能为空', trigger: 'blur' },

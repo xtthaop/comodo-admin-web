@@ -34,6 +34,27 @@ service.interceptors.response.use(
   (response) => {
     const res = response.data
     if (res.code !== 0) {
+      if (res.code === 4024) {
+        if (messageBoxFlag === 0) {
+          messageBoxFlag = 1
+          ElMessageBox.confirm('您的账号已被禁用，请联系管理员', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'error',
+          })
+            .then(async () => {
+              messageBoxFlag = 0
+              await store.dispatch('user/resetToken')
+              router.push(`/login`)
+            })
+            .catch(() => {
+              messageBoxFlag = 0
+            })
+        }
+
+        return Promise.reject(res || 'Error')
+      }
+
       ElMessage({
         message: res.message || 'Error',
         type: 'error',
@@ -57,7 +78,6 @@ service.interceptors.response.use(
           .then(async () => {
             messageBoxFlag = 0
             await store.dispatch('user/resetToken')
-            const location = window.location
             router.push(`/login?redirect=${location.pathname}&${location.search.substring(1)}`)
           })
           .catch(() => {

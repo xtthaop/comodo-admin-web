@@ -11,9 +11,7 @@
         <div class="bullshit__oops">OOPS!</div>
         <div class="bullshit__info"></div>
         <div class="bullshit__headline">{{ message }}</div>
-        <div class="bullshit__info">
-          请检查你访问的页面地址是否正确，或者点击下面的按钮返回首页。
-        </div>
+        <div class="bullshit__info">请检查您访问的页面地址是否正确</div>
         <a href="/" class="bullshit__return-home">返回首页</a>
       </div>
     </div>
@@ -21,12 +19,25 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
-  name: 'Page404',
+  name: 'ErrorPage404',
   computed: {
     message() {
-      return '页面消失了～'
+      return '页面消失了'
     },
+    ...mapState({
+      allPath: (state) => state.permission.allPath,
+    }),
+  },
+  created() {
+    for (let i = 0; i < this.allPath.length; i++) {
+      if (this.allPath[i].test(this.$route.path)) {
+        this.$router.push('/401')
+        return
+      }
+    }
   },
 }
 </script>

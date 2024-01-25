@@ -4,6 +4,7 @@ import store from '@/store'
 import Login from '@/views/login/index.vue'
 import Dashboard from '@/views/dashboard/index.vue'
 import Page404 from '@/views/error-page/404.vue'
+import Page401 from '@/views/error-page/401.vue'
 import BaseRedirect from '@/views/redirect/index.vue'
 
 export const constantRoutes = [
@@ -30,6 +31,13 @@ export const constantRoutes = [
     name: 'Dashboard',
     component: Dashboard,
     meta: { title: '首页', affix: true, layout: true, icon: 'dashboard' },
+  },
+  {
+    path: '/401',
+    name: 'Page401',
+    component: Page401,
+    hidden: true,
+    meta: { layout: false },
   },
   {
     path: '/:pathMatch(.*)*',

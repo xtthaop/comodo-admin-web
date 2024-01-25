@@ -2,6 +2,7 @@ import { getDynamicRoutes } from '@/api/permission'
 import { constantRoutes } from '@/router'
 import Layout from '@/layout/index.vue'
 import router from '@/router'
+import { pathToRegexp } from 'path-to-regexp'
 
 const modules = import.meta.glob('@/views/**/*.vue')
 const _import = (component) => {
@@ -54,6 +55,7 @@ function generateDynamicRoutes(data) {
 const state = {
   routes: [],
   routerConfig: [],
+  allPath: [],
 }
 
 const mutations = {
@@ -65,6 +67,9 @@ const mutations = {
       state.routerConfig.push(router.addRoute(item))
     })
   },
+  SET_ALL_PATH: (state, allPath) => {
+    state.allPath = allPath.map((path) => pathToRegexp(path))
+  },
 }
 
 const actions = {
@@ -72,10 +77,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       getDynamicRoutes()
         .then((res) => {
-          const { data } = res
-          const { routes, routerConfig } = generateDynamicRoutes(data)
+          const { dynamic_routes, all_path } = res.data
+          const { routes, routerConfig } = generateDynamicRoutes(dynamic_routes)
           commit('SET_ROUTES', routes)
           commit('SET_ROUTER_CONFIG', routerConfig)
+          commit('SET_ALL_PATH', all_path)
           resolve(routerConfig)
         })
         .catch((error) => {

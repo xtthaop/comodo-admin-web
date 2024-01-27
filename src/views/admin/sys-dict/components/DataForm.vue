@@ -1,33 +1,49 @@
 <template>
   <div>
-    <el-dialog :title="title" v-model="dialogVisible" width="500px">
+    <el-dialog
+      :title="title"
+      v-model="dialogVisible"
+      :close-on-click-modal="false"
+      :draggable="true"
+      width="500px"
+    >
       <el-form ref="dataForm" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="数据标签" prop="dict_data_label">
-          <el-input v-model="form.dict_data_label" placeholder="请输入数据标签" />
+          <el-input v-model="form.dict_data_label" placeholder="请输入数据标签" maxlength="128" />
         </el-form-item>
         <el-form-item label="数据键值" prop="dict_data_value">
-          <el-input v-model="form.dict_data_value" placeholder="请输入数据键值" />
+          <el-input v-model="form.dict_data_value" placeholder="请输入数据键值" maxlength="255" />
         </el-form-item>
         <el-form-item label="显示排序" prop="dict_data_sort">
-          <el-input-number v-model="form.dict_data_sort" controls-position="right" :min="0" />
+          <el-input-number
+            v-model="form.dict_data_sort"
+            controls-position="right"
+            :min="0"
+            :max="100000"
+          />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
               v-for="dict in statusOptions"
               :key="dict.dict_value"
-              :label="dict.dict_value"
+              :label="Number(dict.dict_value)"
               >{{ dict.dict_label }}</el-radio
             >
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+          <el-input
+            v-model="form.remark"
+            type="textarea"
+            placeholder="请输入内容"
+            maxlength="255"
+          />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -50,7 +66,10 @@ export default {
   data() {
     return {
       title: '',
-      form: {},
+      form: {
+        status: 1,
+        dict_data_sort: 0,
+      },
       dialogVisible: false,
       rules: {
         dict_data_label: [{ required: true, message: '数据标签不能为空', trigger: 'blur' }],
@@ -61,25 +80,19 @@ export default {
   },
   methods: {
     open(item) {
+      this.dialogVisible = true
+      this.reset()
       if (!item) {
-        this.reset()
         this.title = '新增字典数据'
       } else {
-        this.form = Object.assign({}, item)
-        this.form.status = String(this.form.status)
+        this.$nextTick(() => {
+          Object.assign(this.form, item)
+        })
         this.title = '编辑字典数据'
       }
-      this.dialogVisible = true
     },
     reset() {
-      this.form = {
-        dict_data_id: undefined,
-        dict_data_label: undefined,
-        dict_data_value: undefined,
-        dict_data_sort: 0,
-        status: '1',
-        remark: undefined,
-      }
+      this.form.dict_data_id = undefined
       this.resetForm('dataForm')
     },
     submitForm() {
@@ -110,7 +123,6 @@ export default {
     },
     cancel() {
       this.dialogVisible = false
-      this.reset()
     },
   },
 }

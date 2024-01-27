@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card class="box-card">
+    <el-card shadow="never">
       <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
         <el-form-item prop="dict_name">
           <el-input
@@ -59,10 +59,7 @@
         <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true" width="200">
           <template #default="scope">
             <el-button link type="primary">
-              <router-link
-                :to="{ name: 'SysDictData', params: { dictId: scope.row.dict_id } }"
-                class="link-type"
-              >
+              <router-link :to="{ name: 'SysDictData', params: { dictId: scope.row.dict_id } }">
                 <span>{{ scope.row.dict_type }}</span>
               </router-link>
             </el-button>

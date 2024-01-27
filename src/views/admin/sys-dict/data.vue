@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card class="box-card">
+    <el-card shadow="never">
       <el-form ref="queryForm" :model="queryParams" :inline="true">
         <el-form-item prop="dict_label">
           <el-input
@@ -67,7 +67,6 @@
       </el-table>
 
       <BasePagination
-        v-show="total > 0"
         :total="total"
         v-model:page="queryParams.page"
         v-model:limit="queryParams.page_size"
@@ -109,7 +108,7 @@ export default {
     }
   },
   created() {
-    this.queryParams.dict_id = this.$route.params && this.$route.params.dictId
+    this.queryParams.dict_id = this.$route.params?.dictId
     this.handleGetDataList()
     this.getDicts('sys_normal_disable').then((res) => {
       this.statusOptions = res.data

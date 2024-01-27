@@ -15,6 +15,7 @@
                 v-model="form.username"
                 placeholder="请输入用户登录名"
                 :disabled="disabled"
+                maxlength="64"
               />
             </el-form-item>
           </el-col>
@@ -30,7 +31,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="姓名" prop="nickname">
-              <el-input v-model="form.nickname" placeholder="请输入用户姓名" />
+              <el-input v-model="form.nickname" placeholder="请输入用户姓名" maxlength="64" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -40,7 +41,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="50" />
+              <el-input v-model="form.email" placeholder="请输入邮箱" maxlength="128" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -89,14 +90,19 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
+              <el-input
+                v-model="form.remark"
+                type="textarea"
+                placeholder="请输入内容"
+                maxlength="255"
+              />
             </el-form-item>
           </el-col>
         </el-row>
       </el-form>
       <template #footer>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
       </template>
     </el-dialog>
   </div>

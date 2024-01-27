@@ -34,7 +34,7 @@ export default {
   created() {
     for (let i = 0; i < this.allPath.length; i++) {
       if (this.allPath[i].test(this.$route.path)) {
-        this.$router.push('/401')
+        this.$router.push({ path: '/401', query: { goBack: 1 } })
         return
       }
     }

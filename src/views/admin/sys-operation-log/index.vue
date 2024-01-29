@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card class="box-card">
+    <el-card shadow="never">
       <el-form ref="queryForm" :model="queryParams" :inline="true">
         <el-form-item>
           <el-date-picker

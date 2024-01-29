@@ -336,9 +336,6 @@ export default {
       }
 
       this.getTreeSelect()
-      this.$nextTick(() => {
-        this.$refs.formContainer.scrollTop = 0
-      })
     },
     getTreeSelect() {
       getMenuTree().then((res) => {

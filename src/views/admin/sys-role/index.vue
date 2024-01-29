@@ -48,6 +48,7 @@
         <el-table-column label="状态" width="120" align="center">
           <template #default="scope">
             <el-switch
+              v-actionpermission="['admin:sysrole:status']"
               v-model="scope.row.status"
               :active-value="1"
               :inactive-value="0"

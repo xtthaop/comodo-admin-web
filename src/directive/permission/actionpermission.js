@@ -1,7 +1,7 @@
 import store from '@/store'
 
 export default {
-  inserted(el, binding) {
+  mounted(el, binding) {
     const { value } = binding
     const all_permission = '*:*:*'
     const permissions = store.getters && store.getters.actionpermission
@@ -9,7 +9,7 @@ export default {
     if (value && value instanceof Array && value.length > 0) {
       const permissionFlag = value
 
-      const hasPermissions = permissions.some(permission => {
+      const hasPermissions = permissions.some((permission) => {
         return all_permission === permission || permissionFlag.includes(permission)
       })
 
@@ -17,7 +17,9 @@ export default {
         el.parentNode && el.parentNode.removeChild(el)
       }
     } else {
-      throw new Error(`请设置操作权限标签值`)
+      throw new Error(
+        `need permissions! Like v-actionpermission="['sys:admin:add','sys:admin:remove']"`
+      )
     }
-  }
+  },
 }

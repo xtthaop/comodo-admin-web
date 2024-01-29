@@ -50,6 +50,7 @@
             </el-popover>
           </template>
         </el-table-column>
+        <el-table-column label="操作" prop="operation" width="200" :show-overflow-tooltip="true" />
         <el-table-column label="操作人" prop="operator" width="120" :show-overflow-tooltip="true" />
         <el-table-column label="操作日期" width="160">
           <template #default="scope">
@@ -71,7 +72,6 @@
       </el-table>
 
       <BasePagination
-        v-show="total > 0"
         :total="total"
         v-model:page="queryParams.page"
         v-model:limit="queryParams.page_size"

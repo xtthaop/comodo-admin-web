@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card class="box-card">
+    <el-card shadow="never">
       <el-form ref="queryForm" :model="queryParams" :inline="true">
         <el-form-item prop="username">
           <el-input
@@ -48,7 +48,6 @@
           <template #default="scope">
             <el-popover trigger="hover" placement="top" width="200">
               <p>IP: {{ scope.row.ipaddr }}</p>
-              <p>归属地: {{ scope.row.location }}</p>
               <p>浏览器: {{ scope.row.browser }}</p>
               <p>系统: {{ scope.row.os }}</p>
 

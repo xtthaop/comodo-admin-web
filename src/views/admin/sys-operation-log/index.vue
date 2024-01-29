@@ -52,6 +52,12 @@
         </el-table-column>
         <el-table-column label="操作" prop="operation" width="200" :show-overflow-tooltip="true" />
         <el-table-column label="操作人" prop="operator" width="120" :show-overflow-tooltip="true" />
+        <el-table-column
+          label="操作耗时"
+          prop="latency_time"
+          width="120"
+          :show-overflow-tooltip="true"
+        />
         <el-table-column label="操作日期" width="160">
           <template #default="scope">
             <span>{{ parseTime(scope.row.operation_time) }}</span>

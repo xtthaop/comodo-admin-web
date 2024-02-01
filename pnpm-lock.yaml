@@ -18,8 +18,8 @@ dependencies:
     specifier: ^3.0.5
     version: registry.npmmirror.com/js-cookie@3.0.5
   js-md5:
-    specifier: ^0.7.3
-    version: registry.npmmirror.com/js-md5@0.7.3
+    specifier: ^0.8.3
+    version: registry.npmmirror.com/js-md5@0.8.3
   normalize.css:
     specifier: ^8.0.1
     version: registry.npmmirror.com/normalize.css@8.0.1
@@ -2399,10 +2399,10 @@ packages:
     engines: {node: '>=14'}
     dev: false
 
-  registry.npmmirror.com/js-md5@0.7.3:
-    resolution: {integrity: sha512-ZC41vPSTLKGwIRjqDh8DfXoCrdQIyBgspJVPXHBGu4nZlAEvG3nf+jO9avM9RmLiGakg7vz974ms99nEV0tmTQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/js-md5/-/js-md5-0.7.3.tgz}
+  registry.npmmirror.com/js-md5@0.8.3:
+    resolution: {integrity: sha512-qR0HB5uP6wCuRMrWPTrkMaev7MJZwJuuw4fnwAzRgP4J4/F8RwtodOKpGp4XpqsLBFzzgqIO42efFAyz2Et6KQ==, tarball: https://registry.npmmirror.com/js-md5/-/js-md5-0.8.3.tgz}
     name: js-md5
-    version: 0.7.3
+    version: 0.8.3
     dev: false
 
   registry.npmmirror.com/js-sdsl@4.4.2:

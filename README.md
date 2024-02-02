@@ -157,6 +157,7 @@ Comodo Admin 的作者是一名前端小学生，水平不高，文档或者代�
 
 ## 成为赞助者
 ![图片](https://github.com/xtthaop/image-lib/blob/master/comodo-admin/sponsor.png?raw=true)
+
 维护这个项目需要一定的服务器费用用作项目预览，还需要消耗我本人一定的精力，所以如果这个项目帮助到你的话，请多多予以支持！感谢！
 
 ## 许可证

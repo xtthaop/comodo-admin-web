@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  本软件基于 [vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)、参考 [go-admin](https://github.com/go-admin-team/go-admin) 开发
+  本软件基于 <a href="https://github.com/PanJiaChen/vue-element-admin">vue-element-admin</a>、参考 <a href="https://github.com/go-admin-team/go-admin">go-admin</a> 开发
 </p>
 
 ## 简介

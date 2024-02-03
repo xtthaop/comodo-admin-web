@@ -10,7 +10,7 @@
 
 Comodo Admin 是一款极简的 RBAC（基于角色的访问控制） 后台管理系统，前端基于 Vue 3 开发，后端基于 PHP 8.1 开发。它提供了一种 RBAC 后台管理系统的具体实现思路和运行框架。如果你具备 JS、CSS、HTML、Vue 3 和 PHP 的基础知识，即使你从来没有接触过 RBAC 后台管理系统，你也能快速上手。
 
-前端 [comodo-admin-web](https://github.com/xtthaop/comodo-admin-web) 使用了 Vue 3 的选项式 API，将来可能会推出 Vue 3 组合式 API 加上 TypeScript 的版本。推荐安装 ESLint 和 Prettier，ESLint 可以使代码风格更加一致并且避免一些错误，Prettier 可以帮你格式化代码让团队无需争论代码格式问题，同样风格和格式的代码会让合作变得简单很多。
+前端 [comodo-admin-web](https://github.com/xtthaop/comodo-admin-web) 使用了 Vue 3 的选项式 API，将来可能会推出 Vue 3 组合式 API 加上 TypeScript 改进的版本。相比于其他类似项目，本项目在菜单管理上配置更灵活、使用体验更好。为了提升代码质量和团队协作效率，推荐安装 ESLint 和 Prettier，ESLint 可以使代码风格更加一致并且避免一些错误，Prettier 可以帮你格式化代码让团队无需争论代码格式问题。
 
 因为我本人主要精力还是在前端，后端能力有限，开发过程中是持着学习的心态，所以并没有使用流行的后端开发框架。如果有后端开发者对 [comodo-admin-api](https://github.com/xtthaop/comodo-admin-api) 有兴趣并且期望共同建设的话，请参考 comodo-admin-api 源码实现一个更稳定更适用于生产的版本，我会把你的项目地址列到这里。
 

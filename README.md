@@ -22,9 +22,7 @@ Comodo Admin 是一款极简的 RBAC（基于角色的访问控制） 后台管�
 登录页面提供用户名密码及**滑块验证码登录**。
 
 ### 系统布局
-<p align="center">
-  <img src="https://github.com/xtthaop/image-lib/blob/master/comodo-admin/layout.png?raw=true" width="80%" />
-</p>
+<img src="https://github.com/xtthaop/image-lib/blob/master/comodo-admin/layout.png?raw=true" width="60%" />
 
 #### 系统标识：
 显示系统 Logo 及系统名称，系统名称可通过**配置文件**修改，修改后登录页面及浏览器显示标题同步生效。
@@ -162,9 +160,7 @@ crontab -e
 Comodo Admin 的作者是一名前端小学生，水平不高，文档或者代码中如有不当之处还请指正。
 
 ## 成为赞助者
-<p align="center">
- <img src="https://github.com/xtthaop/image-lib/blob/master/comodo-admin/sponsor.png?raw=true" width="100px" />
-</p>
+<img src="https://github.com/xtthaop/image-lib/blob/master/comodo-admin/sponsor.png?raw=true" width="300px" />
 
 维护这个项目需要一定的服务器费用用作项目预览，还需要消耗我本人一定的精力，所以如果这个项目帮助到你的话，请多多予以支持！感谢！
 

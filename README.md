@@ -1,6 +1,10 @@
-<img src="https://github.com/xtthaop/image-lib/blob/master/comodo-admin/logo.png?raw=true" width="50px" />
+<p align="center">
+  <img src="https://github.com/xtthaop/image-lib/blob/master/comodo-admin/logo.png?raw=true" width="50px" />
+</p>
 
-本软件基于 [vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)、参考 [go-admin](https://github.com/go-admin-team/go-admin) 开发
+<p align="center">
+  本软件基于 [vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)、参考 [go-admin](https://github.com/go-admin-team/go-admin) 开发
+</p>
 
 ## 简介
 

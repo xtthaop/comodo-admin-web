@@ -2,7 +2,7 @@
   <img src="https://github.com/xtthaop/image-lib/blob/master/comodo-admin/logo.png?raw=true" width="50px" />
 </p>
 
-<p align="center">
+<p align="center" font-size="12px">
   本软件基于 <a href="https://github.com/PanJiaChen/vue-element-admin">vue-element-admin</a>、参考 <a href="https://github.com/go-admin-team/go-admin">go-admin</a> 开发
 </p>
 

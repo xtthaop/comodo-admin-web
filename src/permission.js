@@ -26,16 +26,9 @@ router.beforeEach(async (to) => {
           return to.fullPath
         } catch (error) {
           // eslint-disable-next-line
-          console.error(error || 'Permission has error when routing...')
-          try {
-            await store.dispatch('user/logout')
-            const otherQuery = window.location.search.substring(1)
-            return `/login?redirect=${to.path}&${otherQuery}`
-          } catch (e) {
-            // eslint-disable-next-line
-            console.error(e || 'Logout has error when routing...')
-            return false
-          }
+          console.error(error || 'error')
+          await store.dispatch('user/resetToken')
+          return `/login?redirect=${to.path}&${location.search.substring(1)}`
         }
       }
     }
@@ -43,8 +36,7 @@ router.beforeEach(async (to) => {
     if (whiteList.indexOf(to.path) !== -1) {
       return true
     } else {
-      const otherQuery = window.location.search.substring(1)
-      return `/login?redirect=${to.path}&${otherQuery}`
+      return `/login?redirect=${to.path}&${location.search.substring(1)}`
     }
   }
 })

@@ -60,7 +60,7 @@ const actions = {
         })
     })
   },
-  logout({ commit }) {
+  logout({ commit, dispatch }) {
     return new Promise((resolve, reject) => {
       logout()
         .then(() => {
@@ -68,6 +68,7 @@ const actions = {
           commit('SET_ROLES', [])
           removeToken()
           resetRouter()
+          dispatch('tagsView/delAllViews', null, { root: true })
           resolve()
         })
         .catch((error) => {
@@ -80,7 +81,6 @@ const actions = {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
       removeToken()
-      resetRouter()
       resolve()
     })
   },

@@ -12,11 +12,16 @@
         <Close />
       </el-icon>
     </div>
-    <div class="img-container">
+    <div class="img-container" v-loading="imgLoading">
       <canvas id="puzzle" width="320" height="170" :style="{ left: puzzleLeft }"></canvas>
       <canvas id="img" width="320" height="170"></canvas>
+      <div v-if="showImgError" class="img-error">加载失败！</div>
     </div>
-    <div class="slider-container" id="slider">
+    <div
+      class="slider-container"
+      id="slider"
+      :style="{ visibility: !showImgError && !imgLoading ? 'visible' : 'hidden' }"
+    >
       <div class="status" :style="status"><span v-show="!btnShow">拼接成功！</span></div>
       <div
         class="btn"
@@ -59,11 +64,14 @@ export default {
         transition: '',
       },
       btnShow: true,
+      imgLoading: false,
+      showImgError: false,
+      verifying: false,
     }
   },
   watch: {
     captchaVisible(val) {
-      if (val) {
+      if (val && !this.verifying) {
         this.btnShow = true
         this.puzzleLeft = 0
         this.btnStyle.left = 0
@@ -74,9 +82,16 @@ export default {
   },
   methods: {
     canvasInt() {
-      getJigsaw().then((res) => {
-        this.draw(res.data)
-      })
+      if (this.imgLoading || this.verifying) return
+      this.imgLoading = true
+      getJigsaw()
+        .then((res) => {
+          this.draw(res.data)
+        })
+        .catch(() => {
+          this.imgLoading = false
+          this.showImgError = true
+        })
     },
     draw(imgInfo) {
       const imgDom = document.querySelector('#img')
@@ -95,20 +110,45 @@ export default {
       dstImg.src = imgInfo.dst_img
       jigsawImg.src = imgInfo.jigsaw_img
 
-      dstImg.onload = () => {
-        imgCtx.drawImage(dstImg, 0, 0, 320, 170)
-      }
+      const dstPromise = new Promise((resolve, reject) => {
+        dstImg.onload = () => {
+          imgCtx.drawImage(dstImg, 0, 0, 320, 170)
+          resolve('success')
+        }
 
-      jigsawImg.onload = () => {
-        puzzleCtx.drawImage(jigsawImg, 2, imgInfo.y, 50, 50)
-      }
+        dstImg.onerror = () => {
+          this.showImgError = true
+          reject('error')
+        }
+      })
+
+      const jigsawPromise = new Promise((resolve, reject) => {
+        jigsawImg.onload = () => {
+          puzzleCtx.drawImage(jigsawImg, 2, imgInfo.y, 50, 50)
+          resolve('success')
+        }
+
+        jigsawImg.onerror = () => {
+          this.showImgError = true
+          reject('error')
+        }
+      })
+
+      Promise.allSettled([dstPromise, jigsawPromise]).then(() => {
+        this.imgLoading = false
+      })
+
+      Promise.all([dstPromise, jigsawPromise]).then(() => {
+        this.showImgError = false
+      })
     },
     drag(e) {
+      if (this.verifying) return
       this.downX = e.x || e.touches[0].pageX
 
       this.btnStyle.transition = ''
       this.status.transition = ''
-      this.status.background = '#67C23A'
+      this.status.background = '#80baf7'
 
       document.getElementById('slider').addEventListener('mousemove', this.move)
       document.addEventListener('mouseup', this.up)
@@ -134,18 +174,23 @@ export default {
       document.removeEventListener('touchend', this.up)
 
       this.$emit('verify', this.offset)
+      this.verifying = true
     },
     handleVerifySuccess() {
       this.btnShow = false
+      this.verifying = false
       this.status.width = '100%'
+      this.status.background = '#67c23a'
     },
-    handleVerifyFail() {
+    handleVerifyFail(noNeedRefresh) {
       this.btnStyle.transition = 'left 1s'
       this.status.transition = 'width 1s'
       this.status.background = '#F56C6C'
       this.status.width = '50px'
       this.puzzleLeft = 0
       this.btnStyle.left = 0
+      this.verifying = false
+      if (noNeedRefresh) return
       this.canvasInt()
     },
   },
@@ -180,6 +225,18 @@ export default {
     #puzzle {
       position: absolute;
       top: 0;
+    }
+
+    .img-error {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: red;
     }
   }
 

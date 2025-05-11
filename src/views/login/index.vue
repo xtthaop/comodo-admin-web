@@ -15,6 +15,7 @@
             placeholder="请输入用户名"
             prefix-icon="el-icon-user"
             clearable
+            maxlength="64"
           ></el-input>
         </el-form-item>
 
@@ -31,6 +32,7 @@
               @keyup="checkCapslock"
               @blur="capsTootip = false"
               @keyup.enter="handleLogin"
+              maxlength="20"
             ></el-input>
           </el-form-item>
         </el-tooltip>
@@ -77,11 +79,7 @@ export default {
     }
   },
   mounted() {
-    if (this.loginForm.username === '') {
-      this.$refs.username.focus()
-    } else if (this.loginForm.password === '') {
-      this.$refs.password.focus()
-    }
+    this.$refs.username.focus()
   },
   watch: {
     $route: {
@@ -118,15 +116,19 @@ export default {
         .dispatch('user/login', data)
         .then(() => {
           this.$refs.captcha.handleVerifySuccess()
-          this.captchaVisible = false
-          this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+          setTimeout(() => {
+            this.captchaVisible = false
+            this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+          }, 300)
         })
         .catch((error) => {
           if (error.code === 4021) {
             // 用户名密码不匹配
             this.captchaVisible = false
+            this.$refs.captcha.handleVerifyFail(true)
+          } else {
+            this.$refs.captcha.handleVerifyFail()
           }
-          this.$refs.captcha.handleVerifyFail()
         })
     },
     checkCapslock(e) {

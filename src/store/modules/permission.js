@@ -28,7 +28,7 @@ function generateDynamicRoutes(data) {
         cache: item.cache,
         id: item.menu_id,
         pid: item.parent_id,
-        menu_type: item.menu_type,
+        menuType: item.menu_type,
         activeMenu: item.active_menu,
       },
     }

@@ -1,7 +1,7 @@
 <template>
   <div v-if="item.hidden" style="display: none"></div>
 
-  <div v-else-if="hasNoShowingChild(item.children) && item.meta?.menu_type !== 'F'">
+  <div v-else-if="hasNoShowingChild(item.children) && item.meta?.menuType !== 'F'">
     <AppLink v-if="item.meta" :to="resolvePath(item)">
       <el-menu-item :index="resolveIndex(item)">
         <ItemIcon :icon="item.meta.icon"></ItemIcon>

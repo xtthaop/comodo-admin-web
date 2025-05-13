@@ -10,28 +10,28 @@
       <el-form ref="userForm" :model="form" :rules="rules" label-width="80px">
         <el-row :gutter="20">
           <el-col :span="12">
-            <el-form-item label="登录名" prop="username">
+            <el-form-item label="用户名" prop="username">
               <el-input
                 v-model="form.username"
-                placeholder="请输入用户登录名"
+                placeholder="请输入用户名"
                 :disabled="disabled"
                 maxlength="64"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-show="form.user_id === undefined" label="密码" prop="password">
+            <el-form-item v-if="form.user_id === undefined" label="密码" prop="password">
               <el-input
                 v-model="form.password"
                 show-password
-                placeholder="请输入用户密码"
+                placeholder="请输入密码"
                 type="password"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="姓名" prop="nickname">
-              <el-input v-model="form.nickname" placeholder="请输入用户姓名" maxlength="64" />
+            <el-form-item label="昵称" prop="nickname">
+              <el-input v-model="form.nickname" placeholder="请输入昵称" maxlength="64" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -46,7 +46,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="用户性别" prop="sex">
-              <el-select v-model="form.sex" placeholder="请选择">
+              <el-select v-model="form.sex" placeholder="请选择" clearable>
                 <el-option
                   v-for="dict in sexOptions"
                   :key="dict.dict_value"
@@ -74,7 +74,6 @@
                 v-model="form.role_ids"
                 multiple
                 placeholder="请选择"
-                @change="$forceUpdate()"
                 :disabled="disabled"
                 style="width: 100%"
               >
@@ -101,8 +100,8 @@
         </el-row>
       </el-form>
       <template #footer>
-        <el-button @click="cancel">取 消</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel" :disabled="submitLoading">取 消</el-button>
+        <el-button type="primary" @click="submitForm" :loading="submitLoading">确 定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -124,12 +123,13 @@ export default {
     return {
       title: '',
       dialogVisible: false,
+      submitLoading: false,
       form: {
         status: 1,
       },
       rules: {
-        username: [{ required: true, message: '登录名不能为空', trigger: 'blur' }],
-        nickname: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
+        username: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
+        nickname: [{ required: true, message: '昵称不能为空', trigger: 'blur' }],
         password: [
           { required: true, message: '密码不能为空', trigger: 'blur' },
           { min: 6, max: 20, message: '密码长度需在 6 到 20 个字符', trigger: 'blur' },
@@ -143,6 +143,8 @@ export default {
             trigger: 'blur',
           },
         ],
+        status: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
+        role_ids: [{ required: true, message: '角色不能为空', trigger: 'blur' }],
       },
       sexOptions: [],
       roleOptions: [],
@@ -183,27 +185,40 @@ export default {
       })
     },
     submitForm() {
-      if (!this.form.user_id) {
-        this.handleAddUser()
-      } else {
-        this.handleUpdateUser()
-      }
+      this.$refs.userForm.validate((valid) => {
+        if (valid) {
+          this.submitLoading = true
+          if (!this.form.user_id) {
+            this.handleAddUser()
+          } else {
+            this.handleUpdateUser()
+          }
+        }
+      })
     },
     handleAddUser() {
       const data = Object.assign({}, this.form)
       data.password = this.md5Password(data.password)
-      addUser(data).then(() => {
-        this.$message.success('新增成功')
-        this.$emit('update')
-        this.dialogVisible = false
-      })
+      addUser(data)
+        .then(() => {
+          this.$message.success('新增成功')
+          this.$emit('update')
+          this.dialogVisible = false
+        })
+        .finally(() => {
+          this.submitLoading = false
+        })
     },
     handleUpdateUser() {
-      updateUser(this.form).then(() => {
-        this.$message.success('修改成功')
-        this.$emit('update')
-        this.dialogVisible = false
-      })
+      updateUser(this.form)
+        .then(() => {
+          this.$message.success('修改成功')
+          this.$emit('update')
+          this.dialogVisible = false
+        })
+        .finally(() => {
+          this.submitLoading = false
+        })
     },
     cancel() {
       this.dialogVisible = false

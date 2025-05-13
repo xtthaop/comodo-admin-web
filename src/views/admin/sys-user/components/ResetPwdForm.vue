@@ -18,8 +18,8 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="cancel">取 消</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel" :disabled="submitLoading">取 消</el-button>
+        <el-button type="primary" @click="submitForm" :loading="submitLoading">确 定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -34,6 +34,7 @@ export default {
     return {
       title: '重置密码',
       dialogVisible: false,
+      submitLoading: false,
       form: {},
       rules: {
         new_password: [
@@ -56,13 +57,18 @@ export default {
     submitForm() {
       this.$refs['resetPwdForm'].validate((valid) => {
         if (valid) {
+          this.submitLoading = true
           const data = {}
           data.user_id = this.form.user_id
           data.new_password = this.md5Password(this.form.new_password)
-          resetPassword(data).then(() => {
-            this.$message.success('密码重置成功')
-            this.dialogVisible = false
-          })
+          resetPassword(data)
+            .then(() => {
+              this.$message.success('密码重置成功')
+              this.dialogVisible = false
+            })
+            .finally(() => {
+              this.submitLoading = false
+            })
         }
       })
     },

@@ -1,22 +1,12 @@
 <template>
   <div class="app-container">
     <el-card shadow="never">
-      <el-form ref="queryForm" :model="queryParams" :inline="true">
+      <el-form ref="queryForm" class="common-query-form" :model="queryParams" :inline="true">
         <el-form-item prop="username">
-          <el-input
-            v-model="queryParams.username"
-            placeholder="请输入登录名"
-            clearable
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.username" placeholder="请输入用户名" clearable />
         </el-form-item>
         <el-form-item prop="phone">
-          <el-input
-            v-model="queryParams.phone"
-            placeholder="请输入手机号码"
-            clearable
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.phone" placeholder="请输入手机号码" clearable />
         </el-form-item>
         <el-form-item prop="status">
           <el-select v-model="queryParams.status" placeholder="用户状态" clearable>
@@ -30,6 +20,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="handleReset">重置</el-button>
           <el-button
             v-actionpermission="['admin:sysuser:add']"
             type="primary"
@@ -42,8 +33,8 @@
 
       <el-table v-loading="loading" :data="userList" border>
         <el-table-column label="ID" width="75" prop="user_id" />
-        <el-table-column label="登录名" prop="username" :show-overflow-tooltip="true" />
-        <el-table-column label="姓名" prop="nickname" :show-overflow-tooltip="true" />
+        <el-table-column label="用户名" prop="username" :show-overflow-tooltip="true" />
+        <el-table-column label="昵称" prop="nickname" :show-overflow-tooltip="true" />
         <el-table-column label="手机号" prop="phone" />
         <el-table-column label="状态">
           <template #default="scope">
@@ -143,6 +134,10 @@ export default {
     handleQuery() {
       this.queryParams.page = 1
       this.handleGetUserList()
+    },
+    handleReset() {
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     handleGetUserList() {
       this.loading = true

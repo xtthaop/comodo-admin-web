@@ -1,0 +1,9 @@
+.common-query-form {
+  &.el-form--inline .el-form-item {
+    margin-right: 16px;
+
+    .el-input {
+      width: 240px;
+    }
+  }
+}

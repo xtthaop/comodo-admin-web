@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-card shadow="never">
-      <el-form ref="queryForm" :model="queryParams" :inline="true">
+      <el-form ref="queryForm" class="common-query-form" :model="queryParams" :inline="true">
         <el-form-item prop="role_name">
           <el-input
             v-model="queryParams.role_name"
@@ -30,6 +30,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="handleReset">重置</el-button>
           <el-button
             v-actionpermission="['admin:sysrole:add']"
             type="primary"
@@ -70,7 +71,7 @@
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              >修改</el-button
+              >编辑</el-button
             >
             <el-button
               v-if="scope.row.role_key !== 'admin'"
@@ -131,6 +132,10 @@ export default {
     handleQuery() {
       this.queryParams.page = 1
       this.handleGetRoleList()
+    },
+    handleReset() {
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     handleGetRoleList() {
       this.loading = true

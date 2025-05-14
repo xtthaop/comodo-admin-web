@@ -94,6 +94,7 @@
                 type="textarea"
                 placeholder="请输入内容"
                 maxlength="255"
+                show-word-limit
               />
             </el-form-item>
           </el-col>

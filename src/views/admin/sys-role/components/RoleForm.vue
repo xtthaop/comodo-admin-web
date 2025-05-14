@@ -45,6 +45,8 @@
               show-checkbox
               node-key="menu_id"
               :props="defaultProps"
+              :check-strictly="true"
+              :default-expand-all="true"
             >
               <template #default="{ node }">
                 <el-icon style="vertical-align: middle; margin-right: 3px; opacity: 0.5">
@@ -55,7 +57,7 @@
                     <Document />
                   </template>
                   <template v-else-if="node.data.menu_type === 'B'">
-                    <Help />
+                    <Place />
                   </template>
                 </el-icon>
                 <span>{{ node.label }}</span>
@@ -77,8 +79,8 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="cancel">取 消</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel" :disabled="submitLoading">取 消</el-button>
+        <el-button type="primary" @click="submitForm" :loading="submitLoading">确 定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -100,6 +102,7 @@ export default {
     return {
       title: '',
       dialogVisible: false,
+      submitLoading: false,
       form: {
         role_sort: 0,
         status: 1,
@@ -108,6 +111,7 @@ export default {
         role_name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
         role_key: [{ required: true, message: '权限字符不能为空', trigger: 'blur' }],
         role_sort: [{ required: true, message: '角色顺序不能为空', trigger: 'blur' }],
+        status: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
       },
       menuOptions: [],
       defaultProps: {
@@ -142,14 +146,7 @@ export default {
     },
     handleSetCheckedKeys(menuIds) {
       if (menuIds && menuIds.length) {
-        const filterCheckedKeys = []
-        menuIds.forEach((item) => {
-          const node = this.$refs.menuTree.getNode(item)
-          if (!node.childNodes || !node.childNodes.length) {
-            filterCheckedKeys.push(item)
-          }
-        })
-        this.$refs.menuTree.setCheckedKeys(filterCheckedKeys)
+        this.$refs.menuTree.setCheckedKeys(menuIds)
       } else {
         this.$refs.menuTree.setCheckedKeys([])
       }
@@ -172,27 +169,40 @@ export default {
       return checkedKeys
     },
     submitForm() {
-      if (!this.form.role_id) {
-        this.handleAddRole()
-      } else {
-        this.handleUpdateRole()
-      }
+      this.$refs.roleForm.validate((valid) => {
+        if (valid) {
+          this.submitLoading = true
+          if (!this.form.role_id) {
+            this.handleAddRole()
+          } else {
+            this.handleUpdateRole()
+          }
+        }
+      })
     },
     handleAddRole() {
       this.form.menu_ids = this.getMenuAllCheckedKeys()
-      addRole(this.form).then(() => {
-        this.$message.success('新增成功')
-        this.$emit('update')
-        this.dialogVisible = false
-      })
+      addRole(this.form)
+        .then(() => {
+          this.$message.success('新增成功')
+          this.$emit('update')
+          this.dialogVisible = false
+        })
+        .finally(() => {
+          this.submitLoading = false
+        })
     },
     handleUpdateRole() {
       this.form.menu_ids = this.getMenuAllCheckedKeys()
-      updateRole(this.form).then(() => {
-        this.$message.success('修改成功')
-        this.$emit('update')
-        this.dialogVisible = false
-      })
+      updateRole(this.form)
+        .then(() => {
+          this.$message.success('修改成功')
+          this.$emit('update')
+          this.dialogVisible = false
+        })
+        .finally(() => {
+          this.submitLoading = false
+        })
     },
     cancel() {
       this.dialogVisible = false

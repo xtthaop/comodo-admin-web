@@ -1,12 +1,6 @@
 <template>
   <div>
-    <el-dialog
-      :title="title"
-      v-model="dialogVisible"
-      :close-on-click-modal="false"
-      :draggable="true"
-      width="600px"
-    >
+    <el-dialog :title="title" v-model="dialogVisible" :close-on-click-modal="false" width="600px">
       <el-form ref="userForm" :model="form" :rules="rules" label-width="80px">
         <el-row :gutter="20">
           <el-col :span="12">
@@ -144,8 +138,8 @@ export default {
             trigger: 'blur',
           },
         ],
-        status: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
-        role_ids: [{ required: true, message: '角色不能为空', trigger: 'blur' }],
+        status: [{ required: true, message: '状态不能为空', trigger: 'change' }],
+        role_ids: [{ required: true, message: '角色不能为空', trigger: 'change' }],
       },
       sexOptions: [],
       roleOptions: [],

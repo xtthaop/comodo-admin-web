@@ -1,12 +1,6 @@
 <template>
   <div>
-    <el-dialog
-      :title="title"
-      v-model="dialogVisible"
-      :close-on-click-modal="false"
-      :draggable="true"
-      width="600px"
-    >
+    <el-dialog :title="title" v-model="dialogVisible" :close-on-click-modal="false" width="600px">
       <el-form ref="roleForm" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="角色名称" prop="role_name">
           <el-input v-model="form.role_name" placeholder="请输入角色名称" maxlength="128" />
@@ -111,7 +105,7 @@ export default {
         role_name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
         role_key: [{ required: true, message: '权限字符不能为空', trigger: 'blur' }],
         role_sort: [{ required: true, message: '角色顺序不能为空', trigger: 'blur' }],
-        status: [{ required: true, message: '状态不能为空', trigger: 'blur' }],
+        status: [{ required: true, message: '状态不能为空', trigger: 'change' }],
       },
       menuOptions: [],
       defaultProps: {

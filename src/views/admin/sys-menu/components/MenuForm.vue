@@ -1,12 +1,6 @@
 <template>
   <div>
-    <el-dialog
-      :title="title"
-      v-model="dialogVisible"
-      :close-on-click-modal="false"
-      :draggable="true"
-      width="700px"
-    >
+    <el-dialog :title="title" v-model="dialogVisible" :close-on-click-modal="false" width="700px">
       <el-form ref="menuForm" :model="form" :rules="rules" label-position="top" label-width="106px">
         <el-row :gutter="20">
           <el-col :span="24">
@@ -90,7 +84,7 @@
           </el-col>
 
           <el-col :span="12" v-if="form.menu_type != 'B'">
-            <el-form-item>
+            <el-form-item prop="visible">
               <template #label>
                 <span>是否显示菜单</span>
               </template>
@@ -294,8 +288,11 @@ export default {
       dialogVisible: false,
       form: {},
       rules: {
+        parent_id: [{ required: true, message: '父级菜单不能为空', trigger: 'change' }],
         title: [{ required: true, message: '菜单标题不能为空', trigger: 'blur' }],
         sort: [{ required: true, message: '排序不能为空', trigger: 'blur' }],
+        menu_type: [{ required: true, message: '菜单类型不能为空', trigger: 'change' }],
+        visible: [{ required: true, message: '是否显示菜单不能为空', trigger: 'change' }],
         component: [{ required: true, message: '组件路径不能为空', trigger: 'blur' }],
         path: [{ required: true, message: '路由地址不能为空', trigger: 'blur' }],
       },

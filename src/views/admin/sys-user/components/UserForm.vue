@@ -138,7 +138,6 @@ export default {
             trigger: 'blur',
           },
         ],
-        status: [{ required: true, message: '状态不能为空', trigger: 'change' }],
         role_ids: [{ required: true, message: '角色不能为空', trigger: 'change' }],
       },
       sexOptions: [],

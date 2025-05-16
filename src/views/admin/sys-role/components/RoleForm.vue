@@ -43,7 +43,7 @@
               :default-expand-all="true"
             >
               <template #default="{ node }">
-                <el-icon style="vertical-align: middle; margin-right: 3px; opacity: 0.5">
+                <el-icon style="margin-right: 3px; opacity: 0.5">
                   <template v-if="node.data.menu_type === 'F'">
                     <Folder />
                   </template>
@@ -105,7 +105,6 @@ export default {
         role_name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
         role_key: [{ required: true, message: '权限字符不能为空', trigger: 'blur' }],
         role_sort: [{ required: true, message: '角色顺序不能为空', trigger: 'blur' }],
-        status: [{ required: true, message: '状态不能为空', trigger: 'change' }],
       },
       menuOptions: [],
       defaultProps: {

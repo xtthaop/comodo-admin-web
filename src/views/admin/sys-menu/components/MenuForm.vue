@@ -19,7 +19,24 @@
                 default-expand-all
                 @change="handleParentMenuChange"
                 style="width: 100%"
-              />
+              >
+                <template #default="{ data }">
+                  <div style="display: flex; align-items: center">
+                    <el-icon style="margin-right: 3px; opacity: 0.5">
+                      <template v-if="data.nodeData.menu_type === 'F'">
+                        <Folder />
+                      </template>
+                      <template v-else-if="data.nodeData.menu_type === 'P'">
+                        <Document />
+                      </template>
+                      <template v-else-if="data.nodeData.menu_type === 'B'">
+                        <Place />
+                      </template>
+                    </el-icon>
+                    <span>{{ data.label }}</span>
+                  </div>
+                </template>
+              </el-tree-select>
             </el-form-item>
           </el-col>
 
@@ -147,15 +164,19 @@
               "
             >
               <template #label>
-                <span style="margin-right: 5px; vertical-align: middle">路由名称</span>
-                <el-tooltip
-                  v-if="form.cache"
-                  content="使用缓存需保持路由名称与组件名称一致"
-                  placement="top"
-                  effect="light"
-                >
-                  <el-tag effect="light" type="danger" size="small">重要提醒</el-tag>
-                </el-tooltip>
+                <div style="display: inline-flex; align-items: center">
+                  <span style="margin-right: 5px; vertical-align: middle">路由名称</span>
+                  <el-tooltip
+                    v-if="form.cache"
+                    content="使用缓存需保持路由名称与代码中组件名称一致"
+                    placement="top"
+                    effect="dark"
+                  >
+                    <el-icon style="color: var(--el-color-danger); font-size: 16px"
+                      ><WarningFilled
+                    /></el-icon>
+                  </el-tooltip>
+                </div>
               </template>
               <el-input
                 v-model="form.route_name"
@@ -182,7 +203,7 @@
           <el-col :span="12" v-if="form.menu_type === 'P'">
             <el-form-item prop="path">
               <template #label>
-                <span>{{ form.is_link ? '外链地址' : '路由地址' }}</span>
+                <span>{{ form.is_link ? '外部链接地址' : '路由地址' }}</span>
               </template>
               <el-input
                 v-model="form.path"
@@ -194,14 +215,20 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12" v-if="form.menu_type !== 'F'">
+          <el-col :span="12">
             <el-form-item>
               <template #label>
                 <span>权限标识</span>
               </template>
               <el-input
                 v-model="form.permission"
-                placeholder="示例：admin:sysmenu"
+                :placeholder="`示例：${
+                  form.menu_type === 'F'
+                    ? 'admin'
+                    : form.menu_type === 'P'
+                    ? 'admin:sysmenu'
+                    : 'admin:sysmenu:add'
+                }`"
                 :disabled="disabled"
                 maxlength="255"
               />
@@ -254,8 +281,8 @@
       </el-form>
 
       <template #footer>
-        <el-button @click="cancel">取 消</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel" :disabled="submitLoading">取 消</el-button>
+        <el-button type="primary" @click="submitForm" :loading="submitLoading">确 定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -286,13 +313,13 @@ export default {
     return {
       title: '',
       dialogVisible: false,
+      submitLoading: false,
       form: {},
       rules: {
         parent_id: [{ required: true, message: '父级菜单不能为空', trigger: 'change' }],
         title: [{ required: true, message: '菜单标题不能为空', trigger: 'blur' }],
         sort: [{ required: true, message: '排序不能为空', trigger: 'blur' }],
         menu_type: [{ required: true, message: '菜单类型不能为空', trigger: 'change' }],
-        visible: [{ required: true, message: '是否显示菜单不能为空', trigger: 'change' }],
         component: [{ required: true, message: '组件路径不能为空', trigger: 'blur' }],
         path: [{ required: true, message: '路由地址不能为空', trigger: 'blur' }],
       },
@@ -405,7 +432,7 @@ export default {
       }
     },
     changeActiveMenu(node) {
-      if (!node.visible) {
+      if (!node.visible && node.visible !== undefined) {
         const parentNode = this.$refs.treeSelect.getNode(node.parent_id)
         this.changeActiveMenu(parentNode.data.nodeData)
       } else {
@@ -433,6 +460,7 @@ export default {
       }
       this.disabled = false
       this.parentMenuType = ''
+      this.resetForm('menuForm')
     },
     selected(name) {
       this.form.icon = name
@@ -440,6 +468,7 @@ export default {
     submitForm() {
       this.$refs.menuForm.validate((valid) => {
         if (valid) {
+          this.submitLoading = true
           const data = this.convertFormContent()
           if (this.form.menu_id === undefined) {
             this.handleAddMenu(data)
@@ -450,26 +479,34 @@ export default {
       })
     },
     handleAddMenu(data) {
-      addMenu(data).then(() => {
-        this.$message.success('新增成功')
-        this.$emit('update')
-        this.dialogVisible = false
-      })
+      addMenu(data)
+        .then(() => {
+          this.$message.success('新增成功')
+          this.$emit('update')
+          this.dialogVisible = false
+        })
+        .finally(() => {
+          this.submitLoading = false
+        })
     },
     handleUpdateMenu(data) {
-      updateMenu(data).then(() => {
-        this.$message.success('修改成功')
-        this.$emit('update')
-        this.dialogVisible = false
-      })
+      updateMenu(data)
+        .then(() => {
+          this.$message.success('修改成功')
+          this.$emit('update')
+          this.dialogVisible = false
+        })
+        .finally(() => {
+          this.submitLoading = false
+        })
     },
     convertFormContent() {
       const { parent_id, menu_id, title, sort, menu_type } = this.form
       const baseObj = { parent_id, menu_id, title, sort, menu_type }
       switch (menu_type) {
         case 'F': {
-          const { icon, visible } = this.form
-          return Object.assign(baseObj, { icon, visible })
+          const { icon, visible, permission } = this.form
+          return Object.assign(baseObj, { icon, visible, permission })
         }
         case 'P': {
           const { icon, visible, is_link } = this.form

@@ -3,20 +3,10 @@
     <el-card shadow="never">
       <el-form ref="queryForm" class="common-query-form" :model="queryParams" :inline="true">
         <el-form-item prop="role_name">
-          <el-input
-            v-model="queryParams.role_name"
-            placeholder="请输入角色名称"
-            clearable
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.role_name" placeholder="请输入角色名称" clearable />
         </el-form-item>
         <el-form-item prop="role_key">
-          <el-input
-            v-model="queryParams.role_key"
-            placeholder="请输入角色标识"
-            clearable
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.role_key" placeholder="请输入角色标识" clearable />
         </el-form-item>
         <el-form-item prop="status">
           <el-select v-model="queryParams.status" placeholder="角色状态" clearable>
@@ -43,9 +33,14 @@
 
       <el-table v-loading="loading" :data="roleList" border>
         <el-table-column label="ID" prop="role_id" width="80" />
-        <el-table-column label="角色名称" prop="role_name" :show-overflow-tooltip="true" />
-        <el-table-column label="角色标识" prop="role_key" :show-overflow-tooltip="true" />
-        <el-table-column label="排序" prop="role_sort" align="center" width="80" />
+        <el-table-column
+          label="角色名称"
+          prop="role_name"
+          min-width="100px"
+          show-overflow-tooltip
+        />
+        <el-table-column label="角色标识" min-width="100px" prop="role_key" />
+        <el-table-column label="排序" prop="role_sort" width="80" />
         <el-table-column label="状态" width="120" align="center">
           <template #default="scope">
             <el-switch
@@ -58,12 +53,12 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" prop="created_at" align="center" width="160">
+        <el-table-column label="创建时间" prop="created_at" min-width="160">
           <template #default="scope">
             <span>{{ parseTime(scope.row.created_at) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="left" width="220">
+        <el-table-column label="操作" width="160">
           <template #default="scope">
             <el-button
               v-actionpermission="['admin:sysrole:update']"

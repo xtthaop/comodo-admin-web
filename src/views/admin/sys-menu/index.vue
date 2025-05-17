@@ -1,28 +1,23 @@
 <template>
   <div class="app-container">
     <el-card shadow="never">
-      <el-form :inline="true">
-        <el-form-item>
-          <el-input
-            v-model="queryParams.title"
-            placeholder="请输入菜单名称"
-            clearable
-            @keyup.enter="handleQuery"
-          />
+      <el-form ref="queryForm" :inline="true" class="common-query-form" :model="queryParams">
+        <el-form-item prop="title">
+          <el-input v-model="queryParams.title" placeholder="请输入菜单名称" clearable />
         </el-form-item>
-        <el-form-item>
-          <el-select v-model="queryParams.visible" placeholder="菜单状态" clearable>
+        <el-form-item prop="visible">
+          <el-select v-model="queryParams.visible" placeholder="显示状态" clearable>
             <el-option
               v-for="dict in visibleOptions"
               :key="dict.dict_value"
               :label="dict.dict_label"
               :value="dict.dict_value"
             />
-            <el-option key="2" label="未知" value="2" />
           </el-select>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="handleReset">重置</el-button>
           <el-button
             v-actionpermission="['admin:sysmenu:add']"
             type="primary"
@@ -44,69 +39,87 @@
           prop="title"
           label="菜单名称"
           header-align="center"
-          :show-overflow-tooltip="true"
-          width="160px"
-        />
-        <el-table-column prop="menu_id" label="ID" align="center" width="60px" />
-        <el-table-column prop="icon" label="图标" align="center" width="80px">
-          <template #default="scope">
-            <span v-if="!scope.row.icon">——</span>
-            <span v-else><UniIcon :icon="scope.row.icon" /></span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="sort" label="排序" align="center" width="60px" />
-        <el-table-column
-          prop="permission"
-          label="权限标识"
-          align="center"
-          :show-overflow-tooltip="true"
+          min-width="160px"
+          class-name="custom-col"
         >
           <template #default="scope">
-            <el-popover v-if="scope.row.api_list.length > 0" trigger="hover" placement="top">
-              <el-table :data="scope.row.api_list" border style="width: 100%">
-                <el-table-column prop="title" label="接口名称" width="260px"></el-table-column>
-                <el-table-column label="接口信息" width="270px">
+            <div style="display: inline-flex; align-items: center">
+              <el-icon style="margin-right: 3px; opacity: 0.5">
+                <template v-if="scope.row.menu_type === 'F'">
+                  <Folder />
+                </template>
+                <template v-else-if="scope.row.menu_type === 'P'">
+                  <Document />
+                </template>
+                <template v-else-if="scope.row.menu_type === 'B'">
+                  <Place />
+                </template>
+              </el-icon>
+              <span>{{ scope.row.title }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="menu_id" label="ID" width="60px" />
+        <el-table-column prop="icon" label="图标" align="center" width="80px">
+          <template #default="scope">
+            <span v-if="scope.row.icon"><UniIcon :icon="scope.row.icon" /></span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="sort" label="排序" width="60px" />
+        <el-table-column prop="permission" label="权限标识" min-width="130px">
+          <template #default="scope">
+            <el-popover
+              v-if="scope.row.api_list.length > 0"
+              trigger="hover"
+              placement="top"
+              :offset="30"
+              :width="280"
+            >
+              <el-table :data="scope.row.api_list" border>
+                <el-table-column
+                  prop="title"
+                  label="接口名称"
+                  min-width="120px"
+                  :show-overflow-tooltip="{
+                    effect: 'light',
+                    placement: 'top',
+                  }"
+                ></el-table-column>
+                <el-table-column label="接口信息" min-width="260px">
                   <template #default="scope">
                     <el-tag :type="getType(scope.row.type)">
-                      {{ '[' + scope.row.type + '] ' + scope.row.path }}
+                      {{ scope.row.type }}
                     </el-tag>
+                    {{ scope.row.path }}
                   </template>
                 </el-table-column>
               </el-table>
 
               <template #reference>
-                <span v-if="!scope.row.permission">——</span>
-                <span v-else>{{ scope.row.permission }}</span>
+                <span>{{ scope.row.permission }}</span>
               </template>
             </el-popover>
 
             <span v-else>
-              <span v-if="!scope.row.permission">——</span>
-              <span v-else>{{ scope.row.permission }}</span>
+              <span>{{ scope.row.permission }}</span>
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="菜单类型" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="菜单类型" align="center" min-width="100px">
           <template #default="scope">
             <span v-if="scope.row.menu_type === 'F'">页面夹</span>
             <span v-else-if="scope.row.menu_type === 'P'">页面</span>
             <span v-else>按钮</span>
           </template>
         </el-table-column>
-        <el-table-column label="组件路径" align="center" :show-overflow-tooltip="true">
+        <el-table-column label="显示状态" align="center" width="100">
           <template #default="scope">
-            <span v-if="!scope.row.component">——</span>
-            <span v-else>{{ scope.row.component }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="状态" align="center" width="80">
-          <template #default="scope">
-            <el-tag :type="visibleType(scope.row.visible)">
+            <el-tag v-if="scope.row.menu_type !== 'B'" :type="visibleType(scope.row.visible)">
               {{ visibleFormat(scope.row) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" align="center" width="180">
+        <el-table-column label="创建时间" min-width="160">
           <template #default="scope">
             <span>{{ parseTime(scope.row.created_at) }}</span>
           </template>
@@ -224,6 +237,10 @@ export default {
           })
       }
     },
+    handleReset() {
+      this.resetForm('queryForm')
+      this.handleQuery()
+    },
     handleQuery() {
       this.handleGetMenuList()
     },
@@ -252,9 +269,6 @@ export default {
         .catch(() => {})
     },
     visibleFormat(row) {
-      if (row.menu_type === 'B') {
-        return ' —— '
-      }
       return this.selectDictLabel(this.visibleOptions, row.visible)
     },
     visibleType(visible) {
@@ -263,10 +277,17 @@ export default {
           return 'danger'
         case 1:
           return 'success'
-        case 2:
+        default:
           return 'info'
       }
     },
   },
 }
 </script>
+
+<style scoped lang="scss">
+:deep(.custom-col .cell) {
+  display: inline-flex;
+  align-items: center;
+}
+</style>

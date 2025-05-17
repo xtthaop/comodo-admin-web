@@ -33,8 +33,8 @@
 
       <el-table v-loading="loading" :data="userList" border>
         <el-table-column label="ID" width="75" prop="user_id" />
-        <el-table-column label="用户名" prop="username" :show-overflow-tooltip="true" />
-        <el-table-column label="昵称" prop="nickname" :show-overflow-tooltip="true" />
+        <el-table-column label="用户名" prop="username" show-overflow-tooltip />
+        <el-table-column label="昵称" prop="nickname" show-overflow-tooltip />
         <el-table-column label="手机号" prop="phone" />
         <el-table-column label="状态">
           <template #default="scope">
@@ -48,7 +48,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="创建时间">
+        <el-table-column label="创建时间" min-width="160px">
           <template #default="scope">
             <span>{{ parseTime(scope.row.created_at) }}</span>
           </template>

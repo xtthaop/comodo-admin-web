@@ -86,7 +86,7 @@ export default {
       handler: function (route) {
         const query = route.query
         if (query) {
-          this.redirect = query.redirect
+          this.redirect = Array.isArray(query.redirect) ? query.redirect[0] : query.redirect
           this.otherQuery = this.getOtherQuery(query)
         }
       },

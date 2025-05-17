@@ -33,7 +33,7 @@ function generateDynamicRoutes(data) {
       },
     }
 
-    if (item.menu_type === 'P' && !item.is_link) {
+    if (item.menu_type === 'P' && !item.is_link && item.path.startsWith('/')) {
       routerConfig.push({ ...route })
     }
 

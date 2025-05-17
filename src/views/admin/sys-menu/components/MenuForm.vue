@@ -293,6 +293,14 @@ import { getMenuTree, addMenu, updateMenu } from '@/api/admin/sys-menu'
 import IconSelect from '@/components/IconSelect/index.vue'
 import UniIcon from '@/components/UniIcon/index.vue'
 
+const validatePath = (rule, value, callback) => {
+  if (value && !value.startsWith('/')) {
+    callback(new Error("请以 '/' 开头"))
+  } else {
+    callback()
+  }
+}
+
 export default {
   name: 'MenuForm',
   components: {
@@ -320,8 +328,14 @@ export default {
         title: [{ required: true, message: '菜单标题不能为空', trigger: 'blur' }],
         sort: [{ required: true, message: '排序不能为空', trigger: 'blur' }],
         menu_type: [{ required: true, message: '菜单类型不能为空', trigger: 'change' }],
-        component: [{ required: true, message: '组件路径不能为空', trigger: 'blur' }],
-        path: [{ required: true, message: '路由地址不能为空', trigger: 'blur' }],
+        component: [
+          { required: true, message: '组件路径不能为空', trigger: 'blur' },
+          { validator: validatePath, trigger: 'blur' },
+        ],
+        path: [
+          { required: true, message: '路由地址不能为空', trigger: 'blur' },
+          { validator: validatePath, trigger: 'blur' },
+        ],
       },
       menuOptions: [],
       disabled: false,
@@ -519,7 +533,7 @@ export default {
         }
         case 'B': {
           const { permission, apis } = this.form
-          return Object.assign(baseObj, { visible: 2, permission, apis })
+          return Object.assign(baseObj, { permission, apis })
         }
       }
     },

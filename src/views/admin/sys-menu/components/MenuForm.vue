@@ -67,11 +67,7 @@
               <template #label>
                 <span>菜单类型</span>
               </template>
-              <el-radio-group
-                v-model="form.menu_type"
-                :disabled="disabled"
-                @change="handleMenuTypeChange"
-              >
+              <el-radio-group v-model="form.menu_type" @change="handleMenuTypeChange">
                 <el-radio label="F" :disabled="parentMenuType === 'P'">页面夹</el-radio>
                 <el-radio label="P">页面</el-radio>
                 <el-radio label="B">按钮</el-radio>
@@ -105,7 +101,7 @@
               <template #label>
                 <span>是否显示菜单</span>
               </template>
-              <el-radio-group v-model="form.visible" :disabled="disabled || isInnerPage">
+              <el-radio-group v-model="form.visible">
                 <el-radio
                   v-for="dict in visibleOptions"
                   :key="dict.dict_value"
@@ -120,7 +116,7 @@
               <template #label>
                 <span>是否为外部链接</span>
               </template>
-              <el-radio-group v-model="form.is_link" :disabled="disabled || isInnerPage">
+              <el-radio-group v-model="form.is_link">
                 <el-radio :label="1">是</el-radio>
                 <el-radio :label="0">否</el-radio>
               </el-radio-group>
@@ -134,7 +130,6 @@
               </template>
               <el-radio-group
                 v-model="form.cache"
-                :disabled="disabled"
                 @change="$refs.menuForm.clearValidate('route_name')"
               >
                 <el-radio :label="1">使用</el-radio>
@@ -147,7 +142,7 @@
               <template #label>
                 <span>是否显示布局</span>
               </template>
-              <el-radio-group v-model="form.layout" :disabled="disabled">
+              <el-radio-group v-model="form.layout">
                 <el-radio :label="1">显示</el-radio>
                 <el-radio :label="0">不显示</el-radio>
               </el-radio-group>
@@ -178,12 +173,7 @@
                   </el-tooltip>
                 </div>
               </template>
-              <el-input
-                v-model="form.route_name"
-                placeholder="示例：SysMenu"
-                :disabled="disabled"
-                maxlength="128"
-              />
+              <el-input v-model="form.route_name" placeholder="示例：SysMenu" maxlength="128" />
             </el-form-item>
           </el-col>
           <el-col :span="12" v-if="form.menu_type === 'P' && !form.is_link">
@@ -194,7 +184,6 @@
               <el-input
                 v-model="form.component"
                 placeholder="示例：/admin/sys-menu/index.vue"
-                :disabled="disabled"
                 maxlength="255"
               />
             </el-form-item>
@@ -210,7 +199,6 @@
                 :placeholder="
                   form.is_link ? '示例：https://www.zxctb.top' : '示例：/admin/sys-menu'
                 "
-                :disabled="disabled"
                 maxlength="255"
               />
             </el-form-item>
@@ -229,7 +217,6 @@
                     ? 'admin:sysmenu'
                     : 'admin:sysmenu:add'
                 }`"
-                :disabled="disabled"
                 maxlength="255"
               />
             </el-form-item>
@@ -244,7 +231,6 @@
                 v-model="form.active_menu"
                 placeholder="请输入在访问此页面时需要高亮显示的菜单路由地址如：/admin/sys-menu"
                 maxlength="255"
-                :disabled="disabled"
               />
             </el-form-item>
           </el-col>
@@ -338,7 +324,6 @@ export default {
         ],
       },
       menuOptions: [],
-      disabled: false,
       parent: '',
       parentMenuType: '',
       defaultProps: {
@@ -365,12 +350,15 @@ export default {
         }
         this.title = '新增菜单'
       } else {
-        if (item.permission === 'admin:sysmenu') {
-          this.disabled = true
-        }
-        Object.assign(this.form, item)
-        this.form.apis = this.form.api_list.map((api) => api.id)
-        this.title = '修改菜单'
+        this.$nextTick(() => {
+          Object.assign(this.form, item)
+          if (!this.form.cache && this.form.cache !== 0) this.form.cache = 0
+          if (!this.form.layout && this.form.layout !== 0) this.form.layout = 1
+          if (!this.form.visible && this.form.visible !== 0) this.form.visible = 1
+          if (!this.form.is_link && this.form.is_link !== 0) this.form.is_link = 0
+          this.form.apis = this.form.api_list.map((api) => api.id)
+        })
+        this.title = '编辑菜单'
       }
 
       this.getTreeSelect()
@@ -406,10 +394,6 @@ export default {
       if (this.form.menu_id && this.form.menu_id === node.menu_id) {
         disabled = true
       }
-      // 编辑菜单管理页面时父菜单不能为页面必须为页面夹
-      if (this.form.menu_id && this.form.permission === 'admin:sysmenu' && node.menu_type === 'P') {
-        disabled = true
-      }
 
       return {
         id: node.menu_id,
@@ -436,10 +420,7 @@ export default {
       this.handleInnerPage(node)
     },
     handleInnerPage(node) {
-      if (this.form.menu_id) return
       if (this.isInnerPage) {
-        this.form.visible = 0
-        this.form.is_link = 0
         this.changeActiveMenu(node)
       } else {
         this.form.active_menu = undefined
@@ -523,12 +504,14 @@ export default {
           return Object.assign(baseObj, { icon, visible, permission })
         }
         case 'P': {
-          const { icon, visible, is_link } = this.form
+          const { icon, is_link } = this.form
+          let { visible } = this.form
+          if (this.isInnerPage) visible = 0
           if (is_link) {
             const { path, permission } = this.form
             return Object.assign(baseObj, { icon, visible, is_link, path, permission })
           } else {
-            return Object.assign({}, this.form)
+            return Object.assign({}, this.form, { visible })
           }
         }
         case 'B': {

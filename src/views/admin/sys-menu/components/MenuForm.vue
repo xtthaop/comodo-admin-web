@@ -101,7 +101,7 @@
               <template #label>
                 <span>是否显示菜单</span>
               </template>
-              <el-radio-group v-model="form.visible">
+              <el-radio-group v-model="form.visible" :disabled="this.isInnerPage">
                 <el-radio
                   v-for="dict in visibleOptions"
                   :key="dict.dict_value"
@@ -116,7 +116,7 @@
               <template #label>
                 <span>是否为外部链接</span>
               </template>
-              <el-radio-group v-model="form.is_link">
+              <el-radio-group v-model="form.is_link" :disabled="this.isInnerPage">
                 <el-radio :label="1">是</el-radio>
                 <el-radio :label="0">否</el-radio>
               </el-radio-group>
@@ -278,14 +278,7 @@
 import { getMenuTree, addMenu, updateMenu } from '@/api/admin/sys-menu'
 import IconSelect from '@/components/IconSelect/index.vue'
 import UniIcon from '@/components/UniIcon/index.vue'
-
-const validatePath = (rule, value, callback) => {
-  if (value && !value.startsWith('/')) {
-    callback(new Error("请以 '/' 开头"))
-  } else {
-    callback()
-  }
-}
+import { isExternal } from '@/utils/validate'
 
 export default {
   name: 'MenuForm',
@@ -316,11 +309,11 @@ export default {
         menu_type: [{ required: true, message: '菜单类型不能为空', trigger: 'change' }],
         component: [
           { required: true, message: '组件路径不能为空', trigger: 'blur' },
-          { validator: validatePath, trigger: 'blur' },
+          { validator: this.validatePath, trigger: 'blur' },
         ],
         path: [
           { required: true, message: '路由地址不能为空', trigger: 'blur' },
-          { validator: validatePath, trigger: 'blur' },
+          { validator: this.validatePath, trigger: 'blur' },
         ],
       },
       menuOptions: [],
@@ -339,6 +332,11 @@ export default {
       return this.parentMenuType === 'P' && this.form.menu_type === 'P'
     },
   },
+  watch: {
+    'form.is_link'() {
+      this.$refs.menuForm?.validateField('path')
+    },
+  },
   methods: {
     open(type, item) {
       this.dialogVisible = true
@@ -347,6 +345,8 @@ export default {
         if (item) {
           this.form.parent_id = item.menu_id
           this.handleChangeParentMenuType(item)
+        } else {
+          this.form.parent_id = 0
         }
         this.title = '新增菜单'
       } else {
@@ -375,12 +375,10 @@ export default {
         menu.children = res.data.sys_menu_tree
         this.sourceData.push(menu)
         this.menuOptions = this.sourceData.map((item) => this.normalizer(item))
-        if (!this.form.parent_id) this.form.parent_id = 0
-        if (this.form.menu_id) {
-          this.$nextTick(() => {
-            this.handleParentMenuChange(this.form.parent_id)
-          })
-        }
+
+        this.$nextTick(() => {
+          this.handleParentMenuChange(this.form.parent_id)
+        })
       })
     },
     normalizer(node) {
@@ -421,6 +419,8 @@ export default {
     },
     handleInnerPage(node) {
       if (this.isInnerPage) {
+        this.form.visible = 0
+        this.form.is_link = 0
         this.changeActiveMenu(node)
       } else {
         this.form.active_menu = undefined
@@ -459,6 +459,15 @@ export default {
     },
     selected(name) {
       this.form.icon = name
+    },
+    validatePath(rule, value, callback) {
+      if (value && !this.form.is_link && !value.startsWith('/')) {
+        callback(new Error("请以 '/' 开头"))
+      } else if (value && this.form.is_link && !isExternal(value)) {
+        callback(new Error('不支持的外部链接地址'))
+      } else {
+        callback()
+      }
     },
     submitForm() {
       this.$refs.menuForm.validate((valid) => {

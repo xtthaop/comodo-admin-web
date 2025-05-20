@@ -22,7 +22,7 @@
             v-actionpermission="['admin:sysmenu:add']"
             type="primary"
             icon="el-icon-plus"
-            @click="handleAdd"
+            @click="handleAdd(false)"
             >新增</el-button
           >
         </el-form-item>

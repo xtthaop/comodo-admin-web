@@ -39,7 +39,7 @@
           prop="title"
           label="菜单名称"
           header-align="center"
-          min-width="160px"
+          min-width="230px"
           class-name="custom-col"
         >
           <template #default="scope">
@@ -66,26 +66,18 @@
           </template>
         </el-table-column>
         <el-table-column prop="sort" label="排序" width="60px" />
-        <el-table-column prop="permission" label="权限标识" min-width="130px">
+        <el-table-column prop="permission" label="权限标识" min-width="230px">
           <template #default="scope">
             <el-popover
               v-if="scope.row.api_list.length > 0"
               trigger="hover"
               placement="top"
-              :offset="30"
-              :width="280"
+              :offset="5"
+              :width="580"
             >
               <el-table :data="scope.row.api_list" border>
-                <el-table-column
-                  prop="title"
-                  label="接口名称"
-                  min-width="120px"
-                  :show-overflow-tooltip="{
-                    effect: 'light',
-                    placement: 'top',
-                  }"
-                ></el-table-column>
-                <el-table-column label="接口信息" min-width="260px">
+                <el-table-column prop="title" label="接口名称" min-width="100px"></el-table-column>
+                <el-table-column label="接口信息" min-width="300px">
                   <template #default="scope">
                     <el-tag :type="getType(scope.row.type)">
                       {{ scope.row.type }}

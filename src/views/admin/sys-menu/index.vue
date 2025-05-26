@@ -197,14 +197,14 @@ export default {
     },
     getType(type) {
       switch (type) {
-        case 'GET':
-          return ''
         case 'POST':
           return 'success'
         case 'DELETE':
           return 'danger'
         case 'PUT':
           return 'warning'
+        default:
+          return ''
       }
     },
     handleGetMenuList() {

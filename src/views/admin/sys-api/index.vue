@@ -3,13 +3,13 @@
     <el-card shadow="never">
       <el-form ref="queryForm" class="common-query-form" :model="queryParams" :inline="true">
         <el-form-item prop="title">
-          <el-input v-model="queryParams.title" placeholder="请输入标题" clearable />
+          <el-input v-model="queryParams.title" placeholder="请输入接口名称" clearable />
         </el-form-item>
         <el-form-item prop="path">
-          <el-input v-model="queryParams.path" placeholder="请输入地址" clearable />
+          <el-input v-model="queryParams.path" placeholder="请输入接口路径" clearable />
         </el-form-item>
         <el-form-item prop="type">
-          <el-select v-model="queryParams.type" placeholder="请选择类型" clearable>
+          <el-select v-model="queryParams.type" placeholder="请选择请求类型" clearable>
             <el-option
               v-for="dict in typeOptions"
               :key="dict.dict_value"
@@ -33,17 +33,13 @@
       </el-form>
 
       <el-table v-loading="loading" :data="apiList" border>
-        <el-table-column
-          label="接口名称"
-          prop="title"
-          width="260px"
-          :show-overflow-tooltip="true"
-        ></el-table-column>
+        <el-table-column label="接口名称" prop="title" width="260px"></el-table-column>
         <el-table-column label="接口信息">
           <template #default="scope">
             <el-tag :type="getType(scope.row.type)">
-              {{ '[' + scope.row.type + '] ' + scope.row.path }}
+              {{ scope.row.type }}
             </el-tag>
+            {{ scope.row.path }}
           </template>
         </el-table-column>
         <el-table-column label="创建时间" prop="created_at" width="180px">
@@ -119,14 +115,14 @@ export default {
   methods: {
     getType(type) {
       switch (type) {
-        case 'GET':
-          return ''
         case 'POST':
           return 'success'
         case 'DELETE':
           return 'danger'
         case 'PUT':
           return 'warning'
+        default:
+          return ''
       }
     },
     handleQuery() {

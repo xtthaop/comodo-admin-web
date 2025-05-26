@@ -1,39 +1,27 @@
 <template>
   <div class="app-container">
     <el-card shadow="never">
-      <el-form ref="queryForm" :model="queryParams" :inline="true">
+      <el-form ref="queryForm" class="common-query-form" :model="queryParams" :inline="true">
         <el-form-item prop="title">
-          <el-input
-            v-model="queryParams.title"
-            placeholder="请输入标题"
-            clearable
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.title" placeholder="请输入标题" clearable />
         </el-form-item>
         <el-form-item prop="path">
-          <el-input
-            v-model="queryParams.path"
-            placeholder="请输入地址"
-            clearable
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.path" placeholder="请输入地址" clearable />
         </el-form-item>
-        <el-form-item prop="action">
-          <el-select
-            v-model="queryParams.type"
-            placeholder="请选择类型"
-            clearable
-            @keyup.enter="handleQuery"
-          >
-            <el-option value="GET">GET</el-option>
-            <el-option value="POST">POST</el-option>
-            <el-option value="PUT">PUT</el-option>
-            <el-option value="DELETE">DELETE</el-option>
+        <el-form-item prop="type">
+          <el-select v-model="queryParams.type" placeholder="请选择类型" clearable>
+            <el-option
+              v-for="dict in typeOptions"
+              :key="dict.dict_value"
+              :label="dict.dict_label"
+              :value="dict.dict_value"
+            />
           </el-select>
         </el-form-item>
 
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="handleReset">重置</el-button>
           <el-button
             v-actionpermission="['admin:sysapi:add']"
             type="primary"
@@ -94,7 +82,7 @@
       />
     </el-card>
 
-    <ApiForm ref="apiForm" @update="handleGetApiList" />
+    <ApiForm ref="apiForm" :typeOptions="typeOptions" @update="handleGetApiList" />
   </div>
 </template>
 
@@ -118,11 +106,15 @@ export default {
         action: undefined,
       },
       apiList: [],
+      typeOptions: [],
       total: 0,
     }
   },
   created() {
     this.handleGetApiList()
+    this.getDicts('sys_api_type').then((res) => {
+      this.typeOptions = res.data
+    })
   },
   methods: {
     getType(type) {
@@ -140,6 +132,10 @@ export default {
     handleQuery() {
       this.queryParams.page = 1
       this.handleGetApiList()
+    },
+    handleReset() {
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     handleGetApiList() {
       this.loading = true

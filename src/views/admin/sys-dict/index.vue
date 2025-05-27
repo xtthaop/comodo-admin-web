@@ -1,32 +1,21 @@
 <template>
   <div class="app-container">
     <el-card shadow="never">
-      <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+      <el-form
+        ref="queryForm"
+        class="common-query-form"
+        :model="queryParams"
+        :inline="true"
+        label-width="68px"
+      >
         <el-form-item prop="dict_name">
-          <el-input
-            v-model="queryParams.dict_name"
-            placeholder="请输入字典名称"
-            clearable
-            style="width: 240px"
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.dict_name" placeholder="请输入字典名称" clearable />
         </el-form-item>
         <el-form-item prop="dict_type">
-          <el-input
-            v-model="queryParams.dict_type"
-            placeholder="请输入字典类型"
-            clearable
-            style="width: 240px"
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.dict_type" placeholder="请输入字典类型" clearable />
         </el-form-item>
         <el-form-item prop="status">
-          <el-select
-            v-model="queryParams.status"
-            placeholder="字典状态"
-            clearable
-            style="width: 240px"
-          >
+          <el-select v-model="queryParams.status" placeholder="字典状态" clearable>
             <el-option
               v-for="dict in statusOptions"
               :key="dict.dict_value"
@@ -38,6 +27,7 @@
 
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="handleReset">重置</el-button>
           <el-button
             v-actionpermission="['admin:sysdicttype:add']"
             type="primary"
@@ -49,14 +39,9 @@
       </el-form>
 
       <el-table v-loading="loading" :data="typeList" border>
-        <el-table-column label="ID" width="80" align="center" prop="dict_id" />
-        <el-table-column
-          label="字典名称"
-          align="center"
-          prop="dict_name"
-          :show-overflow-tooltip="true"
-        />
-        <el-table-column label="字典类型" align="center" :show-overflow-tooltip="true" width="200">
+        <el-table-column label="ID" width="80" prop="dict_id" />
+        <el-table-column label="字典名称" prop="dict_name" min-width="180" />
+        <el-table-column label="字典类型" width="200" min-width="200">
           <template #default="scope">
             <el-button link type="primary">
               <router-link :to="{ name: 'SysDictData', params: { dictId: scope.row.dict_id } }">
@@ -65,9 +50,9 @@
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
-        <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
-        <el-table-column label="创建时间" align="center" prop="created_at" width="180">
+        <el-table-column label="状态" prop="status" :formatter="statusFormat" min-width="80" />
+        <el-table-column label="备注" prop="remark" min-width="220" />
+        <el-table-column label="创建时间" prop="created_at" width="180">
           <template #default="scope">
             <span>{{ parseTime(scope.row.created_at) }}</span>
           </template>
@@ -140,6 +125,10 @@ export default {
     handleQuery() {
       this.queryParams.page = 1
       this.handleGetTypeList()
+    },
+    handleReset() {
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     handleGetTypeList() {
       this.loading = true

@@ -1,12 +1,6 @@
 <template>
   <div>
-    <el-dialog
-      :title="title"
-      v-model="dialogVisible"
-      :close-on-click-modal="false"
-      :draggable="true"
-      width="500px"
-    >
+    <el-dialog :title="title" v-model="dialogVisible" width="500px">
       <el-form ref="dictForm" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="字典名称" prop="dict_name">
           <el-input v-model="form.dict_name" placeholder="请输入字典名称" maxlength="128" />
@@ -35,8 +29,8 @@
       </el-form>
 
       <template #footer>
-        <el-button @click="cancel">取 消</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel" :disabled="submitLoading">取 消</el-button>
+        <el-button type="primary" @click="submitForm" :loading="submitLoading">确 定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -56,6 +50,7 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      submitLoading: false,
       form: {
         status: 1,
       },
@@ -86,6 +81,7 @@ export default {
     submitForm() {
       this.$refs.dictForm.validate((valid) => {
         if (valid) {
+          this.submitLoading = true
           if (this.form.dict_id === undefined) {
             this.handleAddDictType()
           } else {
@@ -95,18 +91,26 @@ export default {
       })
     },
     handleAddDictType() {
-      addDictType(this.form).then(() => {
-        this.$message.success('新增成功')
-        this.dialogVisible = false
-        this.$emit('update')
-      })
+      addDictType(this.form)
+        .then(() => {
+          this.$message.success('新增成功')
+          this.dialogVisible = false
+          this.$emit('update')
+        })
+        .finally(() => {
+          this.submitLoading = false
+        })
     },
     handleUpdateDictType() {
-      updateDictType(this.form).then(() => {
-        this.$message.success('修改成功')
-        this.dialogVisible = false
-        this.$emit('update')
-      })
+      updateDictType(this.form)
+        .then(() => {
+          this.$message.success('修改成功')
+          this.dialogVisible = false
+          this.$emit('update')
+        })
+        .finally(() => {
+          this.submitLoading = false
+        })
     },
     cancel() {
       this.dialogVisible = false

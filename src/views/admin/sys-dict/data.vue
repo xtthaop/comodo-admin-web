@@ -1,17 +1,12 @@
 <template>
   <div class="app-container">
     <el-card shadow="never">
-      <el-form ref="queryForm" :model="queryParams" :inline="true">
-        <el-form-item prop="dict_label">
-          <el-input
-            v-model="queryParams.dict_data_label"
-            placeholder="请输入字典标签"
-            clearable
-            @keyup.enter="handleQuery"
-          />
+      <el-form ref="queryForm" class="common-query-form" :model="queryParams" :inline="true">
+        <el-form-item prop="dict_data_label">
+          <el-input v-model="queryParams.dict_data_label" placeholder="请输入标签" clearable />
         </el-form-item>
         <el-form-item prop="status">
-          <el-select v-model="queryParams.status" placeholder="字典数据状态" clearable>
+          <el-select v-model="queryParams.status" placeholder="状态" clearable>
             <el-option
               v-for="dict in statusOptions"
               :key="dict.dict_value"
@@ -22,6 +17,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="handleReset">重置</el-button>
           <el-button
             v-actionpermission="['admin:sysdictdata:add']"
             type="primary"
@@ -33,13 +29,13 @@
       </el-form>
 
       <el-table v-loading="loading" :data="dataList" border>
-        <el-table-column label="ID" align="center" prop="dict_data_id" />
-        <el-table-column label="标签" align="center" prop="dict_data_label" />
-        <el-table-column label="键值" align="center" prop="dict_data_value" />
-        <el-table-column label="排序" align="center" prop="dict_data_sort" />
-        <el-table-column label="状态" align="center" prop="status" :formatter="statusFormat" />
-        <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
-        <el-table-column label="创建时间" align="center" prop="created_at" width="180">
+        <el-table-column label="ID" prop="dict_data_id" width="60" />
+        <el-table-column label="标签" prop="dict_data_label" min-width="160" />
+        <el-table-column label="键值" prop="dict_data_value" min-width="160" />
+        <el-table-column label="排序" prop="dict_data_sort" min-width="80" />
+        <el-table-column label="状态" prop="status" :formatter="statusFormat" min-width="80" />
+        <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" min-width="220" />
+        <el-table-column label="创建时间" prop="created_at" width="180">
           <template #default="scope">
             <span>{{ parseTime(scope.row.created_at) }}</span>
           </template>
@@ -52,7 +48,7 @@
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              >修改</el-button
+              >编辑</el-button
             >
             <el-button
               v-actionpermission="['admin:sysdictdata:remove']"
@@ -118,6 +114,10 @@ export default {
     handleQuery() {
       this.queryParams.page = 1
       this.handleGetDataList()
+    },
+    handleReset() {
+      this.resetForm('queryForm')
+      this.handleQuery()
     },
     handleGetDataList() {
       this.loading = true

@@ -71,7 +71,7 @@ export default {
         this.$nextTick(() => {
           Object.assign(this.form, item)
         })
-        this.title = '修改字典类型'
+        this.title = '编辑字典类型'
       }
     },
     reset() {

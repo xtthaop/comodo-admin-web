@@ -1,13 +1,7 @@
 <template>
   <div class="app-container">
     <el-card shadow="never">
-      <el-form
-        ref="queryForm"
-        class="common-query-form"
-        :model="queryParams"
-        :inline="true"
-        label-width="68px"
-      >
+      <el-form ref="queryForm" class="common-query-form" :model="queryParams" :inline="true">
         <el-form-item prop="dict_name">
           <el-input v-model="queryParams.dict_name" placeholder="请输入字典名称" clearable />
         </el-form-item>
@@ -65,7 +59,7 @@
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              >修改</el-button
+              >编辑</el-button
             >
             <el-button
               v-actionpermission="['admin:sysdicttype:remove']"

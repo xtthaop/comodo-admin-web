@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card shadow="never">
+    <el-card shadow="never" v-loading="loading">
       <el-form ref="queryForm" class="common-query-form" :model="queryParams" :inline="true">
         <el-form-item prop="username">
           <el-input v-model="queryParams.username" placeholder="请输入用户名" clearable />
@@ -31,7 +31,7 @@
         </el-form-item>
       </el-form>
 
-      <el-table v-loading="loading" :data="userList" border>
+      <el-table :data="userList" border>
         <el-table-column label="ID" width="75" prop="user_id" />
         <el-table-column label="用户名" prop="username" show-overflow-tooltip />
         <el-table-column label="昵称" prop="nickname" show-overflow-tooltip />
@@ -114,9 +114,6 @@ export default {
       queryParams: {
         page: 1,
         page_size: 10,
-        username: undefined,
-        phone: undefined,
-        status: undefined,
       },
       statusOptions: [],
       loading: false,

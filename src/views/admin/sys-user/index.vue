@@ -39,6 +39,7 @@
         <el-table-column label="状态">
           <template #default="scope">
             <el-switch
+              :key="scope.row.user_id"
               v-actionpermission="['admin:sysuser:status']"
               v-model="scope.row.status"
               :active-value="1"
@@ -171,13 +172,10 @@ export default {
       this.$refs.userForm.open(item)
     },
     handleDelete(item) {
-      this.$confirm('确认删除用户？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
+      this.baseConfirm('确认删除用户？')
+        .then((done) => {
           deleteUser({ user_id: item.user_id }).then(() => {
+            done()
             this.$message.success('删除成功')
             this.handleGetUserList()
           })

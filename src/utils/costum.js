@@ -1,3 +1,7 @@
+import md5 from 'js-md5'
+import { h, render } from 'vue'
+import ConfirmDialog from '@/components/ConfirmDialog/index.vue'
+
 // 日期格式化
 export function parseTime(time, pattern) {
   if (arguments.length === 0 || !time) {
@@ -82,7 +86,35 @@ export function praseStrEmpty(str) {
 }
 
 // md5密码
-import md5 from 'js-md5'
 export function md5Password(password, salt = 'comodo-admin') {
   return md5(password + salt)
+}
+
+// 自定义确认弹窗
+export function baseConfirm(text, type) {
+  return new Promise((resolve, reject) => {
+    const closeDialog = () => {
+      render(null, document.body)
+    }
+
+    const vnode = h(ConfirmDialog, {
+      title: '提示',
+      text,
+      type,
+      visible: true,
+      onConfirm: () => {
+        resolve(closeDialog)
+      },
+      onCancel: () => {
+        reject('cancel')
+        closeDialog()
+      },
+      onClose: () => {
+        reject('close')
+        closeDialog()
+      },
+    })
+
+    render(vnode, document.body)
+  })
 }

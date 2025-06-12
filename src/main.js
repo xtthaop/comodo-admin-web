@@ -20,7 +20,7 @@ import SvgIcon from '@/components/SvgIcon/index.vue'
 import 'virtual:svg-icons-register'
 
 import { toHorizontalLine } from '@/utils/index'
-import { parseTime, resetForm, selectDictLabel, md5Password } from '@/utils/costum'
+import { parseTime, resetForm, selectDictLabel, md5Password, baseConfirm } from '@/utils/costum'
 import { getDicts } from '@/api/admin/sys-dict-data'
 import permission from './directive/permission'
 
@@ -52,5 +52,6 @@ app.config.globalProperties.parseTime = parseTime
 app.config.globalProperties.resetForm = resetForm
 app.config.globalProperties.selectDictLabel = selectDictLabel
 app.config.globalProperties.md5Password = md5Password
+app.config.globalProperties.baseConfirm = baseConfirm
 
 app.mount('#app')

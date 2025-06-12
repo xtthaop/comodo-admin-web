@@ -33,8 +33,8 @@
 
       <el-table :data="userList" border>
         <el-table-column label="ID" width="75" prop="user_id" />
-        <el-table-column label="用户名" prop="username" show-overflow-tooltip />
-        <el-table-column label="昵称" prop="nickname" show-overflow-tooltip />
+        <el-table-column label="用户名" prop="username" />
+        <el-table-column label="昵称" prop="nickname" />
         <el-table-column label="手机号" prop="phone" />
         <el-table-column label="状态">
           <template #default="scope">
@@ -48,7 +48,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" min-width="160px">
+        <el-table-column label="创建时间" min-width="160">
           <template #default="scope">
             <span>{{ parseTime(scope.row.created_at) }}</span>
           </template>
@@ -153,15 +153,15 @@ export default {
     },
     handleStatusChange(row) {
       const text = row.status === 0 ? '停用' : '启用'
-      this.$confirm(`确认要${text}吗?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          updateUser(row).catch(() => {
-            row.status = row.status === 0 ? 1 : 0
-          })
+      this.baseConfirm(`确认要${text}吗?`)
+        .then((done) => {
+          updateUser(row)
+            .then(() => {
+              done()
+            })
+            .catch(() => {
+              row.status = row.status === 0 ? 1 : 0
+            })
         })
         .catch(() => {
           row.status = row.status === 0 ? 1 : 0

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :title="title" v-model="dialogVisible" :close-on-click-modal="false" width="600px">
+    <el-dialog :title="title" v-model="dialogVisible" width="600px">
       <el-form ref="userForm" :model="form" :rules="rules" label-width="80px">
         <el-row :gutter="20">
           <el-col :span="12">
@@ -25,7 +25,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="昵称" prop="nickname">
-              <el-input v-model="form.nickname" placeholder="请输入昵称" maxlength="64" />
+              <el-input
+                v-model="form.nickname"
+                :disabled="disabled"
+                placeholder="请输入昵称"
+                maxlength="64"
+              />
             </el-form-item>
           </el-col>
           <el-col :span="12">

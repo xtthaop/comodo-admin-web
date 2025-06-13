@@ -1,12 +1,6 @@
 <template>
   <div>
-    <el-dialog
-      :title="title"
-      v-model="dialogVisible"
-      :close-on-click-modal="false"
-      :draggable="true"
-      width="600px"
-    >
+    <el-dialog :title="title" v-model="dialogVisible" width="600px">
       <el-form ref="resetPwdForm" :model="form" :rules="rules">
         <el-form-item label="" prop="new_password">
           <el-input

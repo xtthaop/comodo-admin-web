@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card shadow="never">
+    <el-card shadow="never" v-loading="loading">
       <el-form ref="queryForm" class="common-query-form" :model="queryParams" :inline="true">
         <el-form-item prop="role_name">
           <el-input v-model="queryParams.role_name" placeholder="请输入角色名称" clearable />
@@ -31,7 +31,7 @@
         </el-form-item>
       </el-form>
 
-      <el-table v-loading="loading" :data="roleList" border>
+      <el-table :data="roleList" border>
         <el-table-column label="ID" prop="role_id" width="80" />
         <el-table-column
           label="角色名称"
@@ -44,6 +44,7 @@
         <el-table-column label="状态" width="120" align="center">
           <template #default="scope">
             <el-switch
+              :key="scope.row.role_id"
               v-actionpermission="['admin:sysrole:status']"
               v-model="scope.row.status"
               :active-value="1"

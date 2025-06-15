@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :title="title" v-model="dialogVisible" :close-on-click-modal="false" width="600px">
+    <el-dialog :title="title" v-model="dialogVisible" width="600px">
       <el-form ref="roleForm" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="角色名称" prop="role_name">
           <el-input v-model="form.role_name" placeholder="请输入角色名称" maxlength="128" />
@@ -18,7 +18,7 @@
             v-model="form.role_sort"
             controls-position="right"
             :min="0"
-            :max="100000"
+            :max="4294967295"
           />
         </el-form-item>
         <el-form-item label="状态" prop="status">

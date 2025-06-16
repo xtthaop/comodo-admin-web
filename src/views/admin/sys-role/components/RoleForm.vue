@@ -33,14 +33,21 @@
         </el-form-item>
         <el-form-item label="菜单权限">
           <div v-show="form.role_key !== 'admin'">
+            <div style="margin-bottom: 10px">
+              <el-checkbox label="selectAll" @change="handleCheckedTreeNodeAll">全选</el-checkbox>
+              <el-checkbox label="expandAll" @change="handleCheckedTreeExpand">展开</el-checkbox>
+              <el-checkbox checked label="checkStrictly" @change="handleCheckedTreeStrictly">
+                父子关联
+              </el-checkbox>
+            </div>
             <el-tree
               ref="menuTree"
               :data="menuOptions"
               show-checkbox
               node-key="menu_id"
               :props="defaultProps"
-              :check-strictly="true"
-              :default-expand-all="true"
+              :check-strictly="checkStrictly"
+              :default-expand-all="false"
             >
               <template #default="{ node }">
                 <el-icon style="margin-right: 3px; opacity: 0.5">
@@ -107,6 +114,7 @@ export default {
         role_sort: [{ required: true, message: '角色顺序不能为空', trigger: 'blur' }],
       },
       menuOptions: [],
+      checkStrictly: false,
       defaultProps: {
         children: 'children',
         label: 'title',
@@ -160,6 +168,31 @@ export default {
       const checkedKeys = this.$refs.menuTree.getCheckedKeys()
       checkedKeys.unshift.apply(checkedKeys, halfCheckedKeys)
       return checkedKeys
+    },
+    setMenuExpanded(nodes, expanded) {
+      nodes.forEach((node) => {
+        this.$refs.menuTree.store.nodesMap[node.menu_id].expanded = expanded
+        if (node.children && node.children.length) {
+          this.setMenuExpanded(node.children, expanded)
+        }
+      })
+    },
+    handleCheckedTreeExpand(value) {
+      this.setMenuExpanded(this.menuOptions, value)
+    },
+    handleCheckedTreeNodeAll(value) {
+      if (value) {
+        this.$refs.menuTree.setCheckedKeys(this.menuOptions.map((item) => item.menu_id))
+      } else {
+        this.$refs.menuTree.setCheckedKeys([])
+      }
+    },
+    handleCheckedTreeStrictly(value) {
+      if (value) {
+        this.checkStrictly = false
+      } else {
+        this.checkStrictly = true
+      }
     },
     submitForm() {
       this.$refs.roleForm.validate((valid) => {

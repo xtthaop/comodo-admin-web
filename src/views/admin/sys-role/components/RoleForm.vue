@@ -13,7 +13,7 @@
             maxlength="128"
           />
         </el-form-item>
-        <el-form-item label="角色顺序" prop="role_sort">
+        <el-form-item label="角色排序" prop="role_sort">
           <el-input-number
             v-model="form.role_sort"
             controls-position="right"
@@ -36,9 +36,6 @@
             <div style="margin-bottom: 10px">
               <el-checkbox label="selectAll" @change="handleCheckedTreeNodeAll">全选</el-checkbox>
               <el-checkbox label="expandAll" @change="handleCheckedTreeExpand">展开</el-checkbox>
-              <el-checkbox checked label="checkStrictly" @change="handleCheckedTreeStrictly">
-                父子关联
-              </el-checkbox>
             </div>
             <el-tree
               ref="menuTree"
@@ -46,7 +43,6 @@
               show-checkbox
               node-key="menu_id"
               :props="defaultProps"
-              :check-strictly="checkStrictly"
               :default-expand-all="false"
             >
               <template #default="{ node }">
@@ -111,10 +107,9 @@ export default {
       rules: {
         role_name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
         role_key: [{ required: true, message: '权限字符不能为空', trigger: 'blur' }],
-        role_sort: [{ required: true, message: '角色顺序不能为空', trigger: 'blur' }],
+        role_sort: [{ required: true, message: '角色排序不能为空', trigger: 'blur' }],
       },
       menuOptions: [],
-      checkStrictly: false,
       defaultProps: {
         children: 'children',
         label: 'title',
@@ -185,13 +180,6 @@ export default {
         this.$refs.menuTree.setCheckedKeys(this.menuOptions.map((item) => item.menu_id))
       } else {
         this.$refs.menuTree.setCheckedKeys([])
-      }
-    },
-    handleCheckedTreeStrictly(value) {
-      if (value) {
-        this.checkStrictly = false
-      } else {
-        this.checkStrictly = true
       }
     },
     submitForm() {

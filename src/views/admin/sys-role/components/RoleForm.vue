@@ -34,8 +34,20 @@
         <el-form-item label="菜单权限">
           <div v-show="form.role_key !== 'admin'">
             <div style="margin-bottom: 10px">
-              <el-checkbox label="selectAll" @change="handleCheckedTreeNodeAll">全选</el-checkbox>
-              <el-checkbox label="expandAll" @change="handleCheckedTreeExpand">展开</el-checkbox>
+              <el-checkbox
+                v-model="selectAllChecked"
+                :indeterminate="selectAllIndeterminate"
+                @change="handleCheckedTreeNodeAll"
+              >
+                全选
+              </el-checkbox>
+              <el-checkbox
+                v-model="expandAllChecked"
+                :indeterminate="expandAllIndeterminate"
+                @change="handleCheckedTreeExpand"
+              >
+                全部展开
+              </el-checkbox>
             </div>
             <el-tree
               ref="menuTree"
@@ -43,7 +55,11 @@
               show-checkbox
               node-key="menu_id"
               :props="defaultProps"
+              :check-strictly="true"
               :default-expand-all="false"
+              @check-change="handleTreeCheckChange"
+              @node-expand="handleTreeNodeExpand"
+              @node-collapse="handleTreeNodeExpand"
             >
               <template #default="{ node }">
                 <el-icon style="margin-right: 3px; opacity: 0.5">
@@ -110,6 +126,10 @@ export default {
         role_sort: [{ required: true, message: '角色排序不能为空', trigger: 'blur' }],
       },
       menuOptions: [],
+      selectAllChecked: false,
+      selectAllIndeterminate: false,
+      expandAllChecked: false,
+      expandAllIndeterminate: false,
       defaultProps: {
         children: 'children',
         label: 'title',
@@ -150,7 +170,19 @@ export default {
     handleGetMenuTree() {
       getMenuTree().then((res) => {
         this.menuOptions = res.data.sys_menu_tree
+        this.menuAllIds = this.getMenuAllIds(this.menuOptions)
       })
+    },
+    getMenuAllIds(nodes) {
+      const res = []
+      nodes.forEach((node) => {
+        res.push(node.menu_id)
+        if (node.children && node.children.length) {
+          const childRes = this.getMenuAllIds(node.children)
+          res.push(...childRes)
+        }
+      })
+      return res
     },
     reset() {
       this.form.role_id = undefined
@@ -175,11 +207,42 @@ export default {
     handleCheckedTreeExpand(value) {
       this.setMenuExpanded(this.menuOptions, value)
     },
+    handleTreeNodeExpand() {
+      this.$nextTick(() => {
+        const noLeafNodes = Object.values(this.$refs.menuTree.store.nodesMap).filter(
+          (item) => !item.isLeaf
+        )
+        this.expandAllChecked = noLeafNodes.every((item) => item.expanded === true)
+        if (this.expandAllChecked) {
+          this.expandAllIndeterminate = false
+        } else {
+          if (!noLeafNodes.every((item) => item.expanded === false)) {
+            this.expandAllIndeterminate = true
+          } else {
+            this.expandAllIndeterminate = false
+          }
+        }
+      })
+    },
     handleCheckedTreeNodeAll(value) {
       if (value) {
-        this.$refs.menuTree.setCheckedKeys(this.menuOptions.map((item) => item.menu_id))
+        this.$refs.menuTree.setCheckedKeys(this.menuAllIds)
       } else {
         this.$refs.menuTree.setCheckedKeys([])
+      }
+    },
+    handleTreeCheckChange() {
+      const checkedIds = this.getMenuAllCheckedKeys()
+      if (checkedIds.length === this.menuAllIds.length) {
+        this.selectAllIndeterminate = false
+        this.selectAllChecked = true
+      } else {
+        this.selectAllChecked = false
+        if (checkedIds.length) {
+          this.selectAllIndeterminate = true
+        } else {
+          this.selectAllIndeterminate = false
+        }
       }
     },
     submitForm() {

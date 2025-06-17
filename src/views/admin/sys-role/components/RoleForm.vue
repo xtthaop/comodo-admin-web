@@ -205,6 +205,7 @@ export default {
       })
     },
     handleCheckedTreeExpand(value) {
+      this.expandAllIndeterminate = false
       this.setMenuExpanded(this.menuOptions, value)
     },
     handleTreeNodeExpand() {

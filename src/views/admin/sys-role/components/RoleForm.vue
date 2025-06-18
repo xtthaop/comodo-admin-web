@@ -34,19 +34,14 @@
         <el-form-item label="菜单权限">
           <div v-show="form.role_key !== 'admin'">
             <div style="margin-bottom: 10px">
-              <el-checkbox
-                v-model="selectAllChecked"
-                :indeterminate="selectAllIndeterminate"
-                @change="handleCheckedTreeNodeAll"
-              >
+              <el-checkbox v-model="selectAllChecked" @change="handleCheckedTreeNodeAll">
                 全选
               </el-checkbox>
-              <el-checkbox
-                v-model="expandAllChecked"
-                :indeterminate="expandAllIndeterminate"
-                @change="handleCheckedTreeExpand"
-              >
+              <el-checkbox v-model="expandAllChecked" @change="handleCheckedTreeExpand">
                 全部展开
+              </el-checkbox>
+              <el-checkbox v-model="checkStrictlyChecked" @change="handleCheckTreeStrictly">
+                父子关联选择
               </el-checkbox>
             </div>
             <el-tree
@@ -55,7 +50,7 @@
               show-checkbox
               node-key="menu_id"
               :props="defaultProps"
-              :check-strictly="true"
+              :check-strictly="!checkStrictlyChecked"
               :default-expand-all="false"
               @check-change="handleTreeCheckChange"
               @node-expand="handleTreeNodeExpand"
@@ -127,9 +122,8 @@ export default {
       },
       menuOptions: [],
       selectAllChecked: false,
-      selectAllIndeterminate: false,
       expandAllChecked: false,
-      expandAllIndeterminate: false,
+      checkStrictlyChecked: true,
       defaultProps: {
         children: 'children',
         label: 'title',
@@ -146,19 +140,29 @@ export default {
       this.reset()
       if (!item) {
         this.title = '新增角色'
+        this.checkStrictlyChecked = true
+        this.handleSetCheckedKeys([])
       } else {
         if (item.role_key === 'admin') {
           this.disabled = true
         }
         this.$nextTick(() => {
           Object.assign(this.form, item)
+          this.checkStrictlyChecked = !!this.form.check_strictly
+          this.$nextTick(() => {
+            let ids = null
+            if (this.checkStrictlyChecked) {
+              ids = this.form.menu_ids?.filter(
+                (item) => this.$refs.menuTree.store.nodesMap[item].isLeaf
+              )
+            } else {
+              ids = this.form.menu_ids
+            }
+            this.handleSetCheckedKeys(ids)
+          })
         })
         this.title = '编辑角色'
       }
-
-      this.$nextTick(() => {
-        this.handleSetCheckedKeys(this.form.menu_ids)
-      })
     },
     handleSetCheckedKeys(menuIds) {
       if (menuIds && menuIds.length) {
@@ -205,7 +209,6 @@ export default {
       })
     },
     handleCheckedTreeExpand(value) {
-      this.expandAllIndeterminate = false
       this.setMenuExpanded(this.menuOptions, value)
     },
     handleTreeNodeExpand() {
@@ -214,15 +217,6 @@ export default {
           (item) => !item.isLeaf
         )
         this.expandAllChecked = noLeafNodes.every((item) => item.expanded === true)
-        if (this.expandAllChecked) {
-          this.expandAllIndeterminate = false
-        } else {
-          if (!noLeafNodes.every((item) => item.expanded === false)) {
-            this.expandAllIndeterminate = true
-          } else {
-            this.expandAllIndeterminate = false
-          }
-        }
       })
     },
     handleCheckedTreeNodeAll(value) {
@@ -235,21 +229,27 @@ export default {
     handleTreeCheckChange() {
       const checkedIds = this.getMenuAllCheckedKeys()
       if (checkedIds.length === this.menuAllIds.length) {
-        this.selectAllIndeterminate = false
         this.selectAllChecked = true
       } else {
         this.selectAllChecked = false
-        if (checkedIds.length) {
-          this.selectAllIndeterminate = true
-        } else {
-          this.selectAllIndeterminate = false
-        }
       }
+    },
+    handleCheckTreeStrictly(value) {
+      this.$nextTick(() => {
+        if (!value) {
+          const checked = this.getMenuAllCheckedKeys()
+          this.handleSetCheckedKeys(checked)
+        } else {
+          const checked = this.$refs.menuTree.getCheckedKeys(true)
+          this.handleSetCheckedKeys(checked)
+        }
+      })
     },
     submitForm() {
       this.$refs.roleForm.validate((valid) => {
         if (valid) {
           this.submitLoading = true
+          this.form.check_strictly = Number(this.checkStrictlyChecked)
           if (!this.form.role_id) {
             this.handleAddRole()
           } else {

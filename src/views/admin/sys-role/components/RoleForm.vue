@@ -3,7 +3,12 @@
     <el-dialog :title="title" v-model="dialogVisible" width="600px">
       <el-form ref="roleForm" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="角色名称" prop="role_name">
-          <el-input v-model="form.role_name" placeholder="请输入角色名称" maxlength="128" />
+          <el-input
+            v-model="form.role_name"
+            placeholder="请输入角色名称"
+            :disabled="disabled"
+            maxlength="128"
+          />
         </el-form-item>
         <el-form-item label="角色标识" prop="role_key">
           <el-input

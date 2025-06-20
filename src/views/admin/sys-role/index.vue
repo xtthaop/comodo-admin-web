@@ -150,15 +150,15 @@ export default {
     },
     handleStatusChange(row) {
       const text = row.status === 0 ? '停用' : '启用'
-      this.$confirm(`确认要${text}吗?`, '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          updateRole(row).catch(() => {
-            row.status = row.status === 0 ? 1 : 0
-          })
+      this.baseConfirm(`确认要${text}吗?`)
+        .then((done) => {
+          updateRole(row)
+            .then(() => {
+              done()
+            })
+            .catch(() => {
+              row.status = row.status === 0 ? 1 : 0
+            })
         })
         .catch(() => {
           row.status = row.status === 0 ? 1 : 0

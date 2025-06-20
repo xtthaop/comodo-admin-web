@@ -158,6 +158,7 @@ export default {
             })
             .catch(() => {
               row.status = row.status === 0 ? 1 : 0
+              done()
             })
         })
         .catch(() => {
@@ -168,20 +169,16 @@ export default {
       this.$refs.roleForm.open(item)
     },
     handleDelete(item) {
-      this.$confirm('确认删除角色？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          const data = {
-            role_id: item.role_id,
-          }
-
-          deleteRole(data).then(() => {
-            this.$message.success('删除成功')
-            this.handleGetRoleList()
-          })
+      this.baseConfirm('确认删除角色？')
+        .then((done) => {
+          deleteRole({ role_id: item.role_id })
+            .then(() => {
+              this.$message.success('删除成功')
+              this.handleGetRoleList()
+            })
+            .finally(() => {
+              done()
+            })
         })
         .catch(() => {})
     },

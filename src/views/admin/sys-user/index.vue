@@ -161,6 +161,7 @@ export default {
               done()
             })
             .catch(() => {
+              done()
               row.status = row.status === 0 ? 1 : 0
             })
         })
@@ -174,11 +175,14 @@ export default {
     handleDelete(item) {
       this.baseConfirm('确认删除用户？')
         .then((done) => {
-          deleteUser({ user_id: item.user_id }).then(() => {
-            done()
-            this.$message.success('删除成功')
-            this.handleGetUserList()
-          })
+          deleteUser({ user_id: item.user_id })
+            .then(() => {
+              this.$message.success('删除成功')
+              this.handleGetUserList()
+            })
+            .finally(() => {
+              done()
+            })
         })
         .catch(() => {})
     },

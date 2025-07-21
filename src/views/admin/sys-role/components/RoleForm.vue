@@ -146,7 +146,9 @@ export default {
       if (!item) {
         this.title = '新增角色'
         this.checkStrictlyChecked = true
-        this.handleSetCheckedKeys([])
+        this.$nextTick(() => {
+          this.handleSetCheckedKeys([])
+        })
       } else {
         if (item.role_key === 'admin') {
           this.disabled = true

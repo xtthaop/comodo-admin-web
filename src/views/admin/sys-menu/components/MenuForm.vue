@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :title="title" v-model="dialogVisible" :close-on-click-modal="false" width="700px">
+    <el-dialog :title="title" v-model="dialogVisible" width="700px">
       <el-form ref="menuForm" :model="form" :rules="rules" label-position="top" label-width="106px">
         <el-row :gutter="20">
           <el-col :span="24">
@@ -57,7 +57,7 @@
                 v-model="form.sort"
                 controls-position="right"
                 :min="0"
-                :max="100000"
+                :max="4294967295"
               />
             </el-form-item>
           </el-col>
@@ -334,7 +334,9 @@ export default {
   },
   watch: {
     'form.is_link'() {
-      this.$refs.menuForm?.validateField('path')
+      if (this.form.path) {
+        this.$refs.menuForm?.validateField('path')
+      }
     },
   },
   methods: {
@@ -462,7 +464,7 @@ export default {
     },
     validatePath(rule, value, callback) {
       if (value && !this.form.is_link && !value.startsWith('/')) {
-        callback(new Error("请以 '/' 开头"))
+        callback(new Error('请以 "/" 开头'))
       } else if (value && this.form.is_link && !isExternal(value)) {
         callback(new Error('不支持的外部链接地址'))
       } else {

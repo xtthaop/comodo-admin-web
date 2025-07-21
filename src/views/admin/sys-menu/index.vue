@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" v-loading="loading">
     <el-card shadow="never">
       <el-form ref="queryForm" :inline="true" class="common-query-form" :model="queryParams">
         <el-form-item prop="title">
@@ -29,7 +29,6 @@
       </el-form>
 
       <el-table
-        v-loading="loading"
         :data="menuList"
         border
         row-key="menu_id"

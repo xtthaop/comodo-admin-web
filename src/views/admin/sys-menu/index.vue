@@ -1,6 +1,6 @@
 <template>
-  <div class="app-container" v-loading="loading">
-    <el-card shadow="never">
+  <div class="app-container">
+    <el-card shadow="never" v-loading="loading">
       <el-form ref="queryForm" :inline="true" class="common-query-form" :model="queryParams">
         <el-form-item prop="title">
           <el-input v-model="queryParams.title" placeholder="请输入菜单名称" clearable />

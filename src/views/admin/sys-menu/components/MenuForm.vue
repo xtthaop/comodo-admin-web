@@ -67,7 +67,11 @@
               <template #label>
                 <span>菜单类型</span>
               </template>
-              <el-radio-group v-model="form.menu_type" @change="handleMenuTypeChange">
+              <el-radio-group
+                v-model="form.menu_type"
+                @change="handleMenuTypeChange"
+                :disabled="this.opeType === 'update'"
+              >
                 <el-radio label="F" :disabled="parentMenuType === 'P'">页面夹</el-radio>
                 <el-radio label="P">页面</el-radio>
                 <el-radio label="B">按钮</el-radio>
@@ -116,7 +120,10 @@
               <template #label>
                 <span>是否为外部链接</span>
               </template>
-              <el-radio-group v-model="form.is_link" :disabled="this.isInnerPage">
+              <el-radio-group
+                v-model="form.is_link"
+                :disabled="this.isInnerPage || form.permission === 'admin:sysmenu'"
+              >
                 <el-radio :label="1">是</el-radio>
                 <el-radio :label="0">否</el-radio>
               </el-radio-group>
@@ -218,6 +225,7 @@
                     : 'admin:sysmenu:add'
                 }`"
                 maxlength="255"
+                :disabled="form.permission === 'admin:sysmenu'"
               />
             </el-form-item>
           </el-col>
@@ -325,6 +333,7 @@ export default {
         children: 'children',
         disabled: 'disabled',
       },
+      opeType: 'add',
     }
   },
   computed: {
@@ -334,8 +343,10 @@ export default {
   },
   watch: {
     'form.is_link'() {
-      if (this.form.path) {
-        this.$refs.menuForm?.validateField('path')
+      if (this.$refs.menuForm && this.form.path) {
+        this.$nextTick(() => {
+          this.$refs.menuForm.validateField('path')
+        })
       }
     },
   },
@@ -343,6 +354,7 @@ export default {
     open(type, item) {
       this.dialogVisible = true
       this.reset()
+      this.opeType = type
       if (type === 'add') {
         if (item) {
           this.form.parent_id = item.menu_id
@@ -384,14 +396,38 @@ export default {
       })
     },
     normalizer(node) {
-      let children = node.children.filter((item) => item.menu_type !== 'B')
-      if (!(children && !children.length)) {
+      let children = node.children?.filter((item) => item.menu_type !== 'B')
+      if (children?.length) {
+        if (
+          this.opeType === 'update' &&
+          (node.parent_id === this.form.menu_id || node.superNodeIdEqualMenuId)
+        ) {
+          children.forEach((child) => {
+            child.superNodeIdEqualMenuId = true
+          })
+        }
         children = children.map((item) => this.normalizer(item))
       }
 
       let disabled = false
+
+      // 父菜单不能是外部链接类型的页面
+      if (node.menu_type === 'P' && node.is_link === 1) {
+        disabled = true
+      }
       // 编辑时选择父菜单不能选自身
-      if (this.form.menu_id && this.form.menu_id === node.menu_id) {
+      if (this.opeType === 'update' && this.form.menu_id && this.form.menu_id === node.menu_id) {
+        disabled = true
+      }
+      // 编辑时页面夹的父菜单只能选页面夹
+      if (this.opeType === 'update' && this.form.menu_type === 'F' && node.menu_type === 'P') {
+        disabled = true
+      }
+      // 编辑时父菜单不能选自身的子菜单
+      if (
+        this.opeType === 'update' &&
+        (node.parent_id === this.form.menu_id || node.superNodeIdEqualMenuId)
+      ) {
         disabled = true
       }
 

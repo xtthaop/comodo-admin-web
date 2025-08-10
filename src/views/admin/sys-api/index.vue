@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card shadow="never">
+    <el-card shadow="never" v-loading="loading">
       <el-form ref="queryForm" class="common-query-form" :model="queryParams" :inline="true">
         <el-form-item prop="title">
           <el-input v-model="queryParams.title" placeholder="请输入接口名称" clearable />
@@ -32,7 +32,7 @@
         </el-form-item>
       </el-form>
 
-      <el-table v-loading="loading" :data="apiList" border>
+      <el-table :data="apiList" border>
         <el-table-column label="接口名称" prop="title" width="260px"></el-table-column>
         <el-table-column label="接口信息">
           <template #default="scope">

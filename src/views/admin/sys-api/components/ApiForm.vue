@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog :title="title" v-model="dialogVisible" :close-on-click-modal="false" width="500px">
+    <el-dialog :title="title" v-model="dialogVisible" width="500px">
       <el-form ref="apiForm" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="接口名称" prop="title">
           <el-input v-model="form.title" placeholder="接口名称" maxlength="128" />
@@ -16,7 +16,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="接口路径" prop="path">
-          <el-input v-model="form.path" placeholder="请求地址" maxlength="128" />
+          <el-input v-model="form.path" placeholder="接口路径" maxlength="128" />
         </el-form-item>
       </el-form>
 

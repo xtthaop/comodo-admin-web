@@ -242,20 +242,16 @@ export default {
       this.$refs.menuForm.open('update', item)
     },
     handleDelete(item) {
-      this.$confirm('确认删除数据？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          const data = {
-            menu_id: item.menu_id,
-          }
-
-          deleteMenu(data).then(() => {
-            this.$message.success('删除成功')
-            this.handleGetMenuList()
-          })
+      this.baseConfirm('确认删除菜单？')
+        .then((done) => {
+          deleteMenu({ menu_id: item.menu_id })
+            .then(() => {
+              this.$message.success('删除成功')
+              this.handleGetMenuList()
+            })
+            .finally(() => {
+              done()
+            })
         })
         .catch(() => {})
     },

@@ -33,6 +33,7 @@
       </el-form>
 
       <el-table :data="apiList" border>
+        <el-table-column label="ID" prop="id" width="80px"></el-table-column>
         <el-table-column label="接口名称" prop="title" width="260px"></el-table-column>
         <el-table-column label="接口信息">
           <template #default="scope">
@@ -70,7 +71,6 @@
       </el-table>
 
       <BasePagination
-        v-show="total > 0"
         :total="total"
         v-model:page="queryParams.page"
         v-model:limit="queryParams.page_size"
@@ -152,16 +152,16 @@ export default {
       this.$refs.apiForm.open()
     },
     handleDelete(item) {
-      this.$confirm('确认删除数据？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          deleteApi({ id: item.id }).then(() => {
-            this.$message.success('删除成功')
-            this.handleGetApiList()
-          })
+      this.baseConfirm('确认删除接口？')
+        .then((done) => {
+          deleteApi({ id: item.id })
+            .then(() => {
+              this.$message.success('删除成功')
+              this.handleGetApiList()
+            })
+            .finally(() => {
+              done()
+            })
         })
         .catch(() => {})
     },

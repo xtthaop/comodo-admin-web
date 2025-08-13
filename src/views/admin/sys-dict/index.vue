@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card shadow="never">
+    <el-card shadow="never" v-loading="loading">
       <el-form ref="queryForm" class="common-query-form" :model="queryParams" :inline="true">
         <el-form-item prop="dict_name">
           <el-input v-model="queryParams.dict_name" placeholder="请输入字典名称" clearable />
@@ -32,7 +32,7 @@
         </el-form-item>
       </el-form>
 
-      <el-table v-loading="loading" :data="typeList" border>
+      <el-table :data="typeList" border>
         <el-table-column label="ID" width="80" prop="dict_id" />
         <el-table-column label="字典名称" prop="dict_name" min-width="180" />
         <el-table-column label="字典类型" width="200" min-width="200">
@@ -143,16 +143,16 @@ export default {
       this.$refs.dictForm.open(item)
     },
     handleDelete(item) {
-      this.$confirm('确认删除数据？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          deleteDictType({ dict_id: item.dict_id }).then(() => {
-            this.$message.success('删除成功')
-            this.handleGetTypeList()
-          })
+      this.baseConfirm('确认删除字典？')
+        .then((done) => {
+          deleteDictType({ dict_id: item.dict_id })
+            .then(() => {
+              this.$message.success('删除成功')
+              this.handleGetTypeList()
+            })
+            .finally(() => {
+              done()
+            })
         })
         .catch(() => {})
     },

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-card shadow="never">
+    <el-card shadow="never" v-loading="loading">
       <el-form ref="queryForm" class="common-query-form" :model="queryParams" :inline="true">
         <el-form-item prop="dict_data_label">
           <el-input v-model="queryParams.dict_data_label" placeholder="请输入标签" clearable />
@@ -28,7 +28,7 @@
         </el-form-item>
       </el-form>
 
-      <el-table v-loading="loading" :data="dataList" border>
+      <el-table :data="dataList" border>
         <el-table-column label="ID" prop="dict_data_id" width="60" />
         <el-table-column label="标签" prop="dict_data_label" min-width="160" />
         <el-table-column label="键值" prop="dict_data_value" min-width="160" />
@@ -138,16 +138,16 @@ export default {
       this.$refs.dataForm.open(item)
     },
     handleDelete(item) {
-      this.$confirm('确认删除数据？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          deleteDictData({ dict_data_id: item.dict_data_id }).then(() => {
-            this.$message.success('删除成功')
-            this.handleGetDataList()
-          })
+      this.baseConfirm('确认删除字典数据？')
+        .then((done) => {
+          deleteDictData({ dict_data_id: item.dict_data_id })
+            .then(() => {
+              this.$message.success('删除成功')
+              this.handleGetDataList()
+            })
+            .finally(() => {
+              done()
+            })
         })
         .catch(() => {})
     },

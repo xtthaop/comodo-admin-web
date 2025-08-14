@@ -13,7 +13,7 @@
             v-model="form.dict_data_sort"
             controls-position="right"
             :min="0"
-            :max="100000"
+            :max="4294967295"
           />
         </el-form-item>
         <el-form-item label="状态" prop="status">

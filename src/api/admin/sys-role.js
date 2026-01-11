@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询接口列表
 export function getRoleList(query) {
   return request({
-    url: '/api/sys_role',
+    url: '/api/sys_role/page',
     method: 'get',
     params: query,
   })

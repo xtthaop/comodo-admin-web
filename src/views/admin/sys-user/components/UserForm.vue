@@ -108,8 +108,7 @@
 </template>
 
 <script>
-import { getRoleList } from '@/api/admin/sys-role'
-import { addUser, updateUser } from '@/api/admin/sys-user'
+import { addUser, updateUser, getAllRoleList } from '@/api/admin/sys-user'
 
 export default {
   name: 'UserForm',
@@ -129,14 +128,12 @@ export default {
       },
       rules: {
         username: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
-        nickname: [{ required: true, message: '昵称不能为空', trigger: 'blur' }],
         password: [
           { required: true, message: '密码不能为空', trigger: 'blur' },
           { min: 6, max: 20, message: '密码长度需在 6 到 20 个字符', trigger: 'blur' },
         ],
         email: [{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }],
         phone: [
-          { required: true, message: '手机号码不能为空', trigger: 'blur' },
           {
             pattern: /^1[3-9]\d{9}$/,
             message: '请输入正确的手机号码',
@@ -179,7 +176,7 @@ export default {
       this.resetForm('userForm')
     },
     handleGetRole() {
-      getRoleList().then((res) => {
+      getAllRoleList().then((res) => {
         this.roleOptions = res.data.sys_role_list
       })
     },

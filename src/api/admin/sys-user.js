@@ -9,6 +9,14 @@ export function getUserList(query) {
   })
 }
 
+// 查询所有角色列表
+export function getAllRoleList() {
+  return request({
+    url: '/api/sys_role/list',
+    method: 'get',
+  })
+}
+
 // 添加新用户
 export function addUser(data) {
   return request({

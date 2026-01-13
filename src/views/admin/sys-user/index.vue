@@ -66,21 +66,21 @@
             >
             <el-button
               v-show="scope.row.username !== 'admin'"
-              v-actionpermission="['admin:sysuser:remove']"
-              link
-              type="primary"
-              icon="el-icon-delete"
-              @click="handleDelete(scope.row)"
-              >删除</el-button
-            >
-            <el-button
-              v-show="scope.row.username !== 'admin'"
               v-actionpermission="['admin:sysuser:resetpassword']"
               link
               type="primary"
               icon="el-icon-key"
               @click="handleResetPwd(scope.row)"
               >重置密码</el-button
+            >
+            <el-button
+              v-show="scope.row.username !== 'admin'"
+              v-actionpermission="['admin:sysuser:remove']"
+              link
+              type="danger"
+              icon="el-icon-delete"
+              @click="handleDelete(scope.row)"
+              >删除</el-button
             >
           </template>
         </el-table-column>

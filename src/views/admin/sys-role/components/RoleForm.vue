@@ -13,7 +13,7 @@
         <el-form-item label="角色标识" prop="role_key">
           <el-input
             v-model="form.role_key"
-            placeholder="请输入权限字符"
+            placeholder="请输入角色标识"
             :disabled="disabled"
             maxlength="128"
           />
@@ -122,8 +122,7 @@ export default {
       },
       rules: {
         role_name: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
-        role_key: [{ required: true, message: '权限字符不能为空', trigger: 'blur' }],
-        role_sort: [{ required: true, message: '角色排序不能为空', trigger: 'blur' }],
+        role_key: [{ required: true, message: '角色标识不能为空', trigger: 'blur' }],
       },
       menuOptions: [],
       selectAllChecked: false,

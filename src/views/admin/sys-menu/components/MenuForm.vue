@@ -313,7 +313,6 @@ export default {
       rules: {
         parent_id: [{ required: true, message: '父级菜单不能为空', trigger: 'change' }],
         title: [{ required: true, message: '菜单标题不能为空', trigger: 'blur' }],
-        sort: [{ required: true, message: '排序不能为空', trigger: 'blur' }],
         menu_type: [{ required: true, message: '菜单类型不能为空', trigger: 'change' }],
         component: [
           { required: true, message: '组件路径不能为空', trigger: 'blur' },

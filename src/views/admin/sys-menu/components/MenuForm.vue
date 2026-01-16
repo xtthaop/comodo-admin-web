@@ -122,7 +122,7 @@
               </template>
               <el-radio-group
                 v-model="form.is_link"
-                :disabled="this.isInnerPage || form.permission === 'admin:sysmenu'"
+                :disabled="this.isInnerPage || this.opeType === 'update'"
               >
                 <el-radio :label="1">是</el-radio>
                 <el-radio :label="0">否</el-radio>

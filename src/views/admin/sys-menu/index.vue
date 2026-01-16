@@ -96,10 +96,13 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="菜单类型" align="center" min-width="100px">
+        <el-table-column label="菜单类型" align="center" min-width="120px">
           <template #default="scope">
             <span v-if="scope.row.menu_type === 'F'">页面夹</span>
-            <span v-else-if="scope.row.menu_type === 'P'">页面</span>
+            <span v-else-if="scope.row.menu_type === 'P'">
+              <span v-if="scope.row.is_link === 1">页面（链接）</span>
+              <span v-else>页面</span>
+            </span>
             <span v-else>按钮</span>
           </template>
         </el-table-column>

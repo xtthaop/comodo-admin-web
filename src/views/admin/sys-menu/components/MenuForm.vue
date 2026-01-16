@@ -369,7 +369,7 @@ export default {
           if (!this.form.layout && this.form.layout !== 0) this.form.layout = 1
           if (!this.form.visible && this.form.visible !== 0) this.form.visible = 1
           if (!this.form.is_link && this.form.is_link !== 0) this.form.is_link = 0
-          this.form.apis = this.form.api_list.map((api) => api.id)
+          this.form.apis = this.form.api_list?.map((api) => api.id) || []
         })
         this.title = '编辑菜单'
       }

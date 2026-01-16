@@ -159,7 +159,7 @@
 
 <script>
 import { getMenuList, getMenuTree, deleteMenu } from '@/api/admin/sys-menu'
-import { getApiList } from '@/api/admin/sys-api'
+import { getAllApiList } from '@/api/admin/sys-api'
 import MenuForm from './components/MenuForm.vue'
 import UniIcon from '@/components/UniIcon/index.vue'
 
@@ -190,7 +190,7 @@ export default {
   },
   methods: {
     getApiList() {
-      getApiList().then((res) => {
+      getAllApiList().then((res) => {
         this.allApiList = res.data.sys_api_list
       })
     },

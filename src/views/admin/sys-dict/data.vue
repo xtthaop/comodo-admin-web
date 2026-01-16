@@ -53,7 +53,7 @@
             <el-button
               v-actionpermission="['admin:sysdictdata:remove']"
               link
-              type="primary"
+              type="danger"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               >删除</el-button

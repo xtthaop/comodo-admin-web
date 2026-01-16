@@ -56,12 +56,12 @@
               type="primary"
               icon="el-icon-edit"
               @click="handleUpdate(scope.row)"
-              >修改</el-button
+              >编辑</el-button
             >
             <el-button
               v-actionpermission="['admin:sysapi:remove']"
               link
-              type="primary"
+              type="danger"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               >删除</el-button

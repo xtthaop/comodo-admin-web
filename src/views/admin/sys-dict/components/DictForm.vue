@@ -6,7 +6,11 @@
           <el-input v-model="form.dict_name" placeholder="请输入字典名称" maxlength="128" />
         </el-form-item>
         <el-form-item label="字典类型" prop="dict_type">
-          <el-input v-model="form.dict_type" placeholder="请输入字典类型" maxlength="128" />
+          <el-input
+            v-model="form.dict_type"
+            placeholder="示例：sys_normal_disable"
+            maxlength="128"
+          />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">

@@ -141,7 +141,7 @@
               v-if="scope.row.permission !== 'admin:sysmenu'"
               v-actionpermission="['admin:sysmenu:remove']"
               link
-              type="primary"
+              type="danger"
               icon="el-icon-delete"
               @click="handleDelete(scope.row)"
               >删除</el-button
@@ -264,7 +264,7 @@ export default {
     visibleType(visible) {
       switch (visible) {
         case 0:
-          return 'danger'
+          return 'info'
         case 1:
           return 'success'
         default:

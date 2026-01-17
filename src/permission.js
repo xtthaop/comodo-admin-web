@@ -27,8 +27,12 @@ router.beforeEach(async (to) => {
         } catch (error) {
           // eslint-disable-next-line
           console.error(error || 'error')
-          await store.dispatch('user/resetToken')
-          return `/login?redirect=${to.path}&${location.search.substring(1)}`
+          await store.dispatch('user/reset')
+          if (error.response?.data?.code === 401) {
+            return `/login?__redirect__=${to.path}&${location.search.substring(1)}`
+          } else {
+            return `/login`
+          }
         }
       }
     }
@@ -36,7 +40,7 @@ router.beforeEach(async (to) => {
     if (whiteList.indexOf(to.path) !== -1) {
       return true
     } else {
-      return `/login?redirect=${to.path}&${location.search.substring(1)}`
+      return `/login?__redirect__=${to.path}&${location.search.substring(1)}`
     }
   }
 })

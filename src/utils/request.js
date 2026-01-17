@@ -1,7 +1,6 @@
 import axios from 'axios'
 import { getToken } from '@/utils/auth'
 import store from '@/store'
-import router from '@/router'
 import { ElMessageBox, ElMessage } from 'element-plus'
 
 let messageBoxFlag = 0
@@ -33,8 +32,10 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response) => {
     const res = response.data
-    if (res.code !== 0) {
-      if (res.code === 4024) {
+    if (res?.code === 0) {
+      return res
+    } else {
+      if (res?.code === 4024) {
         if (messageBoxFlag === 0) {
           messageBoxFlag = 1
           ElMessageBox.confirm('您的账号已被禁用，请联系管理员', '提示', {
@@ -44,26 +45,23 @@ service.interceptors.response.use(
           })
             .then(async () => {
               messageBoxFlag = 0
-              await store.dispatch('user/resetToken')
-              router.push(`/login`)
+              await store.dispatch('user/reset')
+              location.href = '/login'
             })
             .catch(() => {
               messageBoxFlag = 0
             })
         }
-
-        return Promise.reject(res || 'Error')
+      } else {
+        ElMessage({
+          message: res?.message || 'Error',
+          type: 'error',
+          duration: 5 * 1000,
+          showClose: true,
+        })
       }
 
-      ElMessage({
-        message: res.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000,
-      })
-
       return Promise.reject(res || 'Error')
-    } else {
-      return res
     }
   },
   (error) => {
@@ -77,21 +75,24 @@ service.interceptors.response.use(
         })
           .then(async () => {
             messageBoxFlag = 0
-            await store.dispatch('user/resetToken')
-            router.push(`/login?redirect=${location.pathname}&${location.search.substring(1)}`)
+            await store.dispatch('user/reset')
+            location.reload()
           })
           .catch(() => {
             messageBoxFlag = 0
           })
       }
     } else {
-      ElMessage({
-        message: error.response.data?.message || error.message || 'Error',
-        type: 'error',
-        duration: 5 * 1000,
-        showClose: true,
-      })
+      if (error.code !== 'ERR_CANCELED') {
+        ElMessage({
+          message: error.response?.data?.message || error.message || 'Error',
+          type: 'error',
+          duration: 5 * 1000,
+          showClose: true,
+        })
+      }
     }
+
     return Promise.reject(error)
   }
 )

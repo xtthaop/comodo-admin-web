@@ -88,7 +88,8 @@ export default {
     },
     async handleLogOut() {
       await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.path}&${location.search.substring(1)}`)
+      this.$router.push(`/login?__redirect__=${this.$route.path}&${location.search.substring(1)}`)
+      location.reload()
     },
     handleModifyPassword() {
       this.$refs.modifyForm.open()

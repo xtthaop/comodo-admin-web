@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie'
 
-const tokenKey = 'COMODOADMINTOKEN'
+const tokenKey = 'COMODO_ADMIN_TOKEN'
 
 export function setToken(token) {
   return Cookies.set(tokenKey, token)

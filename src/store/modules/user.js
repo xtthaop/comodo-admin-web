@@ -64,8 +64,10 @@ const actions = {
     return new Promise((resolve, reject) => {
       logout()
         .then(() => {
+          commit('SET_USERNAME', '')
           commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
+          commit('SET_ACTION_PERMISSION', [])
           removeToken()
           resetRouter()
           dispatch('tagsView/delAllViews', null, { root: true })
@@ -76,10 +78,12 @@ const actions = {
         })
     })
   },
-  resetToken({ commit }) {
+  reset({ commit }) {
     return new Promise((resolve) => {
-      commit('SET_TOKEN', '')
+      commit('SET_USERNAME', '')
       commit('SET_ROLES', [])
+      commit('SET_ACTION_PERMISSION', [])
+      commit('SET_TOKEN', '')
       removeToken()
       resolve()
     })

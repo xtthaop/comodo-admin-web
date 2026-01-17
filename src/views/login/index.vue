@@ -86,7 +86,9 @@ export default {
       handler: function (route) {
         const query = route.query
         if (query) {
-          this.redirect = Array.isArray(query.redirect) ? query.redirect[0] : query.redirect
+          this.redirect = Array.isArray(query.__redirect__)
+            ? query.__redirect__[0]
+            : query.__redirect__
           this.otherQuery = this.getOtherQuery(query)
         }
       },
@@ -137,7 +139,7 @@ export default {
     },
     getOtherQuery(query) {
       return Object.keys(query).reduce((acc, cur) => {
-        if (cur !== 'redirect') {
+        if (cur !== '__redirect__') {
           acc[cur] = query[cur]
         }
         return acc

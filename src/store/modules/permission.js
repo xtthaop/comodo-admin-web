@@ -18,7 +18,7 @@ function generateDynamicRoutes(data) {
     const route = {
       path: item.path,
       component: item.component === 'Layout' ? Layout : _import(item.component),
-      hidden: item.visible != 1,
+      hidden: item.visible !== 1,
       name: item.route_name,
       meta: {
         title: item.title,

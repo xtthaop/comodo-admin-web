@@ -75,7 +75,7 @@ export default {
       pageStyle: (state) => state.settings.pageStyle,
     }),
     firstOfUsername() {
-      return this.username.substr(0, 1).toUpperCase()
+      return this.username.trim().substr(0, 1).toUpperCase()
     },
   },
   created() {

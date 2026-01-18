@@ -55,8 +55,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import './components/Sidebar/variables.module.scss';
-
 .app-wrapper {
   position: relative;
   width: 100%;

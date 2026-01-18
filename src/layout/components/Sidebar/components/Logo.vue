@@ -1,22 +1,21 @@
 <template>
-  <div class="sidebar-logo-container" :class="{ collapse }" :style="{ backgroundColor }">
+  <div class="sidebar-logo-container" :class="{ collapse }">
     <transition name="sidebar-logo-fade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
         <img class="sidebar-logo" :src="logo" />
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
         <img class="sidebar-logo" :src="logo" />
-        <h1 class="sidebar-title" :style="{ color: titleColor }">{{ systemName }}</h1>
+        <h1 class="sidebar-title">{{ systemName }}</h1>
       </router-link>
     </transition>
   </div>
 </template>
 
 <script>
-import variables from '../variables.module.scss'
 import logo from '@/assets/logo.png'
 import { systemName } from '@/settings'
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'SidebarLogo',
@@ -28,15 +27,6 @@ export default {
   },
   computed: {
     ...mapGetters(['sidebar']),
-    ...mapState({
-      pageStyle: (state) => state.settings.pageStyle,
-    }),
-    titleColor() {
-      return this.pageStyle === 'dark' ? variables.titleDarkColor : variables.titleLightColor
-    },
-    backgroundColor() {
-      return this.pageStyle === 'dark' ? variables.logoDarkBg : variables.logoLightBg
-    },
     collapse() {
       return !this.sidebar.opened
     },
@@ -61,6 +51,7 @@ export default {
   line-height: 50px;
   text-align: center;
   overflow: hidden;
+  background-color: var(--sidebar-logo-bg);
 
   .sidebar-logo-link {
     height: 100%;
@@ -76,7 +67,7 @@ export default {
     .sidebar-title {
       display: inline-block;
       margin: 0;
-      color: #fff;
+      color: var(--sidebar-title-color);
       font-weight: 600;
       line-height: 50px;
       font-size: 15px;

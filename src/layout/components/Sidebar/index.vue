@@ -58,17 +58,8 @@ export default {
 
 <style lang="scss">
 // 注意这里是全局样式
-@import './variables.module.scss';
 
-@mixin custom-style($isLight: false) {
-  --el-menu-text-color: #{if($isLight, $menuLightText, $menuText)};
-  --el-menu-active-color: #{if($isLight, $menuLightActiveText, $menuActiveText)};
-  --el-menu-bg-color: #{if($isLight, $menuLightBg, $menuBg)};
-  --el-menu-hover-bg-color: #{if($isLight, $menuLightHoverBg, $menuHoverBg)};
-  --el-menu-active-bg-color: #{if($isLight, $menuLightActiveBg, $menuActiveBg)};
-  --el-sub-menu-bg-color: #{if($isLight, $subMenuLightBg, $subMenuBg)};
-  --el-sub-menu-hover-bg-color: #{if($isLight, $subMenuLightHover, $subMenuHover)};
-
+@mixin custom-style() {
   --el-menu-item-height: 40px;
   --el-menu-sub-item-height: 40px;
   --el-menu-base-level-padding: 8px;
@@ -83,11 +74,13 @@ export default {
   // 自定义选中菜单背景样式
   .el-menu-item.is-active {
     background-color: var(--el-menu-active-bg-color);
+    font-weight: 700;
   }
 
   // 自定义选中菜单父级样式
   .el-sub-menu.is-active > .el-sub-menu__title {
     color: var(--el-menu-active-color);
+    font-weight: 700;
   }
 }
 
@@ -108,16 +101,10 @@ export default {
   transition: width 0.28s;
   font-size: 0px;
   z-index: 1001;
+  background-color: var(--el-menu-bg-color);
+  border-right: 1px solid var(--el-menu-bg-color);
 
-  background-color: $menuBg;
-  border-right: 1px solid $menuBg;
-  @include custom-style($isLight: false);
-
-  &.light {
-    background-color: $menuLightBg;
-    border-right: 1px solid #ececec;
-    @include custom-style($isLight: true);
-  }
+  @include custom-style();
 
   &.hasLogo {
     .el-scrollbar {
@@ -185,11 +172,7 @@ export default {
 
 // 折叠菜单时弹出菜单保持样式一致
 .sidebar-popper {
-  @include custom-style($isLight: false);
-
-  &.light {
-    @include custom-style($isLight: true);
-  }
+  @include custom-style();
 
   .el-menu--popup {
     // 创建 BFC

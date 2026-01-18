@@ -1,0 +1,70 @@
+$sideBarWidth: 210px;
+$sideBarCloseWidth: 46px;
+
+$defaultTheme: (
+  primaryColor: #0f7af5,
+
+  logoBg: #e6ecf5,
+  titleColor: #0f7af5,
+
+  menuTextColor: #13181d,
+  menuActiveTextColor: #0f7af5,
+
+  menuBg: #e6ecf5,
+  menuHoverBg: #dde4ee,
+  menuActiveBg: #cddcf6,
+
+  subMenuBg: #dee4ee,
+  subMenuHoverBg: #dde4ee,
+);
+
+$fireTheme: (
+  primaryColor: #d65c75,
+
+  logoBg: #eb8886,
+  titleColor: #fff,
+
+  menuTextColor: #fff,
+  menuActiveTextColor: #fff,
+
+  menuBg: #eb8886,
+  menuHoverBg: #efa0a3,
+  menuActiveBg: #f1aeb0,
+
+  subMenuBg: #ee9290,
+  subMenuHoverBg: #efa0a3,
+);
+
+$classicTheme: (
+  primaryColor: #409eff,
+
+  logoBg: #304156,
+  titleColor: #fff,
+
+  menuTextColor: #bfcbd9,
+  menuActiveTextColor: #fff,
+
+  menuBg: #304156,
+  menuHoverBg: #263445,
+  menuActiveBg: #1b5cb6,
+
+  subMenuBg: #1f2d3d,
+  subMenuHoverBg: #001528,
+);
+
+$lightTheme: (
+  primaryColor: #409eff,
+
+  logoBg: #fff,
+  titleColor: #303133,
+
+  menuTextColor: #696969,
+  menuActiveTextColor: #409eff,
+
+  menuBg: #fff,
+  menuHoverBg: #f0f1f5,
+  menuActiveBg: #e6f4ff,
+
+  subMenuBg: #f9f9f9,
+  subMenuHoverBg: #f0f1f5,
+);

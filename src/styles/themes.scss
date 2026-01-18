@@ -1,0 +1,21 @@
+$themes: (
+  default: $defaultTheme,
+  fire: $fireTheme,
+  classic: $classicTheme,
+  light: $lightTheme,
+);
+
+@each $themeName, $colors in $themes {
+  :root[data-theme='#{$themeName}'] {
+    --el-color-primary: #{map-get($colors, primaryColor)};
+    --sidebar-logo-bg: #{map-get($colors, logoBg)};
+    --sidebar-title-color: #{map-get($colors, titleColor)};
+    --el-menu-text-color: #{map-get($colors, menuTextColor)};
+    --el-menu-active-color: #{map-get($colors, menuActiveTextColor)};
+    --el-menu-bg-color: #{map-get($colors, menuBg)};
+    --el-menu-hover-bg-color: #{map-get($colors, menuHoverBg)};
+    --el-menu-active-bg-color: #{map-get($colors, menuActiveBg)};
+    --el-sub-menu-bg-color: #{map-get($colors, subMenuBg)};
+    --el-sub-menu-hover-bg-color: #{map-get($colors, subMenuHoverBg)};
+  }
+}

@@ -38,33 +38,34 @@ export default {
     this.getBreadcrumb()
   },
   methods: {
-    getMatched(routes, sign, array) {
+    getMatched(routes, sign) {
       for (let i = 0; i < routes.length; i++) {
+        const route = routes[i]
         if (routes[i].meta?.id === sign || routes[i].path === sign) {
-          array.unshift(routes[i])
-          return true
-        } else {
-          if (routes[i].children && routes[i].children.length > 0) {
-            const res = this.getMatched(routes[i].children, sign, array)
-            if (res) {
-              array.unshift(routes[i])
-              return true
-            }
+          return [route]
+        } else if (routes[i].children && routes[i].children.length > 0) {
+          const childResult = this.getMatched(routes[i].children, sign)
+          if (childResult.length > 0) {
+            return [route, ...childResult]
           }
         }
       }
+
+      return []
     },
     getBreadcrumb() {
-      const matched = []
       const lastMatched = this.$route.matched[this.$route.matched.length - 1]
-      this.getMatched(this.permissionroutes, lastMatched.meta?.id || lastMatched.path, matched)
+      const matched = this.getMatched(
+        this.permissionroutes,
+        lastMatched.meta?.id || lastMatched.path
+      )
       this.levelList = matched.filter((item) => item.meta?.title)
     },
     // 深层次嵌套的路由跳转到存在动态参数的上一级时可根据此函数匹配到上一级参数
     pathCompile(path) {
       const { params } = this.$route
       var toPath = compile(path)
-      return toPath(params) + window.location.search
+      return toPath(params)
     },
     handleLink(item) {
       const { path, meta, children } = item

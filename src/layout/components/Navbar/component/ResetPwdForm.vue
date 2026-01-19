@@ -8,6 +8,7 @@
             show-password
             placeholder="请输入旧密码"
             type="password"
+            maxlength="20"
           />
         </el-form-item>
         <el-form-item label="新密码" prop="new_password">
@@ -28,8 +29,8 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="cancel">取 消</el-button>
-        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel" :disabled="submitLoading">取 消</el-button>
+        <el-button type="primary" @click="submitForm" :loading="submitLoading">确 定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -64,6 +65,7 @@ export default {
           { required: true, validator: equalToNewPassword, trigger: 'blur' },
         ],
       },
+      submitLoading: false,
     }
   },
   methods: {
@@ -77,15 +79,24 @@ export default {
     submitForm() {
       this.$refs['resetPwdForm'].validate((valid) => {
         if (valid) {
+          this.submitLoading = true
           const data = {}
           for (let key in this.form) {
             data[key] = this.md5Password(this.form[key])
           }
-          changePassword(data).then(() => {
-            this.$message.success('密码修改成功！请重新登录！')
-            this.$emit('logout')
-            this.dialogVisible = false
-          })
+          changePassword(data)
+            .then(() => {
+              this.$message.success('密码修改成功！请重新登录！')
+              this.submitLoading = false
+              this.dialogVisible = false
+              setTimeout(async () => {
+                await this.$store.dispatch('user/reset')
+                location.reload()
+              }, 300)
+            })
+            .catch(() => {
+              this.submitLoading = false
+            })
         }
       })
     },

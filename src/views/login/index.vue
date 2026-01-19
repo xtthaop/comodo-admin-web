@@ -3,7 +3,7 @@
     <div class="login-card">
       <el-form :model="loginForm" ref="loginForm" :rules="rules">
         <div class="login-card-title">
-          <img class="logo" src="@/assets/logo.png" />
+          <img class="logo" src="/logo.png" />
           <h1 class="title">{{ systemName }}</h1>
         </div>
 

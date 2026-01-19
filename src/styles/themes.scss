@@ -1,6 +1,7 @@
 $themes: (
   default: $defaultTheme,
   fire: $fireTheme,
+  calamus: $calamusTheme,
   classic: $classicTheme,
   light: $lightTheme,
 );
@@ -8,6 +9,17 @@ $themes: (
 @each $themeName, $colors in $themes {
   :root[data-theme='#{$themeName}'] {
     --el-color-primary: #{map-get($colors, primaryColor)};
+    --el-color-primary-light-1: #{lighten(map-get($colors, primaryColor), 4)};
+    --el-color-primary-light-2: #{lighten(map-get($colors, primaryColor), 8)};
+    --el-color-primary-light-3: #{lighten(map-get($colors, primaryColor), 12)};
+    --el-color-primary-light-4: #{lighten(map-get($colors, primaryColor), 16)};
+    --el-color-primary-light-5: #{lighten(map-get($colors, primaryColor), 20)};
+    --el-color-primary-light-6: #{lighten(map-get($colors, primaryColor), 24)};
+    --el-color-primary-light-7: #{lighten(map-get($colors, primaryColor), 28)};
+    --el-color-primary-light-8: #{lighten(map-get($colors, primaryColor), 32)};
+    --el-color-primary-light-9: #{lighten(map-get($colors, primaryColor), 36)};
+    --el-color-primary-dark-2: #{darken(map-get($colors, primaryColor), 10)};
+
     --sidebar-logo-bg: #{map-get($colors, logoBg)};
     --sidebar-title-color: #{map-get($colors, titleColor)};
     --el-menu-text-color: #{map-get($colors, menuTextColor)};

@@ -21,18 +21,35 @@ $defaultTheme: (
 $fireTheme: (
   primaryColor: #d65c75,
 
-  logoBg: #eb8886,
+  logoBg: #eb8596,
   titleColor: #fff,
 
   menuTextColor: #fff,
   menuActiveTextColor: #fff,
 
-  menuBg: #eb8886,
+  menuBg: #eb8596,
   menuHoverBg: #efa0a3,
   menuActiveBg: #f1aeb0,
 
-  subMenuBg: #ee9290,
+  subMenuBg: #e47c8e,
   subMenuHoverBg: #efa0a3,
+);
+
+$calamusTheme: (
+  primaryColor: #5d4256,
+
+  logoBg: #5d4256,
+  titleColor: #fff,
+
+  menuTextColor: #fff,
+  menuActiveTextColor: #fff,
+
+  menuBg: #5d4256,
+  menuHoverBg: #8b7785,
+  menuActiveBg: #998996,
+
+  subMenuBg: #533d4d,
+  subMenuHoverBg: #8b7785,
 );
 
 $classicTheme: (

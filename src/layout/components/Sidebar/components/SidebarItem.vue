@@ -14,7 +14,7 @@
     v-else
     ref="subMenu"
     :index="resolveIndex(item)"
-    :popper-class="`sidebar-popper ${pageStyle}`"
+    popper-class="sidebar-popper"
     :popper-offset="12"
   >
     <template v-if="item.meta" #title>
@@ -36,7 +36,6 @@ import ItemIcon from '@/components/UniIcon/index.vue'
 import AppLink from './Link.vue'
 import utils from '../mixins/utils'
 import { isExternal } from '@/utils/validate'
-import { mapState } from 'vuex'
 
 export default {
   name: 'SidebarItem',
@@ -47,11 +46,6 @@ export default {
       type: Object,
       required: true,
     },
-  },
-  computed: {
-    ...mapState({
-      pageStyle: (state) => state.settings.pageStyle,
-    }),
   },
   methods: {
     hasNoShowingChild(children = []) {

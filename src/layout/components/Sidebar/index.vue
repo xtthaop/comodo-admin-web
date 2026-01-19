@@ -7,7 +7,6 @@
         :collapse="isCollapse"
         :unique-opened="false"
         :collapse-transition="false"
-        :popperEffect="pageStyle"
         mode="vertical"
       >
         <SidebarItem v-for="route in permissionroutes" :key="resolveKey(route)" :item="route" />
@@ -33,12 +32,10 @@ export default {
     ...mapGetters(['permissionroutes', 'sidebar']),
     ...mapState({
       showLogo: (state) => state.settings.sidebarLogo,
-      pageStyle: (state) => state.settings.pageStyle,
     }),
     classObj() {
       return {
         hasLogo: this.showLogo,
-        [this.pageStyle]: true,
       }
     },
     activeMenu() {

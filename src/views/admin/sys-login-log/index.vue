@@ -1,42 +1,28 @@
 <template>
   <div class="app-container">
-    <el-card shadow="never">
-      <el-form ref="queryForm" :model="queryParams" :inline="true">
+    <el-card shadow="never" v-loading="loading">
+      <el-form ref="queryForm" class="common-query-form" :model="queryParams" :inline="true">
         <el-form-item prop="username">
-          <el-input
-            v-model="queryParams.username"
-            placeholder="请输入用户名"
-            clearable
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.username" placeholder="请输入用户名" clearable />
         </el-form-item>
         <el-form-item prop="ipaddr">
-          <el-input
-            v-model="queryParams.ipaddr"
-            placeholder="请输入IP地址"
-            clearable
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.ipaddr" placeholder="请输入IP地址" clearable />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="handleReset">重置</el-button>
           <el-button
             v-actionpermission="['admin:sysloginlog:remove']"
             type="danger"
             icon="el-icon-delete"
-            :disabled="multiple"
+            :disabled="!multiple"
             @click="handleDelete"
             >删除</el-button
           >
         </el-form-item>
       </el-form>
 
-      <el-table
-        v-loading="loading"
-        :data="sysloginlogList"
-        border
-        @selection-change="handleSelectionChange"
-      >
+      <el-table :data="sysloginlogList" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column
           label="用户名"
@@ -101,7 +87,7 @@ export default {
         ipaddr: undefined,
       },
       total: 0,
-      multiple: true,
+      multiple: false,
       sysloginlogList: [],
       loading: false,
       ids: [],
@@ -127,24 +113,28 @@ export default {
       this.queryParams.page = 1
       this.handleGetLoginLogList()
     },
+    handleReset() {
+      this.resetForm('queryForm')
+      this.handleQuery()
+    },
     handleDelete(row) {
       const ids = (row.id && [row.id]) || this.ids
-      this.$confirm('确认删除数据?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          deleteLoginlog({ ids }).then(() => {
-            this.$message.success('删除成功')
-            this.handleGetLoginLogList()
-          })
+      this.baseConfirm('确认删除日志?')
+        .then((done) => {
+          deleteLoginlog({ ids })
+            .then(() => {
+              this.$message.success('删除成功')
+              this.handleGetLoginLogList()
+            })
+            .finally(() => {
+              done()
+            })
         })
         .catch(() => {})
     },
     handleSelectionChange(selection) {
       this.ids = selection.map((item) => item.id)
-      this.multiple = !selection.length
+      this.multiple = !!selection.length
     },
   },
 }

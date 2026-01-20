@@ -34,7 +34,7 @@
           <el-switch v-model="sidebarLogo" class="drawer-switch" />
         </div>
         <div class="drawer-item">
-          <span>固定顶部导航</span>
+          <span>固定头部导航</span>
           <el-switch v-model="fixedHeader" class="drawer-switch" />
         </div>
         <div class="drawer-item">

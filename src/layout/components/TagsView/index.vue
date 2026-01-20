@@ -1,7 +1,7 @@
 <template>
   <div id="tags-view-container" class="tags-view-container">
     <scroll-pane ref="scrollPane" class="tags-view-wrapper" @scroll="handleScroll">
-      <div id="draggable-tags">
+      <div ref="draggableTags">
         <router-link
           v-for="tag in visitedViews"
           ref="tag"
@@ -13,7 +13,7 @@
         >
           {{ tag.title }}
           <el-icon
-            v-if="!isAffix(tag) && isActive(tag)"
+            v-if="!isAffix(tag)"
             class="el-icon-close"
             @click.prevent.stop="closeSelectedTag(tag)"
           >
@@ -82,7 +82,7 @@ export default {
   },
   methods: {
     initDraggable() {
-      const el = document.getElementById('draggable-tags')
+      const el = this.$refs.draggableTags
       const sortableOptions = {
         group: 'draggable-tags',
         animation: 500,
@@ -96,6 +96,7 @@ export default {
       const newList = [...this.visitedViews]
       newList.splice(newIndex, 0, newList.splice(oldIndex, 1)[0])
       this.visitedViews = newList
+      // 标签顺序不会自动改变这里手动处理在跳转标签时计算位置使滚动条滚动到正确的位置
       this.$refs.tag.splice(newIndex, 0, this.$refs.tag.splice(oldIndex, 1)[0])
     },
     isActive(route) {
@@ -267,8 +268,7 @@ export default {
         transform-origin: 100% 50%;
         margin-left: 8px;
         &:hover {
-          background-color: #fe5f57;
-          color: #fff;
+          background-color: #eee;
         }
       }
     }

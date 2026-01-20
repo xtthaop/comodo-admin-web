@@ -140,6 +140,7 @@ export default {
           height: 30px;
           background: var(--el-menu-bg-color);
           color: var(--el-menu-text-color);
+          border: 1px solid #eee;
           border-radius: 5px;
           text-align: center;
           transition: all 0.1s;

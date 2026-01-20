@@ -33,12 +33,14 @@
         border
         row-key="menu_id"
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
+        show-overflow-tooltip
+        :tooltip-options="{ popperClass: 'custom-tooltip-style' }"
       >
         <el-table-column
           prop="title"
           label="菜单名称"
           header-align="center"
-          min-width="230px"
+          width="230px"
           class-name="custom-col"
         >
           <template #default="scope">
@@ -54,18 +56,27 @@
                   <Place />
                 </template>
               </el-icon>
-              <span>{{ scope.row.title }}</span>
+              <span
+                style="
+                  width: 167px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  word-break: break-all;
+                "
+                >{{ scope.row.title }}
+              </span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="menu_id" label="ID" width="60px" />
-        <el-table-column prop="icon" label="图标" align="center" width="80px">
+        <el-table-column prop="menu_id" label="ID" width="75" />
+        <el-table-column prop="icon" label="图标" align="center" width="80">
           <template #default="scope">
             <span v-if="scope.row.icon"><UniIcon :icon="scope.row.icon" /></span>
           </template>
         </el-table-column>
-        <el-table-column prop="sort" label="排序" width="60px" />
-        <el-table-column prop="permission" label="权限标识" min-width="230px">
+        <el-table-column prop="sort" label="排序" width="75" />
+        <el-table-column prop="permission" label="权限标识" min-width="200">
           <template #default="scope">
             <el-popover
               v-if="scope.row.api_list.length > 0"
@@ -96,7 +107,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="菜单类型" align="center" min-width="120px">
+        <el-table-column label="菜单类型" align="center" min-width="120">
           <template #default="scope">
             <span v-if="scope.row.menu_type === 'F'">页面夹</span>
             <span v-else-if="scope.row.menu_type === 'P'">

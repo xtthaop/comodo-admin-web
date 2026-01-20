@@ -28,14 +28,25 @@
         </el-form-item>
       </el-form>
 
-      <el-table :data="dataList" border>
-        <el-table-column label="ID" prop="dict_data_id" width="60" />
+      <el-table
+        :data="dataList"
+        border
+        show-overflow-tooltip
+        :tooltip-options="{ popperClass: 'custom-tooltip-style' }"
+      >
+        <el-table-column label="ID" prop="dict_data_id" width="75" />
         <el-table-column label="标签" prop="dict_data_label" min-width="160" />
         <el-table-column label="键值" prop="dict_data_value" min-width="160" />
         <el-table-column label="排序" prop="dict_data_sort" min-width="80" />
-        <el-table-column label="状态" prop="status" :formatter="statusFormat" min-width="80" />
-        <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" min-width="220" />
-        <el-table-column label="创建时间" prop="created_at" width="180">
+        <el-table-column
+          label="状态"
+          prop="status"
+          :formatter="statusFormat"
+          align="center"
+          min-width="80"
+        />
+        <el-table-column label="备注" prop="remark" :show-overflow-tooltip="true" min-width="200" />
+        <el-table-column label="创建时间" prop="created_at" width="160">
           <template #default="scope">
             <span>{{ parseTime(scope.row.created_at) }}</span>
           </template>

@@ -31,8 +31,13 @@
         </el-form-item>
       </el-form>
 
-      <el-table :data="roleList" border>
-        <el-table-column label="ID" prop="role_id" width="80" />
+      <el-table
+        :data="roleList"
+        border
+        show-overflow-tooltip
+        :tooltip-options="{ popperClass: 'custom-tooltip-style' }"
+      >
+        <el-table-column label="ID" prop="role_id" width="75" />
         <el-table-column
           label="角色名称"
           prop="role_name"
@@ -40,8 +45,8 @@
           show-overflow-tooltip
         />
         <el-table-column label="角色标识" min-width="100px" prop="role_key" />
-        <el-table-column label="排序" prop="role_sort" width="80" />
-        <el-table-column label="状态" width="120" align="center">
+        <el-table-column label="排序" prop="role_sort" width="75" />
+        <el-table-column label="状态" min-width="100" align="center">
           <template #default="scope">
             <el-switch
               :key="scope.row.role_id"

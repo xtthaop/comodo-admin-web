@@ -32,10 +32,15 @@
         </el-form-item>
       </el-form>
 
-      <el-table :data="apiList" border>
-        <el-table-column label="ID" prop="id" width="80px"></el-table-column>
-        <el-table-column label="接口名称" prop="title" width="260px"></el-table-column>
-        <el-table-column label="接口信息">
+      <el-table
+        :data="apiList"
+        border
+        show-overflow-tooltip
+        :tooltip-options="{ popperClass: 'custom-tooltip-style' }"
+      >
+        <el-table-column label="ID" prop="id" width="75"></el-table-column>
+        <el-table-column label="接口名称" prop="title" min-width="200"></el-table-column>
+        <el-table-column label="接口信息" min-width="230">
           <template #default="scope">
             <el-tag :type="getType(scope.row.type)">
               {{ scope.row.type }}
@@ -43,12 +48,12 @@
             {{ scope.row.path }}
           </template>
         </el-table-column>
-        <el-table-column label="创建时间" prop="created_at" width="180px">
+        <el-table-column label="创建时间" prop="created_at" width="160">
           <template #default="scope">
             <span>{{ parseTime(scope.row.created_at) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="160px">
+        <el-table-column label="操作" width="160px">
           <template #default="scope">
             <el-button
               v-actionpermission="['admin:sysapi:edit']"

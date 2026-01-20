@@ -34,32 +34,25 @@
         v-loading="loading"
         :data="operationLoglist"
         border
+        show-overflow-tooltip
+        :tooltip-options="{ popperClass: 'custom-tooltip-style' }"
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="ID" width="70" prop="id" />
-        <el-table-column label="请求类型" width="120">
+        <el-table-column label="ID" width="75" prop="id" />
+        <el-table-column label="请求类型" align="center" width="100">
           <template #default="scope">
             <el-tag :type="getType(scope.row.type)">{{ scope.row.type }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="接口信息">
-          <template #default="scope">
-            <el-popover trigger="hover" placement="top" width="200">
-              <p>IP地址: {{ scope.row.ipaddr }}</p>
-
-              <template #reference>
-                {{ scope.row.path }}
-              </template>
-            </el-popover>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" prop="operation" width="200" :show-overflow-tooltip="true" />
-        <el-table-column label="操作人" prop="operator" width="120" :show-overflow-tooltip="true" />
+        <el-table-column label="接口地址" prop="path" min-width="200" />
+        <el-table-column label="操作" prop="operation" min-width="200" />
+        <el-table-column label="IP" prop="ipaddr" min-width="120" />
+        <el-table-column label="操作人" prop="operator" min-width="120" />
         <el-table-column
           label="操作耗时"
           prop="latency_time"
-          width="120"
+          min-width="120"
           :show-overflow-tooltip="true"
         />
         <el-table-column label="操作时间" width="160">

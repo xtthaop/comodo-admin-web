@@ -22,16 +22,17 @@
         </el-form-item>
       </el-form>
 
-      <el-table :data="sysloginlogList" border @selection-change="handleSelectionChange">
+      <el-table
+        :data="sysloginlogList"
+        border
+        show-overflow-tooltip
+        :tooltip-options="{ popperClass: 'custom-tooltip-style' }"
+        @selection-change="handleSelectionChange"
+      >
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="ID" width="70" prop="id" />
-        <el-table-column
-          label="用户名"
-          align="center"
-          prop="username"
-          :show-overflow-tooltip="true"
-        />
-        <el-table-column label="IP地址" align="center" prop="ipaddr">
+        <el-table-column label="ID" width="75" prop="id" />
+        <el-table-column label="用户名" prop="username" min-width="120" />
+        <el-table-column label="IP地址" prop="ipaddr" min-width="120">
           <template #default="scope">
             <el-popover trigger="hover" placement="top" width="200">
               <p>IP: {{ scope.row.ipaddr }}</p>
@@ -45,12 +46,12 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="登录时间" align="center" prop="login_time" width="180">
+        <el-table-column label="登录时间" prop="login_time" min-width="160">
           <template #default="scope">
             <span>{{ parseTime(scope.row.login_time) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
+        <el-table-column label="操作" width="80">
           <template #default="scope">
             <el-button
               v-actionpermission="['admin:sysloginlog:remove']"

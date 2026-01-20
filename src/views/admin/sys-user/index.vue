@@ -31,12 +31,17 @@
         </el-form-item>
       </el-form>
 
-      <el-table :data="userList" border>
+      <el-table
+        :data="userList"
+        border
+        show-overflow-tooltip
+        :tooltip-options="{ popperClass: 'custom-tooltip-style' }"
+      >
         <el-table-column label="ID" width="75" prop="user_id" />
-        <el-table-column label="用户名" prop="username" />
-        <el-table-column label="昵称" prop="nickname" />
-        <el-table-column label="手机号" prop="phone" />
-        <el-table-column label="状态">
+        <el-table-column label="用户名" min-width="120" prop="username" />
+        <el-table-column label="昵称" min-width="120" prop="nickname" />
+        <el-table-column label="手机号" min-width="120" prop="phone" />
+        <el-table-column label="状态" min-width="100" align="center">
           <template #default="scope">
             <el-switch
               :key="scope.row.user_id"

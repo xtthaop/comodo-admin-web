@@ -32,9 +32,14 @@
         </el-form-item>
       </el-form>
 
-      <el-table :data="typeList" border>
-        <el-table-column label="ID" width="80" prop="dict_id" />
-        <el-table-column label="字典名称" prop="dict_name" min-width="180" />
+      <el-table
+        :data="typeList"
+        border
+        show-overflow-tooltip
+        :tooltip-options="{ popperClass: 'custom-tooltip-style' }"
+      >
+        <el-table-column label="ID" width="75" prop="dict_id" />
+        <el-table-column label="字典名称" prop="dict_name" min-width="120" />
         <el-table-column label="字典类型" width="200" min-width="200">
           <template #default="scope">
             <el-button link type="primary">
@@ -44,14 +49,20 @@
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column label="状态" prop="status" :formatter="statusFormat" min-width="80" />
-        <el-table-column label="备注" prop="remark" min-width="220" />
-        <el-table-column label="创建时间" prop="created_at" width="180">
+        <el-table-column
+          label="状态"
+          prop="status"
+          :formatter="statusFormat"
+          align="center"
+          min-width="80"
+        />
+        <el-table-column label="备注" prop="remark" min-width="200" />
+        <el-table-column label="创建时间" prop="created_at" width="160">
           <template #default="scope">
             <span>{{ parseTime(scope.row.created_at) }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center" width="180">
+        <el-table-column label="操作" align="center" width="160">
           <template #default="scope">
             <el-button
               v-actionpermission="['admin:sysdicttype:edit']"

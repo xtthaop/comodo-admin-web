@@ -37,13 +37,14 @@ pnpm run build
 密码：123456
 
 ## 成为赞助者
-<img src="https://github.com/xtthaop/image-lib/blob/master/comodo-admin/sponsor.png?raw=true" width="300px" />
+<img src="./public//sponsor.png?raw=true" width="300px" />
 
 如果这个项目帮助到你的话，请多多予以支持！感谢！
 
 ## 许可证
 [MIT](./LICENSE.md)
 
-<p align="center" style="font-size: 12px;">
-  本项目参考了 <a href="https://github.com/PanJiaChen/vue-element-admin">vue-element-admin</a>、<a href="https://github.com/go-admin-team/go-admin">go-admin</a>  感谢！
-</p>
+---
+
+本项目参考了 <a href="https://github.com/PanJiaChen/vue-element-admin">vue-element-admin</a>、<a href="https://github.com/go-admin-team/go-admin">go-admin</a>
+

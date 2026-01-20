@@ -1,8 +1,11 @@
 <template>
   <div class="app-container">
     <el-card shadow="never">
-      <el-form ref="queryForm" :model="queryParams" :inline="true">
-        <el-form-item>
+      <el-form ref="queryForm" class="common-query-form" :model="queryParams" :inline="true">
+        <el-form-item prop="username">
+          <el-input v-model="queryParams.username" placeholder="请输入操作人" clearable />
+        </el-form-item>
+        <el-form-item prop="date_range">
           <el-date-picker
             v-model="queryParams.date_range"
             type="datetimerange"
@@ -10,15 +13,17 @@
             start-placeholder="开始时间"
             end-placeholder="结束时间"
             value-format="YYYY-MM-DD HH:mm:ss"
+            :default-time="[new Date(2000, 1, 1, 0, 0, 0), new Date(2000, 1, 1, 23, 59, 59)]"
           />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" icon="el-icon-search" @click="handleQuery">搜索</el-button>
+          <el-button type="primary" icon="el-icon-refresh" @click="handleReset">重置</el-button>
           <el-button
             v-actionpermission="['admin:sysoperationlog:remove']"
             type="danger"
             icon="el-icon-delete"
-            :disabled="multiple"
+            :disabled="!multiple"
             @click="handleDelete"
             >删除</el-button
           >
@@ -42,7 +47,6 @@
           <template #default="scope">
             <el-popover trigger="hover" placement="top" width="200">
               <p>IP地址: {{ scope.row.ipaddr }}</p>
-              <p>耗时: {{ scope.row.latency_time }}</p>
 
               <template #reference>
                 {{ scope.row.path }}
@@ -58,7 +62,7 @@
           width="120"
           :show-overflow-tooltip="true"
         />
-        <el-table-column label="操作日期" width="160">
+        <el-table-column label="操作时间" width="160">
           <template #default="scope">
             <span>{{ parseTime(scope.row.operation_time) }}</span>
           </template>
@@ -97,10 +101,11 @@ export default {
       queryParams: {
         page: 1,
         page_size: 10,
+        username: undefined,
         date_range: [],
       },
       total: 0,
-      multiple: true,
+      multiple: false,
       loading: false,
       operationLoglist: [],
       ids: [],
@@ -126,6 +131,10 @@ export default {
       this.queryParams.page = 1
       this.handleGetOperationLogList()
     },
+    handleReset() {
+      this.resetForm('queryForm')
+      this.handleQuery()
+    },
     handleGetOperationLogList() {
       this.loading = true
       getOperationLogList(this.queryParams)
@@ -140,22 +149,22 @@ export default {
     },
     handleDelete(row) {
       const ids = (row.id && [row.id]) || this.ids
-      this.$confirm('确认删除数据?', '警告', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-      })
-        .then(() => {
-          deleteOperationlog({ ids }).then(() => {
-            this.$message.success('删除成功')
-            this.handleGetOperationLogList()
-          })
+      this.baseConfirm('确认删除日志?')
+        .then((done) => {
+          deleteOperationlog({ ids })
+            .then(() => {
+              this.$message.success('删除成功')
+              this.handleGetOperationLogList()
+            })
+            .finally(() => {
+              done()
+            })
         })
         .catch(() => {})
     },
     handleSelectionChange(selection) {
       this.ids = selection.map((item) => item.id)
-      this.multiple = !selection.length
+      this.multiple = !!selection.length
     },
   },
 }

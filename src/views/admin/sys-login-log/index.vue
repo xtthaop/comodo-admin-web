@@ -24,6 +24,7 @@
 
       <el-table :data="sysloginlogList" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="ID" width="70" prop="id" />
         <el-table-column
           label="用户名"
           align="center"

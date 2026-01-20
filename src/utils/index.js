@@ -33,3 +33,7 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ')
   }
 }
+
+export function setTheme(val) {
+  document.documentElement.setAttribute('data-theme', val)
+}

@@ -2,61 +2,33 @@
   <div class="drawer-container">
     <div>
       <div class="setting-drawer-content">
-        <div class="setting-drawer-title">风格设置</div>
-        <div class="setting-drawer-block-checbox">
-          <div class="setting-drawer-block-checbox-item" @click="handleChangePageStyle('light')">
-            <img src="@/assets/light.svg" alt="light" />
-            <div
-              v-if="pageStyle === 'light'"
-              class="setting-drawer-block-checbox-selectIcon"
-              style="display: block"
+        <div class="setting-drawer-title">主题</div>
+        <el-row :gutter="10" class="setting-drawer-block-checbox">
+          <el-radio-group v-model="theme" size="small" style="width: 100%">
+            <el-col
+              :span="8"
+              v-for="item in ['default', 'fire', 'calamus', 'classic', 'light']"
+              :key="item"
             >
-              <i aria-label="图标: check" class="anticon anticon-check">
-                <svg
-                  viewBox="64 64 896 896"
-                  data-icon="check"
-                  width="1em"
-                  height="1em"
-                  aria-hidden="true"
-                  focusable="false"
-                  class=""
-                >
-                  <path
-                    d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"
-                  />
-                </svg>
-              </i>
-            </div>
-          </div>
-          <div class="setting-drawer-block-checbox-item" @click="handleChangePageStyle('dark')">
-            <img src="@/assets/dark.svg" alt="dark" />
-            <div
-              v-if="pageStyle === 'dark'"
-              class="setting-drawer-block-checbox-selectIcon"
-              style="display: block"
-            >
-              <i aria-label="图标: check" class="anticon anticon-check">
-                <svg
-                  viewBox="64 64 896 896"
-                  data-icon="check"
-                  width="1em"
-                  height="1em"
-                  aria-hidden="true"
-                  focusable="false"
-                  class=""
-                >
-                  <path
-                    d="M912 190h-69.9c-9.8 0-19.1 4.5-25.1 12.2L404.7 724.5 207 474a32 32 0 0 0-25.1-12.2H112c-6.7 0-10.4 7.7-6.3 12.9l273.9 347c12.8 16.2 37.4 16.2 50.3 0l488.4-618.9c4.1-5.1.4-12.8-6.3-12.8z"
-                  />
-                </svg>
-              </i>
-            </div>
-          </div>
-        </div>
+              <div
+                class="setting-drawer-block-checbox-item"
+                @click="handleChangeTheme(item)"
+                :style="{ borderColor: theme === item ? 'var(--el-color-primary)' : '' }"
+              >
+                <div class="example-bg" :style="{ backgroundColor: primaryColorDict[item] }"></div>
+                <div class="option-content">
+                  <el-radio :label="item" style="height: 20px">
+                    {{ nameDict[item] }}
+                  </el-radio>
+                </div>
+              </div>
+            </el-col>
+          </el-radio-group>
+        </el-row>
       </div>
       <el-divider />
       <div class="setting-drawer-content">
-        <div class="setting-drawer-title">布局设置</div>
+        <div class="setting-drawer-title">布局</div>
         <div class="drawer-item">
           <span>显示系统标识</span>
           <el-switch v-model="sidebarLogo" class="drawer-switch" />
@@ -81,11 +53,31 @@ export default {
   name: 'SystemSetting',
   mixins: [utils],
   data() {
-    return {}
+    return {
+      nameDict: {
+        default: '默认',
+        fire: '花火',
+        calamus: '菖蒲',
+        classic: '经典',
+        light: '明亮',
+      },
+      primaryColorDict: {
+        default: '#0f7af5',
+        fire: '#d65c75',
+        calamus: '#5d4256',
+        classic: '#304156',
+        light: '#ffffff',
+      },
+    }
   },
   computed: {
-    pageStyle() {
-      return this.$store.state.settings.pageStyle
+    theme: {
+      get() {
+        return this.$store.state.settings.theme
+      },
+      set(val) {
+        this.handleChangeTheme(val)
+      },
     },
     fixedHeader: {
       get() {
@@ -159,32 +151,25 @@ export default {
   }
 
   .setting-drawer-block-checbox {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-
     .setting-drawer-block-checbox-item {
       position: relative;
-      margin-right: 16px;
-      border-radius: 2px;
+      width: 100%;
+      height: 54px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
       cursor: pointer;
 
-      img {
-        width: 48px;
-        height: 48px;
+      .example-bg {
+        height: 30px;
+        border-start-start-radius: 5px;
+        border-start-end-radius: 5px;
       }
 
-      .setting-drawer-block-checbox-selectIcon {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        padding-top: 15px;
-        padding-left: 24px;
-        color: #1890ff;
-        font-weight: 700;
-        font-size: 14px;
+      .option-content {
+        height: 24px;
+        padding: 0 3px;
+        border-top: 1px solid #ddd;
       }
     }
   }

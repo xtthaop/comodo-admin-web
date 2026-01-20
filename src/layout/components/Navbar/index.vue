@@ -72,15 +72,15 @@ export default {
     ...mapGetters(['sidebar', 'username']),
     ...mapState({
       showSettings: (state) => state.settings.showSettings,
-      pageStyle: (state) => state.settings.pageStyle,
+      theme: (state) => state.settings.theme,
     }),
     firstOfUsername() {
       return this.username.trim().substr(0, 1).toUpperCase()
     },
   },
   created() {
-    const pageStyle = Cookies.get('pageStyle') || this.pageStyle
-    this.handleChangePageStyle(pageStyle)
+    const theme = Cookies.get('theme') || this.theme
+    this.handleChangeTheme(theme)
   },
   methods: {
     toggleSideBar() {

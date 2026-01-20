@@ -1,16 +1,11 @@
-import { addClass, removeClass } from '@/utils'
+import { setTheme } from '@/utils'
 
 export default {
   methods: {
-    handleChangePageStyle(val) {
-      if (val === 'dark') {
-        addClass(document.documentElement, 'dark')
-      } else {
-        removeClass(document.documentElement, 'dark')
-      }
-
+    handleChangeTheme(val) {
+      setTheme(val)
       this.$store.dispatch('settings/changeSetting', {
-        key: 'pageStyle',
+        key: 'theme',
         value: val,
       })
     },

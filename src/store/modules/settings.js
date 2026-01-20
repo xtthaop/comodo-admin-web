@@ -1,4 +1,4 @@
-import { showSettings, tagsView, fixedHeader, sidebarLogo, pageStyle } from '@/settings'
+import { showSettings, tagsView, fixedHeader, sidebarLogo, theme } from '@/settings'
 import Cookies from 'js-cookie'
 
 const state = {
@@ -6,7 +6,7 @@ const state = {
   tagsView: Cookies.get('tagsView') ? !!+Cookies.get('tagsView') : tagsView,
   fixedHeader: Cookies.get('fixedHeader') ? !!+Cookies.get('fixedHeader') : fixedHeader,
   sidebarLogo: Cookies.get('sidebarLogo') ? !!+Cookies.get('sidebarLogo') : sidebarLogo,
-  pageStyle: Cookies.get('pageStyle') || pageStyle,
+  theme: Cookies.get('theme') || theme,
 }
 
 const mutations = {
@@ -14,7 +14,7 @@ const mutations = {
     // eslint-disable-next-line no-prototype-builtins
     if (state.hasOwnProperty(key)) {
       state[key] = value
-      if (key === 'pageStyle') {
+      if (key === 'theme') {
         Cookies.set(key, value)
       } else {
         Cookies.set(key, +value)

@@ -45,16 +45,17 @@ RUN npm config set registry https://mirrors.cloud.tencent.com/npm/ && \
 # 6. 安装 Apache 2.4
 RUN apt-get install -y \
     apache2 \
-    apache2-utils \
     libapache2-mod-php8.1
 
 # 开启 Apache 常用模块 (如 rewrite 用于美化 URL)
-RUN a2enmod rewrite \
-    a2enmod proxy \
-    a2enmod proxy_http \
-    a2dismod mpm_event \
-    a2enmod mpm_prefork \
-    a2enmod php8.1
+RUN a2dismod mpm_event
+
+RUN a2enmod \
+    rewrite \
+    proxy \
+    proxy_http \
+    mpm_prefork \
+    php8.1
 
 # 7. 安装 code-server (IDE 界面)
 RUN curl -fsSL https://code-server.dev/install.sh | sh

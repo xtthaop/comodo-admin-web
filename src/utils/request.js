@@ -65,7 +65,7 @@ service.interceptors.response.use(
     }
   },
   (error) => {
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
       if (messageBoxFlag === 0) {
         messageBoxFlag = 1
         ElMessageBox.confirm('您的登录状态已失效，请重新登录', '提示', {

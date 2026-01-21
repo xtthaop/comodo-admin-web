@@ -35,7 +35,7 @@ RUN apt-get install -y \
     php8.1-redis
 
 # 5. 安装 Node.js
-RUN curl -fsSL https://mirrors.cloud.tencent.com/nodejs-release/v18.17.1/node-v18.17.1-linux-x64.tar.xz | tar -xJ --strip-components=1 -C /usr/local
+RUN curl -fsSL https://mirrors.cloud.tencent.com/nodejs-release/v18.17.0/node-v18.17.0-linux-x64.tar.xz | tar -xJ --strip-components=1 -C /usr/local
 
 # 安装 pnpm 8.6.10 并设置腾讯云镜像源
 RUN npm config set registry https://mirrors.cloud.tencent.com/npm/ && \

@@ -10,9 +10,7 @@ ENV TZ=Asia/Shanghai
 # 1. 更新源并安装基础工具
 # 使用腾讯云软件源镜像以加速下载
 RUN sed -i 's/archive.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list && \
-    sed -i 's/security.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list && \
-    apt-get update && apt-get upgrade \
-    apt-get install -y \
+    apt-get update && apt-get install -y \
     git \
     net-tools \
     ssh \

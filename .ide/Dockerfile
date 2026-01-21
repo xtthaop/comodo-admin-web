@@ -11,8 +11,8 @@ ENV TZ=Asia/Shanghai
 # 使用腾讯云软件源镜像以加速下载
 RUN sed -i 's/archive.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list && \
     sed -i 's/security.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.list && \
-    apt update && apt upgrade \
-    apt install -y \
+    apt-get update && apt-get upgrade \
+    apt-get install -y \
     git \
     net-tools \
     ssh \
@@ -20,18 +20,18 @@ RUN sed -i 's/archive.ubuntu.com/mirrors.cloud.tencent.com/g' /etc/apt/sources.l
     xz-utils
 
 # 2. 安装 MySQL Server   
-RUN apt install -y \
+RUN apt-get install -y \
     mysql-server 
 
 # 配置免密
 RUN echo "[client]\nuser=root\npassword=111\nport=3306" > /root/.my.cnf
 
 # 3. 安装 Redis
-RUN apt install -y \
+RUN apt-get install -y \
     redis-server
 
 # 4. 安装 PHP 8.1 (Ubuntu 22.04 默认版本就是 8.1)
-RUN apt install -y \
+RUN apt-get install -y \
     php8.1-mysql \
     php8.1-gd \
     php8.1-redis
@@ -45,7 +45,7 @@ RUN npm config set registry https://mirrors.cloud.tencent.com/npm/ && \
     pnpm config set registry https://mirrors.cloud.tencent.com/npm/
 
 # 6. 安装 Apache 2.4
-RUN apt install -y \
+RUN apt-get install -y \
     apache2 \
     libapache2-mod-php8.1
 

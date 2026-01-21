@@ -9,32 +9,10 @@ Comodo Admin 是一款极简的 RBAC（基于角色的访问控制） 后台管�
 [系统预览](https://zxctb.top:8081)  
 [使用文档](./PROMPT.md)
 
+## 特别感谢
 
-
-## 快速开始
-
-#### 安装依赖
-```
-pnpm install
-```
-
-#### 本地开发环境运行
-```
-pnpm run dev
-```
-
-#### 打包到生产环境
-```
-pnpm run build
-```
-
-#### 初始化账户信息
-
-用户名：admin   
-密码：123456
-
-用户名：user  
-密码：123456
+1. <a href="https://github.com/PanJiaChen/vue-element-admin">vue-element-admin</a>  
+2. <a href="https://github.com/go-admin-team/go-admin">go-admin</a>
 
 ## 成为赞助者
 <img src="./public//sponsor.png?raw=true" width="300px" />
@@ -43,8 +21,3 @@ pnpm run build
 
 ## 许可证
 [MIT](./LICENSE.md)
-
----
-
-本项目参考了 <a href="https://github.com/PanJiaChen/vue-element-admin">vue-element-admin</a>、<a href="https://github.com/go-admin-team/go-admin">go-admin</a>
-

@@ -1,0 +1,90 @@
+$:
+  vscode:
+    - docker:
+        build: .ide/Dockerfile
+      services:
+        - vscode
+        - docker
+      stages:
+        - name: 准备代码环境
+          script: |
+            # 把后端仓库拉进来
+            if [ ! -d "comodo-admin-api" ]; then
+                echo "正在拉取后端代码..."
+                git clone https://cnb.cool/tidalwhisper/comodo-open/comodo-admin-api
+            fi
+        
+        - name: 编译前端代码
+          script: |
+            echo "开始前端编译..."
+            pnpm install
+            pnpm run build
+            # 确保 dist 目录存在，避免 Apache 启动失败
+            mkdir -p dist
+
+        - name: 配置 Apache 多端口与反向代理
+          script: |
+            # 让 Apache 监听端口
+            echo "Listen 8080" > /etc/apache2/ports.conf
+            echo "Listen 80" >> /etc/apache2/ports.conf
+
+            # 配置 80 端口：托管前端 dist 转发 /api 到 8080
+            cat > /etc/apache2/sites-available/000-default.conf <<EOF
+            <VirtualHost *:80>
+              DocumentRoot /workspace/dist
+              
+              # 反向代理配置：将 /api 开头的请求转给后端
+              ProxyPass /api http://127.0.0.1:8080
+              ProxyPassReverse /api http://127.0.0.1:8080
+
+              <Directory /workspace/dist>
+                <IfModule mod_rewrite.c>
+                  RewriteEngine On
+                  RewriteBase /
+                  RewriteRule ^index\.html$ - [L]
+                  RewriteCond %{REQUEST_FILENAME} !-f
+                  RewriteCond %{REQUEST_FILENAME} !-d
+                  RewriteRule . /index.html [L]
+                </IfModule>
+              </Directory>
+            </VirtualHost>
+
+            <VirtualHost *:8080>
+              DocumentRoot /workspace/comodo-admin-api
+              <Directory /workspace/comodo-admin-api>
+                Options Indexes FollowSymLinks
+                AllowOverride All
+                Require all granted
+              </Directory>
+            </VirtualHost>
+            EOF
+
+        - name: 初始化并启动
+          script: |
+            # 1. 后台启动 MySQL 服务
+            service mysql start
+            
+            # 2. 设置 root 密码为 111 (仅在第一次启动时需要)
+            # 使用 --execute 来直接运行 SQL 命令
+            mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '111'; FLUSH PRIVILEGES;"
+            
+            echo "MySQL 启动成功，密码已设置为 111"
+
+            # 3. 启动 Redis 服务
+            service redis-server start
+            
+            echo "Redis 启动成功"
+
+            # 启动 Apache
+            service apache2 start
+            
+            echo "Apache 启动成功"
+        
+        - name: 检查环境
+          script: |
+            mysql -e "show databases;"
+            redis-cli ping
+            php -v
+            node -v
+            pnpm -v
+            apachectl configtest

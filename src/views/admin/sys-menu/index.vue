@@ -56,16 +56,7 @@
                   <Place />
                 </template>
               </el-icon>
-              <span
-                style="
-                  width: 167px;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  white-space: nowrap;
-                  word-break: break-all;
-                "
-                >{{ scope.row.title }}
-              </span>
+              <span>{{ scope.row.title }}</span>
             </div>
           </template>
         </el-table-column>

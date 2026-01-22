@@ -12,6 +12,11 @@ $:
             if [ ! -d "comodo-admin-api" ]; then
                 echo "正在拉取后端代码..."
                 git clone https://cnb.cool/tidalwhisper/comodo-open/comodo-admin-api
+            else
+                echo "后端代码已存在，无需重复拉取"
+                cd "comodo-admin-api"
+                git pull
+                cd ..
             fi
 
         - name: 配置目录权限与定时任务

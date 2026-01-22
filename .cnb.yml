@@ -88,12 +88,24 @@ $:
           script: |
             # 1. 后台启动 MySQL 服务
             service mysql start
+
+            # 等待 MySQL 彻底就绪（防止连接过快报错）
+            echo "等待 MySQL 就绪..."
+            until mysqladmin ping >/dev/null 2>&1; do
+              sleep 1
+            done
             
             # 2. 设置 root 密码为 111 (仅在第一次启动时需要)
             # 使用 --execute 来直接运行 SQL 命令
             mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '111'; FLUSH PRIVILEGES;"
             
             echo "MySQL 启动成功，密码已设置为 111"
+
+            # 3. 执行数据库导入
+            SQL_PATH="/workspace/comodo-admin-api/assets/mysql/comodo-admin-open.sql"
+
+            mysql < "$SQL_PATH"
+            echo "数据库导入成功！"
 
             # 3. 启动 Redis 服务
             service redis-server start

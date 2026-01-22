@@ -23,6 +23,11 @@ $:
                 echo "public 目录权限已设置为 777"
             fi
 
+            # --- 定时任务配置定时清除 redis 黑名单 token ---
+            # 1. 确保 cron 服务已安装（通常 Ubuntu 自带，如果没有可在 Dockerfile 加上）
+            service cron start || apt-get install -y cron && service cron start
+            
+            # 2. 写入 crontab
             # 使用 echo 配合 crontab - 是一种非交互式的写入方式
             CRON_JOB="0 3 * * * bash /workspace/comodo-admin-api/assets/bash/comodo-admin-clear-expired-token.sh > /dev/null 2>&1"
             

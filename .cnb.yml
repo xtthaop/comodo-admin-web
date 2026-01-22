@@ -13,6 +13,28 @@ $:
                 echo "正在拉取后端代码..."
                 git clone https://cnb.cool/tidalwhisper/comodo-open/comodo-admin-api
             fi
+
+        - name: 配置目录权限与定时任务
+          script: |
+            # --- 权限设置 ---
+            # 确保目录存在后再执行
+            if [ -d "/workspace/comodo-admin-api/public" ]; then
+                chmod -R 777 /workspace/comodo-admin-api/public
+                echo "public 目录权限已设置为 777"
+            fi
+
+            # --- 定时任务配置定时清除 redis 黑名单 token ---
+            # 1. 确保 cron 服务已安装（通常 Ubuntu 自带，如果没有可在 Dockerfile 加上）
+            service cron start
+            
+            # 2. 写入 crontab (注意：这里将路径修正为 /workspace 下的实际路径)
+            # 使用 echo 配合 crontab - 是一种非交互式的写入方式
+            CRON_JOB="0 3 * * * bash /workspace/comodo-admin-api/assets/bash/comodo-admin-clear-expired-token.sh > /dev/null 2>&1"
+            
+            # 检查是否已经存在该任务，避免重复写入
+            (crontab -l 2>/dev/null | grep -F "$CRON_JOB") || (crontab -l 2>/dev/null; echo "$CRON_JOB") | crontab -
+            
+            echo "定时任务已写入 crontab"
         
         - name: 编译前端代码
           script: |

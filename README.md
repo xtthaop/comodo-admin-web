@@ -6,14 +6,14 @@
 
 Comodo Admin 是一款极简的 RBAC（基于角色的访问控制） 后台管理系统，前端基于 Vue 3 开发，后端基于 PHP 8.1 开发。它提供了一种 RBAC 后台管理系统的具体实现思路和运行框架。
 
-### 在线预览: <https://admin.zxctb.top>
+### 在线预览：<https://admin.zxctb.top>
 
 初始账号信息：
 
-用户名：admin
+用户名：admin  
 密码：123456
 
-用户名：user
+用户名：user  
 密码：123456  
 
 ### 在线调试：<https://cnb.cool/tidalwhisper/comodo-open/comodo-admin-web>

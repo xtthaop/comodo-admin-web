@@ -38,7 +38,7 @@
         :tooltip-options="{ popperClass: 'custom-tooltip-style' }"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column type="selection" width="55" />
         <el-table-column label="ID" width="75" prop="id" />
         <el-table-column label="请求类型" align="center" width="100">
           <template #default="scope">

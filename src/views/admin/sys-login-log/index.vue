@@ -29,7 +29,7 @@
         :tooltip-options="{ popperClass: 'custom-tooltip-style' }"
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column type="selection" width="55" />
         <el-table-column label="ID" width="75" prop="id" />
         <el-table-column label="用户名" prop="username" min-width="120" />
         <el-table-column label="IP地址" prop="ipaddr" min-width="120">
